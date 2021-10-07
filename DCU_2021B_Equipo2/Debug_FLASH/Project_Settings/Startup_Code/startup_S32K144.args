@@ -1,0 +1,22 @@
+-c
+-I"C:/Users/Propietario/workspaceS32DS.3.4/DCU_2021B_Equipo2/src"
+-I"C:/Users/Propietario/workspaceS32DS.3.4/DCU_2021B_Equipo2/board"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/rtos/FreeRTOS_S32K/Source/include"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/rtos/FreeRTOS_S32K/Source/portable/GCC/ARM_CM4F"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144/include"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144/startup"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/common"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/drivers/inc"
+-I"C:/nxp/S32DS.3.4/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/drivers/src/clock/S32K1xx"
+-x assembler-with-cpp
+-DSTART_FROM_FLASH
+-DUSING_OS_FREERTOS
+-g3
+-mcpu=cortex-m4
+-mfloat-abi=hard
+-mfpu=fpv4-sp-d16
+-specs=nano.specs
+-specs=nosys.specs
+--sysroot="C:/nxp/S32DS.3.4/S32DS/build_tools/gcc_b1620/gcc-6.3-arm32-eabi/arm-none-eabi/newlib"
