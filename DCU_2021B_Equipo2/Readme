@@ -1,0 +1,4 @@
+This is the first version of the DCU 
+This includes the following]:
+FreeRTOS example integration 
+DCU files imported into project to support DIO,ADC,MCU for future implementation
