@@ -131,6 +131,11 @@
 			<locationURI>$%7BS32K144_SDK_4_0_2_PATH%7D/rtos/FreeRTOS_S32K/Source/timers.c</locationURI>
 		</link>
 		<link>
+			<name>doc/SDK/rtos/doxygen/freeRTOS.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/rtos/doxygen/freeRTOS.dox</locationURI>
+		</link>
+		<link>
 			<name>SDK/platform/devices/S32K144/include/S32K144.h</name>
 			<type>1</type>
 			<locationURI>$%7BS32K144_SDK_4_0_2_PATH%7D/platform/devices/S32K144/include/S32K144.h</locationURI>
