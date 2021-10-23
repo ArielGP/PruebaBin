@@ -1,0 +1,9 @@
+#
+# Ignore directories
+#
+Debug_FLASH/
+
+#
+# Ignore files
+#
+.settings/language.settings.xml
