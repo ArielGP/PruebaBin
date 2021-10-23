@@ -27,38 +27,13 @@
 #include "Dio.h"
 #include "DcuTasks.h"
 
+/*Local Macros______________________________________________________________*/
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
 
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
 
-
-/* ============================================================================
- * Function Name:app_task_200ms
- * Description:It is a periodic task that runs each 200ms
- * Arguments: void *pvParameters
- * Return:void
- * ========================================================================= */
-void app_task_200ms( void *pvParameters )
-{
-	TickType_t xNextWakeTime;
-
-	/* Casting pvParameters to void because it is unused */
-	(void)pvParameters;
-
-	/* Initialize xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
-	{
-
-		/* Place this task in the blocked state until it is time to run again.
-		The block time is specified in ticks, the constant used converts ticks
-		to ms.  While in the Blocked state this task will not consume any CPU
-		time. */
-		vTaskDelayUntil( &xNextWakeTime, 200 );
-
-	}
-}
 
 /* ============================================================================
  * Function Name:app_task_100ms
@@ -177,9 +152,9 @@ void app_task_10ms( void *pvParameters )
 
 void Tasks_StartOS(void)
 {
-	xTaskCreate(app_task_200ms,        "App200ms",         configMINIMAL_STACK_SIZE, NULL,  5, NULL);
-	xTaskCreate(app_task_100ms,        "App100ms",         configMINIMAL_STACK_SIZE, NULL,  5, NULL);
-	xTaskCreate(app_task_10ms,          "App10ms",         configMINIMAL_STACK_SIZE, NULL,  5, NULL);
+
+	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
+	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE, NULL,  app_10ms_TASK_PRIORITY,  NULL);
 
 	Mpu_Init();
 

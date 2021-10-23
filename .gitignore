@@ -1,3 +1,12 @@
+#
+# Ignore direcories
+#
+RemoteSystemsTempFiles/
+FreeRTOS_TAD_logs/
+
+#
 # Ignore below files.
+#
 /**/~*.*
 /**/.~*.*
+/.metadata/
