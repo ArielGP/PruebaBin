@@ -1,3 +1,11 @@
+#
+# Ignore direcories
+#
+RemoteSystemsTempFiles/
+
+#
 # Ignore below files.
+#
 /**/~*.*
 /**/.~*.*
+/.metadata/
