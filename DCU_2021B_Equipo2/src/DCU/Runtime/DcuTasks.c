@@ -27,6 +27,10 @@
 #include "Dio.h"
 #include "DcuTasks.h"
 
+/*Local Macros______________________________________________________________*/
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
+
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
 
@@ -91,8 +95,8 @@ void app_task_10ms( void *pvParameters )
 void Tasks_StartOS(void)
 {
 
-	xTaskCreate(app_task_100ms,        "App100ms",         configMINIMAL_STACK_SIZE, NULL,  5, NULL);
-	xTaskCreate(app_task_10ms,          "App10ms",         configMINIMAL_STACK_SIZE, NULL,  5, NULL);
+	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
+	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE, NULL,  app_10ms_TASK_PRIORITY,  NULL);
 
 	Mpu_Init();
 
