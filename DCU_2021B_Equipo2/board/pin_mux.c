@@ -9,6 +9,7 @@ mcu_data: s32sdk_s32k1xx_rtm_402
 processor_version: 0.0.0
 pin_labels:
 - {pin_num: '68', pin_signal: PTB12, label: BTN0, identifier: BTN0}
+- {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -43,6 +44,7 @@ BOARD_InitPins:
   - {pin_num: '49', peripheral: PORTC, signal: 'port, 13', pin_signal: PTC13, direction: INPUT}
   - {pin_num: '40', peripheral: PORTC, signal: 'port, 0', pin_signal: PTC0, direction: OUTPUT}
   - {pin_num: '39', peripheral: PORTC, signal: 'port, 1', pin_signal: PTC1, direction: OUTPUT}
+  - {pin_num: '46', peripheral: ADC0, signal: 'se, 12', pin_signal: PTC14}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -93,6 +95,19 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
+    },
+    {
+        .base            = PORTC,
+        .pinPortIdx      = 14U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_PIN_DISABLED,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = NULL,
+        .digitalFilter   = false,
     },
     {
         .base            = PORTD,
