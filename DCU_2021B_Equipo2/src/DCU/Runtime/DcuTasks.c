@@ -27,9 +27,15 @@
 #include "Dio.h"
 #include "DcuTasks.h"
 
+
+#include "pins_driver.h"
+
+
+
 /*Local Macros______________________________________________________________*/
-#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
-#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2u )   //5
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2u )   //4
+#define TASK3_PRIORITY                ( tskIDLE_PRIORITY + 3u )
 
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
@@ -54,11 +60,19 @@ void app_task_100ms( void *pvParameters )
 	for( ;; )
 	{
 
+
+		PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,0);
+		//PINS_DRV_TogglePins(DOOR_LOCKED_PORT,1 << DOOR_LOCKED_PIN);
+
+
+
+
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 100 );
+		//vTaskDelayUntil( &xNextWakeTime, 500 );
+		vTaskDelay(500);
 
 	}
 }
@@ -88,6 +102,11 @@ void app_task_10ms( void *pvParameters )
 	#endif
 	for( ;; )
 	{
+
+		//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
+
+
+		/*
 		#ifdef TEST
 		switch(btn_state)
 		{
@@ -122,6 +141,8 @@ void app_task_10ms( void *pvParameters )
 		}
 		#endif
 
+		*/
+
 		#ifdef TEST2
 		switch(leds_state)
 		{
@@ -144,17 +165,53 @@ void app_task_10ms( void *pvParameters )
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 10 );
+		//vTaskDelayUntil( &xNextWakeTime, 2000 );
+
+		vTaskDelay(500);
 
 	}
 }
 
 
+/* ============================================================================
+ * Function Name:task3
+ * Description:It is a periodic task task that runs each 100ms
+ * Arguments: void *pvParameters
+ * Return:void
+ * ========================================================================= */
+void task3( void *pvParameters )
+{
+	TickType_t xNextWakeTime;
+
+	/* Casting pvParameters to void because it is unused */
+	(void)pvParameters;
+
+	/* Initialize xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		int suma=0;
+		for(int i=0;i<1000;i++)
+			suma =suma+i;
+
+
+
+		/* Place this task in the blocked state until it is time to run again.
+		The block time is specified in ticks, the constant used converts ticks
+		to ms.  While in the Blocked state this task will not consume any CPU
+		time. */
+		vTaskDelayUntil( &xNextWakeTime, 10 );
+
+	}
+}
+
 void Tasks_StartOS(void)
 {
 
-	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
-	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE, NULL,  app_10ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE, NULL,app_100ms_TASK_PRIORITY, NULL);
+	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE, NULL,app_10ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(task3,    "task3",         configMINIMAL_STACK_SIZE, NULL,TASK3_PRIORITY,  NULL);
 
 	Mpu_Init();
 

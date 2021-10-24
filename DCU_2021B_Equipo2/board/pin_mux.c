@@ -70,9 +70,7 @@ BOARD_InitPins:
   - {pin_num: '21', peripheral: PORTD, signal: 'port, 16', pin_signal: PTD16, direction: OUTPUT}
   - {pin_num: '22', peripheral: PORTD, signal: 'port, 15', pin_signal: PTD15, direction: OUTPUT}
   - {pin_num: '40', peripheral: PORTC, signal: 'port, 0', pin_signal: PTC0, direction: OUTPUT}
-  - {pin_num: '39', peripheral: PORTC, signal: 'port, 1', pin_signal: PTC1, direction: OUTPUT}
   - {pin_num: '23', peripheral: PORTE, signal: 'port, 9', pin_signal: PTE9, direction: OUTPUT}
-  - {pin_num: '96', peripheral: PORTC, signal: 'port, 4', pin_signal: PTC4, direction: OUTPUT}
   - {pin_num: '16', peripheral: PORTB, signal: 'port, 6', pin_signal: PTB6, direction: INPUT}
   - {pin_num: '15', peripheral: PORTB, signal: 'port, 7', pin_signal: PTB7, direction: INPUT}
   - {pin_num: '94', peripheral: PORTE, signal: 'port, 0', pin_signal: PTE0, direction: INPUT}
@@ -87,7 +85,6 @@ BOARD_InitPins:
   - {pin_num: '70', peripheral: PORTD, signal: 'port, 3', pin_signal: PTD3, direction: INPUT}
   - {pin_num: '3', peripheral: PORTD, signal: 'port, 1', pin_signal: PTD1, direction: INPUT}
   - {pin_num: '32', peripheral: PORTD, signal: 'port, 6', pin_signal: PTD6, direction: OUTPUT}
-  - {pin_num: '98', peripheral: PORTA, signal: 'port, 4', pin_signal: PTA4, direction: INPUT}
   - {pin_num: '69', peripheral: PORTD, signal: 'port, 4', pin_signal: PTD4, direction: OUTPUT}
   - {pin_num: '68', peripheral: PORTB, signal: 'port, 12', pin_signal: PTB12, direction: OUTPUT}
   - {pin_num: '54', peripheral: PORTB, signal: 'port, 0', pin_signal: PTB0, direction: OUTPUT}
@@ -146,21 +143,6 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .clearIntFlag    = false,
         .gpioBase        = PTA,
         .direction       = GPIO_OUTPUT_DIRECTION,
-        .digitalFilter   = false,
-        .initValue       = 0U,
-    },
-    {
-        .base            = PORTA,
-        .pinPortIdx      = 4U,
-        .pullConfig      = PORT_INTERNAL_PULL_UP_ENABLED,
-        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
-        .passiveFilter   = false,
-        .mux             = PORT_MUX_AS_GPIO,
-        .pinLock         = false,
-        .intConfig       = PORT_DMA_INT_DISABLED,
-        .clearIntFlag    = false,
-        .gpioBase        = PTA,
-        .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },
@@ -271,21 +253,6 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     },
     {
         .base            = PORTC,
-        .pinPortIdx      = 1U,
-        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
-        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
-        .passiveFilter   = false,
-        .mux             = PORT_MUX_AS_GPIO,
-        .pinLock         = false,
-        .intConfig       = PORT_DMA_INT_DISABLED,
-        .clearIntFlag    = false,
-        .gpioBase        = PTC,
-        .direction       = GPIO_OUTPUT_DIRECTION,
-        .digitalFilter   = false,
-        .initValue       = 0U,
-    },
-    {
-        .base            = PORTC,
         .pinPortIdx      = 12U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
@@ -339,21 +306,6 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .clearIntFlag    = false,
         .gpioBase        = PTC,
         .direction       = GPIO_INPUT_DIRECTION,
-        .digitalFilter   = false,
-        .initValue       = 0U,
-    },
-    {
-        .base            = PORTC,
-        .pinPortIdx      = 4U,
-        .pullConfig      = PORT_INTERNAL_PULL_DOWN_ENABLED,
-        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
-        .passiveFilter   = false,
-        .mux             = PORT_MUX_AS_GPIO,
-        .pinLock         = false,
-        .intConfig       = PORT_DMA_INT_DISABLED,
-        .clearIntFlag    = false,
-        .gpioBase        = PTC,
-        .direction       = GPIO_OUTPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },

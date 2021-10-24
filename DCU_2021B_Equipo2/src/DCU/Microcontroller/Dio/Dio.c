@@ -11,11 +11,14 @@
 #include "sdk_project_config.h"
 
 
+
 void Dio_Init(void)
 {
 
 	/* Init IO HAL */
 	PINS_DRV_Init(NUM_OF_CONFIGURED_PINS0,g_pin_mux_InitConfigArr0);
+	//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,0);
+	PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,0);
 }
 
 
@@ -28,6 +31,8 @@ void Dio_Write_DoorLock_Led(PIN_VALUE value)
 {
 	PINS_DRV_WritePin(DOOR_LOCKED_PORT, DOOR_LOCKED_PIN, (uint8_t) value);
 }
+
+
 
 PIN_VALUE Dio_Read_DoorUnlock(void)
 {
@@ -44,9 +49,14 @@ PIN_VALUE Dio_Read_DoorLock(void)
 }
 
 
+
+
+
 void Dio_Write_Window_Leds(PIN_VALUES values)
 {
 	/*Se descarta cualquier dato superior al bit 9 de la variable values*/
+
+
 	PIN_VALUES led_data = values & 0xFFFFFFFF;
 	PINS_DRV_WritePin(WINDOW_LED1_PORT, WINDOW_LED1_PIN, (uint8_t) (led_data >> 31));
 	PINS_DRV_WritePin(WINDOW_LED2_PORT, WINDOW_LED2_PIN, (uint8_t) (led_data >> 30));
@@ -59,6 +69,10 @@ void Dio_Write_Window_Leds(PIN_VALUES values)
 	PINS_DRV_WritePin(WINDOW_LED9_PORT, WINDOW_LED9_PIN, (uint8_t) (led_data >> 23));
 	PINS_DRV_WritePin(WINDOW_LED10_PORT, WINDOW_LED10_PIN, (uint8_t)(led_data >> 22));
 }
+
+
+
+
 
 
 
@@ -84,6 +98,9 @@ PIN_VALUE Dio_Read_DoorLock_Button(void)
 	//return DIO_LOW;
 }
 
+
+
+/*
 PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 {
 	PIN_VALUE drUnlockBtn = PINS_DRV_ReadPins(UNLOCK_BTN_PORT) >> (31 - UNLOCK_BTN_PIN);
@@ -91,6 +108,7 @@ PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 	//return DIO_LOW;
 }
 
+*/
 
 PIN_VALUE Dio_Read_WindowOpen_Button(void)
 {
@@ -143,6 +161,8 @@ PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void)
 	//return DIO_LOW;
 }
 
+/*
+
 PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 {
 	PIN_VALUE btn = PINS_DRV_ReadPins(REARRIGHT_CLOSE_BTN_PORT) >> (31 - REARRIGHT_CLOSE_BTN_PIN);
@@ -150,6 +170,8 @@ PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 	//return DIO_LOW;
 }
 
+
+*/
 PIN_VALUE Dio_Read_RearWindowLock_Button(void)
 {
 	PIN_VALUE btn = PINS_DRV_ReadPins(REAR_WINDOW_LOCK_BTN_PORT) >> (31 - REAR_WINDOW_LOCK_BTN_PIN);
@@ -171,5 +193,6 @@ PIN_VALUE Dio_Read_Jumper1(void)
 	return jmp;
 	//return DIO_LOW;
 }
+
 
 
