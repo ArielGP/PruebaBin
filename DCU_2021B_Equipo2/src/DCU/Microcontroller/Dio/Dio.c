@@ -100,7 +100,7 @@ PIN_VALUE Dio_Read_DoorLock_Button(void)
 
 
 
-/*
+
 PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 {
 	PIN_VALUE drUnlockBtn = PINS_DRV_ReadPins(UNLOCK_BTN_PORT) >> (31 - UNLOCK_BTN_PIN);
@@ -108,7 +108,7 @@ PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 	//return DIO_LOW;
 }
 
-*/
+
 
 PIN_VALUE Dio_Read_WindowOpen_Button(void)
 {
@@ -161,7 +161,7 @@ PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void)
 	//return DIO_LOW;
 }
 
-/*
+
 
 PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 {
@@ -171,7 +171,6 @@ PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 }
 
 
-*/
 PIN_VALUE Dio_Read_RearWindowLock_Button(void)
 {
 	PIN_VALUE btn = PINS_DRV_ReadPins(REAR_WINDOW_LOCK_BTN_PORT) >> (31 - REAR_WINDOW_LOCK_BTN_PIN);

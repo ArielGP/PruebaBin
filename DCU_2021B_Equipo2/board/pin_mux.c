@@ -38,6 +38,8 @@ pin_labels:
 - {pin_num: '83', pin_signal: PTA15, label: WINDOW_LED9, identifier: WINDOW_LED9}
 - {pin_num: '82', pin_signal: PTA16, label: WINDOW_LED10, identifier: WINDOW_LED10}
 - {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
+- {pin_num: '80', pin_signal: PTC7, label: UNLOCK_BTN, identifier: REARRIGHT_CLOSE_BTN;UNLOCK_BTN}
+- {pin_num: '81', pin_signal: PTC6, label: REARRIGHT_CLOSE_BTN, identifier: REARRIGHT_CLOSE_BTN}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -70,15 +72,17 @@ BOARD_InitPins:
   - {pin_num: '21', peripheral: PORTD, signal: 'port, 16', pin_signal: PTD16, direction: OUTPUT}
   - {pin_num: '22', peripheral: PORTD, signal: 'port, 15', pin_signal: PTD15, direction: OUTPUT}
   - {pin_num: '40', peripheral: PORTC, signal: 'port, 0', pin_signal: PTC0, direction: OUTPUT}
-  - {pin_num: '23', peripheral: PORTE, signal: 'port, 9', pin_signal: PTE9, direction: OUTPUT}
+  - {pin_num: '23', peripheral: PORTE, signal: 'port, 9', pin_signal: PTE9, direction: INPUT}
   - {pin_num: '16', peripheral: PORTB, signal: 'port, 6', pin_signal: PTB6, direction: INPUT}
   - {pin_num: '15', peripheral: PORTB, signal: 'port, 7', pin_signal: PTB7, direction: INPUT}
   - {pin_num: '94', peripheral: PORTE, signal: 'port, 0', pin_signal: PTE0, direction: INPUT}
+  - {pin_num: '81', peripheral: PORTC, signal: 'port, 6', pin_signal: PTC6, direction: INPUT}
   - {pin_num: '95', peripheral: PORTC, signal: 'port, 5', pin_signal: PTC5, direction: INPUT}
   - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT}
   - {pin_num: '49', peripheral: PORTC, signal: 'port, 13', pin_signal: PTC13, direction: INPUT}
   - {pin_num: '31', peripheral: PORTD, signal: 'port, 7', pin_signal: PTD7, direction: INPUT}
   - {pin_num: '92', peripheral: PORTA, signal: 'port, 10', pin_signal: PTA10, direction: INPUT}
+  - {pin_num: '80', peripheral: PORTC, signal: 'port, 7', pin_signal: PTC7, identifier: UNLOCK_BTN, direction: INPUT}
   - {pin_num: '71', peripheral: PORTD, signal: 'port, 2', pin_signal: PTD2, direction: INPUT}
   - {pin_num: '4', peripheral: PORTD, signal: 'port, 0', pin_signal: PTD0, direction: INPUT}
   - {pin_num: '43', peripheral: PORTC, signal: 'port, 17', pin_signal: PTC17, direction: INPUT}
@@ -325,6 +329,36 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .initValue       = 0U,
     },
     {
+        .base            = PORTC,
+        .pinPortIdx      = 6U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_AS_GPIO,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = PTC,
+        .direction       = GPIO_INPUT_DIRECTION,
+        .digitalFilter   = false,
+        .initValue       = 0U,
+    },
+    {
+        .base            = PORTC,
+        .pinPortIdx      = 7U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_AS_GPIO,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = PTC,
+        .direction       = GPIO_INPUT_DIRECTION,
+        .digitalFilter   = false,
+        .initValue       = 0U,
+    },
+    {
         .base            = PORTD,
         .pinPortIdx      = 0U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
@@ -515,7 +549,7 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .intConfig       = PORT_DMA_INT_DISABLED,
         .clearIntFlag    = false,
         .gpioBase        = PTE,
-        .direction       = GPIO_OUTPUT_DIRECTION,
+        .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },
