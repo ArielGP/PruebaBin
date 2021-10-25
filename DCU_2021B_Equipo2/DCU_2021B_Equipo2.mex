@@ -54,7 +54,8 @@
                <pin_label pin_num="83" pin_signal="PTA15" label="WINDOW_LED9" identifier="WINDOW_LED9"/>
                <pin_label pin_num="82" pin_signal="PTA16" label="WINDOW_LED10" identifier="WINDOW_LED10"/>
                <pin_label pin_num="46" pin_signal="PTC14" label="ANTIPINCH_SIGNAL" identifier="ANTIPINCH_SIGNAL"/>
-               <pin_label pin_num="80" pin_signal="PTC7" label="REARRIGHT_CLOSE_BTN" identifier="REARRIGHT_CLOSE_BTN"/>
+               <pin_label pin_num="80" pin_signal="PTC7" label="UNLOCK_BTN" identifier="REARRIGHT_CLOSE_BTN;UNLOCK_BTN"/>
+               <pin_label pin_num="81" pin_signal="PTC6" label="REARRIGHT_CLOSE_BTN" identifier="REARRIGHT_CLOSE_BTN"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -101,7 +102,7 @@
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="PORTC" signal="port, 7" pin_num="80" pin_signal="PTC7">
+                  <pin peripheral="PORTC" signal="port, 6" pin_num="81" pin_signal="PTC6">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
@@ -128,6 +129,12 @@
                   </pin>
                   <pin peripheral="PORTA" signal="port, 10" pin_num="92" pin_signal="PTA10">
                      <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="PORTC" signal="port, 7" pin_num="80" pin_signal="PTC7">
+                     <pin_features>
+                        <pin_feature name="identifier" value="UNLOCK_BTN"/>
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
