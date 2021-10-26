@@ -66,8 +66,9 @@ void app_task_100ms( void *pvParameters )
 		antipinchresult = Adc_Get_AntiPinch_Value();
 
 		if(antipinchresult < 500){
-			PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,0);
+			PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,1);
 			PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
+			//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
 		}
 		else
 			PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
