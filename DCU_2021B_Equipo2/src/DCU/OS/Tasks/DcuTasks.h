@@ -8,7 +8,7 @@
 #ifndef OS_TASKS_TASKS_H_
 #define OS_TASKS_TASKS_H_
 
-
+#define TEST2
 extern void init_hook(void);
 
 #endif /* OS_TASKS_TASKS_H_ */
