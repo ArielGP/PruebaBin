@@ -361,6 +361,11 @@
 			<locationURI>s32sdk_s32k1xx_rtm_402/platform/pal/src/adc/doxygen/adc_pal.dox</locationURI>
 		</link>
 		<link>
+			<name>doc/SDK/platform/pal/src/can/doxygen/can_pal.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/pal/src/can/doxygen/can_pal.dox</locationURI>
+		</link>
+		<link>
 			<name>doc/SDK/platform/drivers/src/clock/S32K1xx/doxygen/clock_S32K1xx.dox</name>
 			<type>1</type>
 			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/clock/S32K1xx/doxygen/clock_S32K1xx.dox</locationURI>

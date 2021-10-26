@@ -40,6 +40,8 @@ pin_labels:
 - {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
 - {pin_num: '80', pin_signal: PTC7, label: UNLOCK_BTN, identifier: REARRIGHT_CLOSE_BTN;UNLOCK_BTN}
 - {pin_num: '81', pin_signal: PTC6, label: REARRIGHT_CLOSE_BTN, identifier: REARRIGHT_CLOSE_BTN}
+- {pin_num: '9', pin_signal: PTE4, label: CAN_RX, identifier: CAN_RX}
+- {pin_num: '8', pin_signal: PTE5, label: CAN_TX, identifier: CAN_TX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -99,6 +101,8 @@ BOARD_InitPins:
   - {pin_num: '83', peripheral: PORTA, signal: 'port, 15', pin_signal: PTA15, direction: OUTPUT}
   - {pin_num: '82', peripheral: PORTA, signal: 'port, 16', pin_signal: PTA16, direction: OUTPUT}
   - {pin_num: '46', peripheral: ADC0, signal: 'se, 12', pin_signal: PTC14}
+  - {pin_num: '9', peripheral: CAN0, signal: 'rxd, rxd', pin_signal: PTE4}
+  - {pin_num: '8', peripheral: CAN0, signal: 'txd, txd', pin_signal: PTE5}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -522,6 +526,32 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .direction       = GPIO_OUTPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
+    },
+    {
+        .base            = PORTE,
+        .pinPortIdx      = 4U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_ALT5,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = NULL,
+        .digitalFilter   = false,
+    },
+    {
+        .base            = PORTE,
+        .pinPortIdx      = 5U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_ALT5,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = NULL,
+        .digitalFilter   = false,
     },
     {
         .base            = PORTE,
