@@ -19,6 +19,7 @@
 #include "clock_config.h"
 #include "pin_mux.h"
 #include "peripherals_FreeRTOS.h"
+#include "peripherals_adc_pal_1.h"
 
 
 #endif /* SDK_PROJECT_CONFIG_H_ */

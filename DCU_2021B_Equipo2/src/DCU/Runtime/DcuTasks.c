@@ -59,6 +59,7 @@ void app_task_100ms( void *pvParameters )
 
 	for( ;; )
 	{
+<<<<<<< HEAD
 
 
 
@@ -67,6 +68,9 @@ void app_task_100ms( void *pvParameters )
 
 
 
+=======
+		Adc_Run();
+>>>>>>> 193dd56c61d3b7fcb5f1bd5a4afe0ffab3c8470c
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
