@@ -24,7 +24,7 @@ void Button_Init(void)
 {
 	for(int i = 0; i < TOTAL_BUTTONS; i++)
 	{
-		memset(&ButtonList[i], 0, sizeof(ButtonList));
+		memset(&ButtonList[i], 0, sizeof(ButtonList[i]));
 		ButtonList[i].threshold1 = 5;
 		ButtonList[i].threshold2 = 50;
 	}
