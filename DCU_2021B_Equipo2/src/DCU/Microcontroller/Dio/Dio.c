@@ -17,8 +17,7 @@ void Dio_Init(void)
 
 	/* Init IO HAL */
 	PINS_DRV_Init(NUM_OF_CONFIGURED_PINS0,g_pin_mux_InitConfigArr0);
-	//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,0);
-	PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,0);
+
 }
 
 

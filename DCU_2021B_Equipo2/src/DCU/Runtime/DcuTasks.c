@@ -30,16 +30,13 @@
 
 #include "pins_driver.h"
 
-
-
 /*Local Macros______________________________________________________________*/
-#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2u )   //5
-#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2u )   //4
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
 
 
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
-
 
 /* ============================================================================
  * Function Name:app_task_100ms
@@ -57,26 +54,29 @@ void app_task_100ms( void *pvParameters )
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
 
+
+	ADC_VALUE antipinchresult;
+
 	for( ;; )
 	{
-<<<<<<< HEAD
 
 
-
-		//PINS_DRV_TogglePins(DOOR_LOCKED_PORT,1 << DOOR_LOCKED_PIN);
-
-
-
-
-=======
 		Adc_Run();
->>>>>>> 193dd56c61d3b7fcb5f1bd5a4afe0ffab3c8470c
+
+		antipinchresult = Adc_Get_AntiPinch_Value();
+
+		if(antipinchresult < 500){
+			PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,0);
+			PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
+		}
+		else
+			PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
+
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 500 );
-
+		vTaskDelayUntil( &xNextWakeTime, 100 );
 
 	}
 }
@@ -96,25 +96,23 @@ void app_task_10ms( void *pvParameters )
 
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
-	#ifdef TEST
+#ifdef TEST
 	uint8_t btn_state = 0;
 	PIN_VALUE openbtn, closebtn;
-	#endif
-	#ifdef TEST2
+#endif
+#ifdef TEST2
 	PIN_VALUES led_data;
 	uint8_t leds_state = 0;
-	#endif
+#endif
 	for( ;; )
 	{
 
 		//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
 
-
-
-		#ifdef TEST
+#ifdef TEST
 		switch(btn_state)
 		{
-			case 0:
+		case 0:
 			openbtn = Dio_Read_WindowOpen_Button();
 			if(openbtn == DIO_HIGH)
 			{
@@ -129,7 +127,7 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-			case 1:
+		case 1:
 			closebtn = Dio_Read_WindowClose_Button();
 			if(closebtn == DIO_HIGH)
 			{
@@ -139,43 +137,40 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-			default:
-				btn_state = 0;
-				break;
+		default:
+			btn_state = 0;
+			break;
 		}
-		#endif
+#endif
 
 
 
-		#ifdef TEST2
+#ifdef TEST2
 		switch(leds_state)
 		{
-			case 0:
-				led_data = 0x3FF;
-				Dio_Write_Window_Leds(led_data);
-				leds_state = 1;
-				break;
+		case 0:
+			led_data = 0x3FF;
+			Dio_Write_Window_Leds(led_data);
+			leds_state = 1;
+			break;
 
-			case 1:
+		case 1:
 
-				break;
+			break;
 
-			default:
-				leds_state = 0;
-				break;
+		default:
+			leds_state = 0;
+			break;
 		}
-		#endif
+#endif
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
 		vTaskDelayUntil( &xNextWakeTime, 2000 );
 
-
-
 	}
 }
-
 
 
 void Tasks_StartOS(void)
@@ -193,13 +188,13 @@ void Tasks_StartOS(void)
 
 void init_hook(void) {
 
-    Mcu_Init();
+	Mcu_Init();
 
 	Wdg_Init();
 
-    Dio_Init();
+	Dio_Init();
 
-    Adc_Init();
+	Adc_Init();
 
 	Tasks_StartOS();
 }

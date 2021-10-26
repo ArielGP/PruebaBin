@@ -403,11 +403,24 @@
                   <data type="Version">1.0.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.adc_pal" description="ADC PAL not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.adc_pal" description="Unsupported version of the ADC PAL in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">1.0.0</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
             <file path="board/FreeRTOSConfig.h" update_enabled="true"/>
+            <file path="board/adc_pal_cfg.h" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.c" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.h" update_enabled="true"/>
+            <file path="board/peripherals_adc_pal_1.c" update_enabled="true"/>
+            <file path="board/peripherals_adc_pal_1.h" update_enabled="true"/>
             <file path="board/sdk_project_config.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
@@ -513,6 +526,42 @@
                         </struct>
                         <struct name="us_tab">
                            <setting name="configUSER_SETTINGS" value=""/>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="adc_pal_1" uuid="77d751e0-32ba-4b9d-a231-56e76a806ab3" type="adc_pal_config" type_id="adc_pal" mode="general" peripheral="ADC_0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="adc_pal">
+                        <struct name="adcPalConfig">
+                           <setting name="name" value="adc_pal_1_config"/>
+                           <setting name="readOnly" value="true"/>
+                           <setting name="sampleTicks" value="30"/>
+                           <setting name="extensionName" value="adc_pal_1_extensionConfig"/>
+                           <setting name="adcClkDiv" value="ADC_CLK_DIVIDE_1"/>
+                           <setting name="adcResolution" value="ADC_RESOLUTION_10BIT"/>
+                           <setting name="adcInputClock" value="ADC_CLK_ALT_1"/>
+                           <setting name="adcVoltageRef" value="ADC_VOLTAGEREF_VREF"/>
+                           <setting name="adcSupplyMonitoringEnable" value="false"/>
+                           <setting name="adcPDBPrescaler" value="PDB_CLK_PREDIV_BY_1"/>
+                           <setting name="conversionGroupArrayName" value="adc_pal_1_groupArray"/>
+                           <array name="conversionGroupArray">
+                              <struct name="0">
+                                 <setting name="numSetsResults" value="1"/>
+                                 <setting name="hwTriggerSupport" value="false"/>
+                                 <setting name="triggerSource" value="TRGMUX_TRIG_SOURCE_DISABLED"/>
+                                 <setting name="delayType" value="ADC_DELAY_TYPE_NO_DELAY"/>
+                                 <setting name="continuousConvEn" value="true"/>
+                                 <setting name="callback" value="NULL"/>
+                                 <setting name="callbackUserData" value="NULL"/>
+                                 <setting name="resultsName" value="adc_pal_1_results0"/>
+                                 <setting name="chansArrayName" value="adc_pal_1_channelsArray0"/>
+                                 <array name="inputChannelArray">
+                                    <struct name="0">
+                                       <setting name="adcInputChannel" value="ADC_INPUTCHAN_EXT12"/>
+                                       <setting name="chanDelay" value="0"/>
+                                    </struct>
+                                 </array>
+                              </struct>
+                           </array>
                         </struct>
                      </config_set>
                   </instance>

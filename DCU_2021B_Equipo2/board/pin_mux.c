@@ -40,7 +40,6 @@ pin_labels:
 - {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
 - {pin_num: '80', pin_signal: PTC7, label: UNLOCK_BTN, identifier: REARRIGHT_CLOSE_BTN;UNLOCK_BTN}
 - {pin_num: '81', pin_signal: PTC6, label: REARRIGHT_CLOSE_BTN, identifier: REARRIGHT_CLOSE_BTN}
-- {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -99,7 +98,6 @@ BOARD_InitPins:
   - {pin_num: '84', peripheral: PORTE, signal: 'port, 6', pin_signal: PTE6, direction: OUTPUT}
   - {pin_num: '83', peripheral: PORTA, signal: 'port, 15', pin_signal: PTA15, direction: OUTPUT}
   - {pin_num: '82', peripheral: PORTA, signal: 'port, 16', pin_signal: PTA16, direction: OUTPUT}
-  - {pin_num: '46', peripheral: ADC0, signal: 'se, 12', pin_signal: PTC14}
   - {pin_num: '46', peripheral: ADC0, signal: 'se, 12', pin_signal: PTC14}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */

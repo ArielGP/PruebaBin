@@ -6,7 +6,7 @@
  */
 #include "BasicTypes.h"
 #include "DoorApp.h"
-#include "Signals.h"
+//#include "Signals.h"
 #include "Button.h"
 #include "Door.h"
 #include "HwConfig.h"
