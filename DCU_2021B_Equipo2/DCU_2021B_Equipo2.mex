@@ -26,17 +26,13 @@
             <pin_labels>
                <pin_label pin_num="68" pin_signal="PTB12" label="WINDOW_LED2" identifier="WINDOW_LED2"/>
                <pin_label pin_num="49" pin_signal="PTC13" label="CLOSE_BTN" identifier="CLOSE_BTN"/>
-               <pin_label pin_num="16" pin_signal="PTB6" label="PASSENGER_OPEN_BTN" identifier="PASSENGER_OPEN_BTN"/>
-               <pin_label pin_num="15" pin_signal="PTB7" label="PASSENGER_CLOSE_BTN" identifier="PASSENGER_CLOSE_BTN"/>
                <pin_label pin_num="94" pin_signal="PTE0" label="REARLEFT_OPEN_BTN" identifier="REARLEFT_OPEN_BTN"/>
                <pin_label pin_num="23" pin_signal="PTE9" label="REARLEFT_CLOSE_BTN" identifier="REARLEFT_CLOSE_BTN"/>
                <pin_label pin_num="95" pin_signal="PTC5" label="REARRIGHT_OPEN_BTN" identifier="REARRIGHT_OPEN_BTN"/>
-               <pin_label pin_num="96" pin_signal="PTC4" label="REARRIGHT_CLOSE_BTN" identifier="REARRIGHT_CLOSE_BTN"/>
                <pin_label pin_num="50" pin_signal="PTC12" label="OPEN_BTN" identifier="OPEN_BTN"/>
                <pin_label pin_num="32" pin_signal="PTD6" label="SW_WINDOW_OPEN" identifier="SW_WINDOW_OPEN"/>
                <pin_label pin_num="31" pin_signal="PTD7" label="SW_WINDOW_CLOSE" identifier="SW_WINDOW_CLOSE"/>
                <pin_label pin_num="92" pin_signal="PTA10" label="LOCK_BTN" identifier="LOCK_BTN"/>
-               <pin_label pin_num="98" pin_signal="PTA4" label="UNLOCK_BTN" identifier="UNLOCK_BTN"/>
                <pin_label pin_num="71" pin_signal="PTD2" label="SW_DOOR_LOCKED" identifier="SW_DOOR_LOCKED"/>
                <pin_label pin_num="4" pin_signal="PTD0" label="SW_DOOR_UNLOCKED" identifier="SW_DOOR_UNLOCKED"/>
                <pin_label pin_num="22" pin_signal="PTD15" label="DOOR_LOCKED" identifier="DOOR_LOCKED"/>
@@ -54,6 +50,12 @@
                <pin_label pin_num="83" pin_signal="PTA15" label="WINDOW_LED9" identifier="WINDOW_LED9"/>
                <pin_label pin_num="82" pin_signal="PTA16" label="WINDOW_LED10" identifier="WINDOW_LED10"/>
                <pin_label pin_num="46" pin_signal="PTC14" label="ANTIPINCH_SIGNAL" identifier="ANTIPINCH_SIGNAL"/>
+               <pin_label pin_num="9" pin_signal="PTE4" label="CAN_RX" identifier="CAN_RX"/>
+               <pin_label pin_num="8" pin_signal="PTE5" label="CAN_TX" identifier="CAN_TX"/>
+               <pin_label pin_num="81" pin_signal="PTC6" label="REARRIGHT_CLOSE_BTN" identifier="REARRIGHT_CLOSE_BTN"/>
+               <pin_label pin_num="63" pin_signal="PTB17" label="UNLOCK_BTN" identifier="UNLOCK_BTN"/>
+               <pin_label pin_num="66" pin_signal="PTB14" label="PASSENGER_OPEN_BTN" identifier="PASSENGER_OPEN_BTN"/>
+               <pin_label pin_num="65" pin_signal="PTB15" label="PASSENGER_CLOSE_BTN" identifier="PASSENGER_CLOSE_BTN"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -88,21 +90,6 @@
                   <pin peripheral="PORTE" signal="port, 9" pin_num="23" pin_signal="PTE9">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="PORTC" signal="port, 4" pin_num="96" pin_signal="PTC4">
-                     <pin_features>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="PORTB" signal="port, 6" pin_num="16" pin_signal="PTB6">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="PORTB" signal="port, 7" pin_num="15" pin_signal="PTB7">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="PORTE" signal="port, 0" pin_num="94" pin_signal="PTE0">
@@ -165,11 +152,6 @@
                         <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="PORTA" signal="port, 4" pin_num="98" pin_signal="PTA4">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                     </pin_features>
-                  </pin>
                   <pin peripheral="PORTD" signal="port, 4" pin_num="69" pin_signal="PTD4">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
@@ -216,6 +198,29 @@
                      </pin_features>
                   </pin>
                   <pin peripheral="ADC0" signal="se, 12" pin_num="46" pin_signal="PTC14"/>
+                  <pin peripheral="CAN0" signal="rxd, rxd" pin_num="9" pin_signal="PTE4"/>
+                  <pin peripheral="CAN0" signal="txd, txd" pin_num="8" pin_signal="PTE5"/>
+                  <pin peripheral="ADC1" signal="se, 5" pin_num="80" pin_signal="PTC7"/>
+                  <pin peripheral="PORTC" signal="port, 6" pin_num="81" pin_signal="PTC6">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="PORTB" signal="port, 14" pin_num="66" pin_signal="PTB14">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="PORTB" signal="port, 17" pin_num="63" pin_signal="PTB17">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="PORTB" signal="port, 15" pin_num="65" pin_signal="PTB15">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -405,11 +410,49 @@
                   <data type="Version">1.0.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.can_pal" description="CAN_PAL Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.can_pal" description="Unsupported version of the CAN_PAL Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">1.0.0</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.driver.osif" description="OSIF driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.driver.osif" description="Unsupported version of the OSIF driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">1.0.0</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.adc_pal" description="ADC PAL not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.pal.adc_pal" description="Unsupported version of the ADC PAL in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">1.0.0</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
             <file path="board/FreeRTOSConfig.h" update_enabled="true"/>
+            <file path="board/adc_pal_cfg.h" update_enabled="true"/>
+            <file path="board/can_pal_cfg.h" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.c" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.h" update_enabled="true"/>
+            <file path="board/peripherals_adc_pal_1.c" update_enabled="true"/>
+            <file path="board/peripherals_adc_pal_1.h" update_enabled="true"/>
+            <file path="board/peripherals_can_pal_1.c" update_enabled="true"/>
+            <file path="board/peripherals_can_pal_1.h" update_enabled="true"/>
+            <file path="board/peripherals_osif_1.c" update_enabled="true"/>
+            <file path="board/peripherals_osif_1.h" update_enabled="true"/>
             <file path="board/sdk_project_config.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
@@ -515,6 +558,84 @@
                         </struct>
                         <struct name="us_tab">
                            <setting name="configUSER_SETTINGS" value=""/>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="can_pal_1" uuid="57d78a05-39e5-480e-ab29-959d3136e1ef" type="can_pal_config" type_id="can_pal" mode="general" peripheral="CAN0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="can_pal" quick_selection="dv_can_pal0">
+                        <struct name="can_instance_t2">
+                           <setting name="name" value="can_instance0"/>
+                           <setting name="readonly" value="false"/>
+                           <setting name="instType" value="CAN_INST_TYPE_FLEXCAN"/>
+                        </struct>
+                        <struct name="can_user_config_t2">
+                           <setting name="name" value="can_config0"/>
+                           <setting name="readonly" value="false"/>
+                           <setting name="maxBuffNum" value="16"/>
+                           <setting name="mode" value="CAN_NORMAL_MODE"/>
+                           <setting name="peClkSrc" value="CAN_CLK_SOURCE_OSC"/>
+                           <setting name="enableFD" value="false"/>
+                           <setting name="payloadSize" value="CAN_PAYLOAD_SIZE_8"/>
+                           <setting name="can_bitrate2ts" value="false"/>
+                           <struct name="flexcan_cfg_time_segments1">
+                              <struct name="nominalBitrate">
+                                 <setting name="propSeg" value="7"/>
+                                 <setting name="phaseSeg1" value="4"/>
+                                 <setting name="phaseSeg2" value="1"/>
+                                 <setting name="preDivider" value="0"/>
+                                 <setting name="rJumpwidth" value="1"/>
+                              </struct>
+                              <struct name="dataBitrate"/>
+                           </struct>
+                        </struct>
+                        <struct name="can_fifo_ext2">
+                           <setting name="isRxFIFO_Enable" value="false"/>
+                           <setting name="name" value="can_fifo_ext0"/>
+                           <struct name="struct_extension">
+                              <setting name="readonly" value="false"/>
+                              <setting name="numIdFilters" value="FLEXCAN_RX_FIFO_ID_FILTERS_8"/>
+                              <setting name="idFormat" value="FLEXCAN_RX_FIFO_ID_FORMAT_A"/>
+                              <setting name="idFilterTable" value="NULL"/>
+                           </struct>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="osif_1" uuid="5529288c-1183-42b4-a44d-761a171dcd6b" type="osif" type_id="osif" mode="general" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="osif"/>
+                  </instance>
+                  <instance name="adc_pal_1" uuid="87bc340d-e048-4819-a97a-30b5850e98cb" type="adc_pal_config" type_id="adc_pal" mode="general" peripheral="ADC_0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="adc_pal">
+                        <struct name="adcPalConfig">
+                           <setting name="name" value="adc_pal_1_config"/>
+                           <setting name="readOnly" value="true"/>
+                           <setting name="sampleTicks" value="30"/>
+                           <setting name="extensionName" value="adc_pal_1_extensionConfig"/>
+                           <setting name="adcClkDiv" value="ADC_CLK_DIVIDE_1"/>
+                           <setting name="adcResolution" value="ADC_RESOLUTION_10BIT"/>
+                           <setting name="adcInputClock" value="ADC_CLK_ALT_1"/>
+                           <setting name="adcVoltageRef" value="ADC_VOLTAGEREF_VREF"/>
+                           <setting name="adcSupplyMonitoringEnable" value="false"/>
+                           <setting name="adcPDBPrescaler" value="PDB_CLK_PREDIV_BY_1"/>
+                           <setting name="conversionGroupArrayName" value="adc_pal_1_groupArray"/>
+                           <array name="conversionGroupArray">
+                              <struct name="0">
+                                 <setting name="numSetsResults" value="1"/>
+                                 <setting name="hwTriggerSupport" value="false"/>
+                                 <setting name="triggerSource" value="TRGMUX_TRIG_SOURCE_DISABLED"/>
+                                 <setting name="delayType" value="ADC_DELAY_TYPE_NO_DELAY"/>
+                                 <setting name="continuousConvEn" value="true"/>
+                                 <setting name="callback" value="NULL"/>
+                                 <setting name="callbackUserData" value="NULL"/>
+                                 <setting name="resultsName" value="adc_pal_1_results0"/>
+                                 <setting name="chansArrayName" value="adc_pal_1_channelsArray0"/>
+                                 <array name="inputChannelArray">
+                                    <struct name="0">
+                                       <setting name="adcInputChannel" value="ADC_INPUTCHAN_EXT12"/>
+                                       <setting name="chanDelay" value="0"/>
+                                    </struct>
+                                 </array>
+                              </struct>
+                           </array>
                         </struct>
                      </config_set>
                   </instance>

@@ -10,17 +10,13 @@ processor_version: 0.0.0
 pin_labels:
 - {pin_num: '68', pin_signal: PTB12, label: WINDOW_LED2, identifier: WINDOW_LED2}
 - {pin_num: '49', pin_signal: PTC13, label: CLOSE_BTN, identifier: CLOSE_BTN}
-- {pin_num: '16', pin_signal: PTB6, label: PASSENGER_OPEN_BTN, identifier: PASSENGER_OPEN_BTN}
-- {pin_num: '15', pin_signal: PTB7, label: PASSENGER_CLOSE_BTN, identifier: PASSENGER_CLOSE_BTN}
 - {pin_num: '94', pin_signal: PTE0, label: REARLEFT_OPEN_BTN, identifier: REARLEFT_OPEN_BTN}
 - {pin_num: '23', pin_signal: PTE9, label: REARLEFT_CLOSE_BTN, identifier: REARLEFT_CLOSE_BTN}
 - {pin_num: '95', pin_signal: PTC5, label: REARRIGHT_OPEN_BTN, identifier: REARRIGHT_OPEN_BTN}
-- {pin_num: '96', pin_signal: PTC4, label: REARRIGHT_CLOSE_BTN, identifier: REARRIGHT_CLOSE_BTN}
 - {pin_num: '50', pin_signal: PTC12, label: OPEN_BTN, identifier: OPEN_BTN}
 - {pin_num: '32', pin_signal: PTD6, label: SW_WINDOW_OPEN, identifier: SW_WINDOW_OPEN}
 - {pin_num: '31', pin_signal: PTD7, label: SW_WINDOW_CLOSE, identifier: SW_WINDOW_CLOSE}
 - {pin_num: '92', pin_signal: PTA10, label: LOCK_BTN, identifier: LOCK_BTN}
-- {pin_num: '98', pin_signal: PTA4, label: UNLOCK_BTN, identifier: UNLOCK_BTN}
 - {pin_num: '71', pin_signal: PTD2, label: SW_DOOR_LOCKED, identifier: SW_DOOR_LOCKED}
 - {pin_num: '4', pin_signal: PTD0, label: SW_DOOR_UNLOCKED, identifier: SW_DOOR_UNLOCKED}
 - {pin_num: '22', pin_signal: PTD15, label: DOOR_LOCKED, identifier: DOOR_LOCKED}
@@ -38,6 +34,10 @@ pin_labels:
 - {pin_num: '83', pin_signal: PTA15, label: WINDOW_LED9, identifier: WINDOW_LED9}
 - {pin_num: '82', pin_signal: PTA16, label: WINDOW_LED10, identifier: WINDOW_LED10}
 - {pin_num: '46', pin_signal: PTC14, label: ANTIPINCH_SIGNAL, identifier: ANTIPINCH_SIGNAL}
+- {pin_num: '81', pin_signal: PTC6, label: REARRIGHT_CLOSE_BTN, identifier: REARRIGHT_CLOSE_BTN}
+- {pin_num: '63', pin_signal: PTB17, label: UNLOCK_BTN, identifier: UNLOCK_BTN}
+- {pin_num: '66', pin_signal: PTB14, label: PASSENGER_OPEN_BTN, identifier: PASSENGER_OPEN_BTN}
+- {pin_num: '65', pin_signal: PTB15, label: PASSENGER_CLOSE_BTN, identifier: PASSENGER_CLOSE_BTN}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -72,9 +72,6 @@ BOARD_InitPins:
   - {pin_num: '40', peripheral: PORTC, signal: 'port, 0', pin_signal: PTC0, direction: OUTPUT}
   - {pin_num: '39', peripheral: PORTC, signal: 'port, 1', pin_signal: PTC1, direction: OUTPUT}
   - {pin_num: '23', peripheral: PORTE, signal: 'port, 9', pin_signal: PTE9, direction: OUTPUT}
-  - {pin_num: '96', peripheral: PORTC, signal: 'port, 4', pin_signal: PTC4, direction: OUTPUT}
-  - {pin_num: '16', peripheral: PORTB, signal: 'port, 6', pin_signal: PTB6, direction: INPUT}
-  - {pin_num: '15', peripheral: PORTB, signal: 'port, 7', pin_signal: PTB7, direction: INPUT}
   - {pin_num: '94', peripheral: PORTE, signal: 'port, 0', pin_signal: PTE0, direction: INPUT}
   - {pin_num: '95', peripheral: PORTC, signal: 'port, 5', pin_signal: PTC5, direction: INPUT}
   - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT}
@@ -87,7 +84,6 @@ BOARD_InitPins:
   - {pin_num: '70', peripheral: PORTD, signal: 'port, 3', pin_signal: PTD3, direction: INPUT}
   - {pin_num: '3', peripheral: PORTD, signal: 'port, 1', pin_signal: PTD1, direction: INPUT}
   - {pin_num: '32', peripheral: PORTD, signal: 'port, 6', pin_signal: PTD6, direction: OUTPUT}
-  - {pin_num: '98', peripheral: PORTA, signal: 'port, 4', pin_signal: PTA4, direction: INPUT}
   - {pin_num: '69', peripheral: PORTD, signal: 'port, 4', pin_signal: PTD4, direction: OUTPUT}
   - {pin_num: '68', peripheral: PORTB, signal: 'port, 12', pin_signal: PTB12, direction: OUTPUT}
   - {pin_num: '54', peripheral: PORTB, signal: 'port, 0', pin_signal: PTB0, direction: OUTPUT}
@@ -98,6 +94,10 @@ BOARD_InitPins:
   - {pin_num: '83', peripheral: PORTA, signal: 'port, 15', pin_signal: PTA15, direction: OUTPUT}
   - {pin_num: '82', peripheral: PORTA, signal: 'port, 16', pin_signal: PTA16, direction: OUTPUT}
   - {pin_num: '46', peripheral: ADC0, signal: 'se, 12', pin_signal: PTC14}
+  - {pin_num: '81', peripheral: PORTC, signal: 'port, 6', pin_signal: PTC6, direction: INPUT}
+  - {pin_num: '63', peripheral: PORTB, signal: 'port, 17', pin_signal: PTB17, direction: INPUT}
+  - {pin_num: '66', peripheral: PORTB, signal: 'port, 14', pin_signal: PTB14, direction: INPUT}
+  - {pin_num: '65', peripheral: PORTB, signal: 'port, 15', pin_signal: PTB15, direction: INPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -146,21 +146,6 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .clearIntFlag    = false,
         .gpioBase        = PTA,
         .direction       = GPIO_OUTPUT_DIRECTION,
-        .digitalFilter   = false,
-        .initValue       = 0U,
-    },
-    {
-        .base            = PORTA,
-        .pinPortIdx      = 4U,
-        .pullConfig      = PORT_INTERNAL_PULL_UP_ENABLED,
-        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
-        .passiveFilter   = false,
-        .mux             = PORT_MUX_AS_GPIO,
-        .pinLock         = false,
-        .intConfig       = PORT_DMA_INT_DISABLED,
-        .clearIntFlag    = false,
-        .gpioBase        = PTA,
-        .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },
@@ -226,7 +211,7 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     },
     {
         .base            = PORTB,
-        .pinPortIdx      = 6U,
+        .pinPortIdx      = 14U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
@@ -241,7 +226,22 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     },
     {
         .base            = PORTB,
-        .pinPortIdx      = 7U,
+        .pinPortIdx      = 15U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_AS_GPIO,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = PTB,
+        .direction       = GPIO_INPUT_DIRECTION,
+        .digitalFilter   = false,
+        .initValue       = 0U,
+    },
+    {
+        .base            = PORTB,
+        .pinPortIdx      = 17U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
@@ -344,8 +344,8 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     },
     {
         .base            = PORTC,
-        .pinPortIdx      = 4U,
-        .pullConfig      = PORT_INTERNAL_PULL_DOWN_ENABLED,
+        .pinPortIdx      = 5U,
+        .pullConfig      = PORT_INTERNAL_PULL_UP_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
         .mux             = PORT_MUX_AS_GPIO,
@@ -353,14 +353,14 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .intConfig       = PORT_DMA_INT_DISABLED,
         .clearIntFlag    = false,
         .gpioBase        = PTC,
-        .direction       = GPIO_OUTPUT_DIRECTION,
+        .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },
     {
         .base            = PORTC,
-        .pinPortIdx      = 5U,
-        .pullConfig      = PORT_INTERNAL_PULL_UP_ENABLED,
+        .pinPortIdx      = 6U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
         .mux             = PORT_MUX_AS_GPIO,
