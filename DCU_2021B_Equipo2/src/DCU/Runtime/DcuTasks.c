@@ -43,6 +43,20 @@ uint8_t btn_state = 0;
 BUTTON_STATUS openbtn, closebtn;
 #endif
 
+	#ifdef TEST
+	uint8_t btn_state = 0;
+	PIN_VALUE openbtn, closebtn;
+	#endif
+	#ifdef TEST2
+	PIN_VALUES led_data;
+	uint8_t leds_state = 0;
+	#endif
+	#ifdef TEST3
+	uint8_t btn_state = 0;
+	BUTTON_STATUS openbtn, closebtn;
+	#endif
+
+
 /*Local Macros______________________________________________________________*/
 #define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
 #define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY)//4
@@ -113,6 +127,7 @@ void app_task_10ms( void *pvParameters )
 		switch(btn_state)
 		{
 			case 0:
+
 			openbtn = Dio_Read_WindowOpen_Button();
 			if(openbtn == DIO_HIGH)
 			{
@@ -127,7 +142,9 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
+
 			case 1:
+
 			closebtn = Dio_Read_WindowClose_Button();
 			if(closebtn == DIO_HIGH)
 			{
@@ -136,6 +153,7 @@ void app_task_10ms( void *pvParameters )
 				btn_state = 0;
 			}
 			break;
+
 
 			default:
 				btn_state = 0;

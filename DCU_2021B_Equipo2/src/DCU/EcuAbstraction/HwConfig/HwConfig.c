@@ -20,6 +20,8 @@ Jumper 0	Jumper 1	Variant Behavior
 1	          1	        RearRight Door
 */
 
+//Variable de HwConfig
+HW_CONFIG Hw_Config = HWCONFIG_UNKNOWN;
 
 //Variable de HwConfig
 HW_CONFIG Hw_Config = HWCONFIG_UNKNOWN;
@@ -58,3 +60,4 @@ boolean HwConfig_IsAny(HW_CONFIG config, HW_CONFIG config_mask)
 	(void)config_mask;
 	return FALSE;
 }
+
