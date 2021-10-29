@@ -5,7 +5,6 @@
  *      Author: uid87544
  */
 
-#include "sdk_project_config.h"
 
 #include "BasicTypes.h"
 #include "HwConfig.h"
@@ -31,16 +30,19 @@ void Signals_Init(void)
 void Signals_RunTx(void)
 {
 
-	uint8_t test_msg[5]={
+	uint8_t test_msg[8]={
 			0x01,
 			0x02,
 			0x03,
 			0x04,
-			0x05
+			0x05,
+			0x06,
+			0x07,
+			0x08
 	};
 
 
-	CANpal_send_CAN_message(0x02,5,test_msg);
+	CANpal_send_CAN_message(0x02,8,test_msg);
 
 
 }
@@ -447,5 +449,8 @@ void Signals_Set_DCU_4_CRC(t_DCU_4_CRC value)
 	(void) value;
 	CALVOS_CRITICAL_EXIT();
 }
+
+
+
 
 

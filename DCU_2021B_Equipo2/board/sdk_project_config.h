@@ -20,6 +20,7 @@
 #include "pin_mux.h"
 #include "peripherals_FreeRTOS.h"
 #include "peripherals_can_pal_1.h"
+#include "peripherals_osif_1.h"
 #include "peripherals_adc_pal_1.h"
 
 

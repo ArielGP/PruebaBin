@@ -7,7 +7,9 @@
 #include "BasicTypes.h"
 #include "HwConfig.h"
 #include "Dio.h"
+#include <stdio.h>
 
+#include "sdk_project_config.h"
 /*
 SW Variant Configuration will be done through 2 configuration jumpers.
 Depending on the state of the jumpers is the intended behavior of the DCU.
@@ -19,9 +21,35 @@ Jumper 0	Jumper 1	Variant Behavior
 */
 
 
+//Variable de HwConfig
+HW_CONFIG Hw_Config = HWCONFIG_UNKNOWN;
+
+void Hw_Config_Init(void)    /*READS DIP-SWITCH STATUS TO DEFINE HWCONFIG */
+{
+	volatile uint8_t sw_variant_1_value, sw_variant_0_value;
+		sw_variant_1_value = (PINS_DRV_ReadPins(SW_VARIANT_1_PORT) >> SW_VARIANT_1_PIN) & 1u;
+		sw_variant_0_value = (PINS_DRV_ReadPins(SW_VARIANT_0_PORT) >> SW_VARIANT_0_PIN) & 1u;
+		if(sw_variant_1_value == 0 && sw_variant_0_value == 0)
+		{
+			Hw_Config = HWCONFIG_DRIVER;
+		}
+		if(sw_variant_1_value == 1 && sw_variant_0_value == 0)
+		{
+			Hw_Config = HWCONFIG_PASSENGER;
+		}
+		if(sw_variant_1_value == 0 && sw_variant_0_value == 1)
+		{
+			Hw_Config = HWCONFIG_REAR_LEFT;
+		}
+		if(sw_variant_1_value == 1 && sw_variant_0_value == 1)
+		{
+			Hw_Config = HWCONFIG_REAR_RIGHT;
+		}
+}
+
 HW_CONFIG HwConfig_Get(void)
 {
-	return HWCONFIG_UNKNOWN;
+	return Hw_Config;
 }
 
 

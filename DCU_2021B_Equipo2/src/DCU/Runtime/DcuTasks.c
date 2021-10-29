@@ -26,18 +26,35 @@
 #include "Adc.h"
 #include "Dio.h"
 #include "DcuTasks.h"
+#include "Signals.h"
+#include "HwConfig.h"
 
 
-#include "pins_driver.h"
+#ifdef TEST
+uint8_t btn_state = 0;
+PIN_VALUE openbtn, closebtn;
+#endif
+#ifdef TEST2
+PIN_VALUES led_data;
+uint8_t leds_state = 0;
+#endif
+#ifdef TEST3
+uint8_t btn_state = 0;
+BUTTON_STATUS openbtn, closebtn;
+#endif
 
 /*Local Macros______________________________________________________________*/
-#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
-#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
-#define app_20ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4u )
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY)//4
+#define app_20ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
+
+HW_CONFIG hwversion;
+
 
 
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
+
 
 /* ============================================================================
  * Function Name:app_task_100ms
@@ -55,24 +72,8 @@ void app_task_100ms( void *pvParameters )
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
 
-
-	ADC_VALUE antipinchresult;
-
 	for( ;; )
 	{
-
-
-		Adc_Run();
-
-		antipinchresult = Adc_Get_AntiPinch_Value();
-
-		if(antipinchresult < 500){
-			PINS_DRV_WritePin(DOOR_UNLOCKED_PORT,DOOR_UNLOCKED_PIN,1);
-			PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
-			//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
-		}
-		else
-			PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
@@ -98,23 +99,20 @@ void app_task_10ms( void *pvParameters )
 
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
-#ifdef TEST
-	uint8_t btn_state = 0;
-	PIN_VALUE openbtn, closebtn;
-#endif
-#ifdef TEST2
-	PIN_VALUES led_data;
-	uint8_t leds_state = 0;
-#endif
+
+
+
 	for( ;; )
 	{
 
-		//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
+		Signals_RunTx();
 
-#ifdef TEST
+		Button_Run();
+		/*
+		#ifdef TEST
 		switch(btn_state)
 		{
-		case 0:
+			case 0:
 			openbtn = Dio_Read_WindowOpen_Button();
 			if(openbtn == DIO_HIGH)
 			{
@@ -129,13 +127,70 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-		case 1:
+			case 1:
 			closebtn = Dio_Read_WindowClose_Button();
 			if(closebtn == DIO_HIGH)
 			{
 				Dio_Write_DoorLock_Led(DIO_LOW);
 				Dio_Write_DoorUnlock_Led(DIO_HIGH);
+				btn_state = 0;
+			}
+			break;
+
+			default:
+				btn_state = 0;
+				break;
+		}
+		#endif
+
+		#ifdef TEST2
+		switch(leds_state)
+		{
+			case 0:
+				//led_data = 0x3FF;
+				led_data = 0x0000001F;
+				Dio_Write_Window_Leds(led_data);
+				leds_state = 1;
+				break;
+
+			case 1:
+
+				break;
+
+			default:
+				leds_state = 0;
+				break;
+		}
+		#endif
+		 */
+#ifdef TEST3
+		switch(btn_state)
+		{
+		case 0:
+			openbtn = Button_Get_Window_Open();
+			if(openbtn == BUTTON_PRESSED)
+			{
+				Dio_Write_DoorLock_Led(DIO_HIGH);
 				btn_state = 1;
+			}
+			else if(openbtn == BUTTON_LONG_PRESSED)
+			{
+				Dio_Write_DoorUnlock_Led(DIO_HIGH);
+				btn_state = 1;
+			}
+			break;
+
+		case 1:
+			closebtn = Button_Get_Window_Close();
+			if(closebtn == BUTTON_PRESSED)
+			{
+				Dio_Write_DoorLock_Led(DIO_LOW);
+				btn_state = 0;
+			}
+			if(closebtn == BUTTON_LONG_PRESSED)
+			{
+				Dio_Write_DoorUnlock_Led(DIO_LOW);
+				btn_state = 0;
 			}
 			break;
 
@@ -145,38 +200,18 @@ void app_task_10ms( void *pvParameters )
 		}
 #endif
 
+		/*CAN running*/
 
-
-#ifdef TEST2
-		switch(leds_state)
-		{
-		case 0:
-			led_data = 0x3FF;
-			Dio_Write_Window_Leds(led_data);
-			leds_state = 1;
-			break;
-
-		case 1:
-
-			break;
-
-		default:
-			leds_state = 0;
-			break;
-		}
-#endif
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 2000 );
+		vTaskDelayUntil( &xNextWakeTime, 10 );
 
 	}
 }
-
-
 /* ============================================================================
- * Function Name:app_task_20ms
+ * Function Name:app_task_200ms
  * Description:It is a periodic task task that runs each 100ms
  * Arguments: void *pvParameters
  * Return:void
@@ -193,10 +228,9 @@ void app_task_20ms( void *pvParameters )
 
 	for( ;; )
 	{
-
-
 		/*CAN running*/
-		Signals_RunTx();
+		Signals_RunRx();
+
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
@@ -211,10 +245,9 @@ void app_task_20ms( void *pvParameters )
 void Tasks_StartOS(void)
 {
 
-	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE, NULL,app_100ms_TASK_PRIORITY, NULL);
-	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE, NULL,app_10ms_TASK_PRIORITY,  NULL);
-	(void) xTaskCreate(app_task_20ms,    "App20ms",         configMINIMAL_STACK_SIZE, NULL,app_20ms_TASK_PRIORITY,  NULL);
-
+	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE , NULL,  app_100ms_TASK_PRIORITY, NULL);
+	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE + 10 , NULL,  app_10ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(app_task_20ms,    "App20ms",         configMINIMAL_STACK_SIZE + 10 , NULL,  app_20ms_TASK_PRIORITY,  NULL);
 
 	Mpu_Init();
 
@@ -232,11 +265,13 @@ void init_hook(void) {
 
 	Adc_Init();
 
-	/*Button init()*/
-
-
+	Button_Init();
 
 	Signals_Init();
 
+	Hw_Config_Init();
+
 	Tasks_StartOS();
 }
+
+
