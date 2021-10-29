@@ -28,7 +28,20 @@
 #include "DcuTasks.h"
 
 
-#include "pins_driver.h"
+
+	#ifdef TEST
+	uint8_t btn_state = 0;
+	PIN_VALUE openbtn, closebtn;
+	#endif
+	#ifdef TEST2
+	PIN_VALUES led_data;
+	uint8_t leds_state = 0;
+	#endif
+	#ifdef TEST3
+	uint8_t btn_state = 0;
+	BUTTON_STATUS openbtn, closebtn;
+	#endif
+
 
 /*Local Macros______________________________________________________________*/
 #define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 5u )
@@ -108,12 +121,13 @@ void app_task_10ms( void *pvParameters )
 	for( ;; )
 	{
 
-		//PINS_DRV_WritePin(DOOR_LOCKED_PORT,DOOR_LOCKED_PIN,1);
+		Button_Run();
 
-#ifdef TEST
+		#ifdef TEST
 		switch(btn_state)
 		{
-		case 0:
+			case 0:
+
 			openbtn = Dio_Read_WindowOpen_Button();
 			if(openbtn == DIO_HIGH)
 			{
@@ -128,7 +142,9 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-		case 1:
+
+			case 1:
+
 			closebtn = Dio_Read_WindowClose_Button();
 			if(closebtn == DIO_HIGH)
 			{
@@ -138,32 +154,68 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-		default:
-			btn_state = 0;
-			break;
+
+			default:
+				btn_state = 0;
+				break;
 		}
-#endif
+		#endif
 
-
-
-#ifdef TEST2
+		#ifdef TEST2
 		switch(leds_state)
 		{
-		case 0:
-			led_data = 0x3FF;
-			Dio_Write_Window_Leds(led_data);
-			leds_state = 1;
-			break;
+			case 0:
+				led_data = 0x3FF;
+				Dio_Write_Window_Leds(led_data);
+				leds_state = 1;
+				break;
 
-		case 1:
+			case 1:
 
-			break;
+				break;
 
-		default:
-			leds_state = 0;
-			break;
+			default:
+				leds_state = 0;
+				break;
 		}
-#endif
+		#endif
+		#ifdef TEST3
+		switch(btn_state)
+		{
+			case 0:
+			openbtn = Button_Get_Window_Open();
+			if(openbtn == BUTTON_PRESSED)
+			{
+				Dio_Write_DoorLock_Led(DIO_HIGH);
+				btn_state = 1;
+			}
+			else if(openbtn == BUTTON_LONG_PRESSED)
+			{
+				Dio_Write_DoorUnlock_Led(DIO_HIGH);
+				btn_state = 1;
+			}
+			break;
+
+			case 1:
+			closebtn = Dio_Read_WindowClose_Button();
+			if(closebtn == BUTTON_PRESSED)
+			{
+				Dio_Write_DoorLock_Led(DIO_LOW);
+				btn_state = 0;
+			}
+			if(closebtn == BUTTON_LONG_PRESSED)
+			{
+				Dio_Write_DoorUnlock_Led(DIO_LOW);
+				btn_state = 0;
+			}
+			break;
+
+			default:
+				btn_state = 0;
+				break;
+		}
+		#endif
+
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
@@ -197,5 +249,9 @@ void init_hook(void) {
 
 	Adc_Init();
 
+    Button_Init();
+
 	Tasks_StartOS();
 }
+
+
