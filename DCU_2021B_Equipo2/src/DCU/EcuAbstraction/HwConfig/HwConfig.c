@@ -40,7 +40,7 @@ void HwConfig_Init(void)
 	{
 		Hw_Config = HWCONFIG_REAR_LEFT;
 	}
-	if(sw_variant_1_value == 0 && sw_variant_0_value == 1)
+	if(sw_variant_1_value == 1 && sw_variant_0_value == 1)
 	{
 		Hw_Config = HWCONFIG_REAR_RIGHT;
 	}
