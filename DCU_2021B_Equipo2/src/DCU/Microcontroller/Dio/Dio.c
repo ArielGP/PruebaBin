@@ -11,11 +11,13 @@
 #include "sdk_project_config.h"
 
 
+
 void Dio_Init(void)
 {
 
 	/* Init IO HAL */
 	PINS_DRV_Init(NUM_OF_CONFIGURED_PINS0,g_pin_mux_InitConfigArr0);
+
 }
 
 
@@ -28,6 +30,8 @@ void Dio_Write_DoorLock_Led(PIN_VALUE value)
 {
 	PINS_DRV_WritePin(DOOR_LOCKED_PORT, DOOR_LOCKED_PIN, (uint8_t) value);
 }
+
+
 
 PIN_VALUE Dio_Read_DoorUnlock(void)
 {
@@ -45,6 +49,9 @@ PIN_VALUE Dio_Read_DoorLock(void)
 }
 
 
+
+
+
 void Dio_Write_Window_Leds(PIN_VALUES values)
 {
 	values = values << 1;
@@ -59,6 +66,10 @@ void Dio_Write_Window_Leds(PIN_VALUES values)
 	PINS_DRV_WritePin(WINDOW_LED9_PORT, WINDOW_LED9_PIN,  (values & DIO_WINDOW_LED9) >> 9);
 	PINS_DRV_WritePin(WINDOW_LED10_PORT, WINDOW_LED10_PIN, (values & DIO_WINDOW_LED10) >> 10);
 }
+
+
+
+
 
 
 
@@ -87,6 +98,9 @@ PIN_VALUE Dio_Read_DoorLock_Button(void)
 	//return DIO_LOW;
 }
 
+
+
+
 PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 {
 	//PIN_VALUE drUnlockBtn = PINS_DRV_ReadPins(UNLOCK_BTN_PORT) >> (31 - UNLOCK_BTN_PIN);
@@ -94,6 +108,7 @@ PIN_VALUE Dio_Read_DoorUnlock_Button(void)
 	return drUnlockBtn;
 	//return DIO_LOW;
 }
+
 
 
 PIN_VALUE Dio_Read_WindowOpen_Button(void)
@@ -154,6 +169,8 @@ PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void)
 	//return DIO_LOW;
 }
 
+
+
 PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 {
 	//PIN_VALUE btn = PINS_DRV_ReadPins(REARRIGHT_CLOSE_BTN_PORT) >> (31 - REARRIGHT_CLOSE_BTN_PIN);
@@ -161,6 +178,7 @@ PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 	return btn;
 	//return DIO_LOW;
 }
+
 
 PIN_VALUE Dio_Read_RearWindowLock_Button(void)
 {
@@ -186,5 +204,6 @@ PIN_VALUE Dio_Read_Jumper1(void)
 	return jmp;
 	//return DIO_LOW;
 }
+
 
 

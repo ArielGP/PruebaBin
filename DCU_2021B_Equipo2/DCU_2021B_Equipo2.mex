@@ -604,7 +604,7 @@
                   <instance name="osif_1" uuid="5529288c-1183-42b4-a44d-761a171dcd6b" type="osif" type_id="osif" mode="general" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="osif"/>
                   </instance>
-                  <instance name="adc_pal_1" uuid="87bc340d-e048-4819-a97a-30b5850e98cb" type="adc_pal_config" type_id="adc_pal" mode="general" peripheral="ADC_0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="adc_pal_1" uuid="87bc340d-e048-4819-a97a-30b5850e98cb" type="adc_pal_config" type_id="adc_pal" mode="general" peripheral="ADC_0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">     
                      <config_set name="adc_pal">
                         <struct name="adcPalConfig">
                            <setting name="name" value="adc_pal_1_config"/>

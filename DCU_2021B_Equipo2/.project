@@ -266,6 +266,11 @@
 			<locationURI>$%7BS32K144_SDK_4_0_2_PATH%7D/rtos/FreeRTOS_S32K/Source/include/timers.h</locationURI>
 		</link>
 		<link>
+			<name>doc/SDK/rtos/osif/doxygen/osif.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/rtos/osif/doxygen/osif.dox</locationURI>
+		</link>
+		<link>
 			<name>SDK/platform/drivers/src/clock/S32K1xx/clock_S32K1xx.c</name>
 			<type>1</type>
 			<locationURI>$%7BS32K144_SDK_4_0_2_PATH%7D/platform/drivers/src/clock/S32K1xx/clock_S32K1xx.c</locationURI>
@@ -314,6 +319,51 @@
 			<name>SDK/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h</name>
 			<type>1</type>
 			<locationURI>$%7BS32K144_SDK_4_0_2_PATH%7D/rtos/FreeRTOS_S32K/Source/portable/GCC/ARM_CM4F/portmacro.h</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/adc/doxygen/adc_driver.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/adc/doxygen/adc_driver.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/clock/doxygen/clock_manager.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/clock/doxygen/clock_manager.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/interrupt/doxygen/interrupt.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/interrupt/doxygen/interrupt.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/pdb/doxygen/pdb.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/pdb/doxygen/pdb.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/pdb/doxygen/pdb_driver.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/pdb/doxygen/pdb_driver.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/pins/doxygen/pins.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/pins/doxygen/pins.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/trgmux/doxygen/trgmux_driver.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/trgmux/doxygen/trgmux_driver.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/pal/src/adc/doxygen/adc_pal.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/pal/src/adc/doxygen/adc_pal.dox</locationURI>
+		</link>
+		<link>
+			<name>doc/SDK/platform/drivers/src/clock/S32K1xx/doxygen/clock_S32K1xx.dox</name>
+			<type>1</type>
+			<locationURI>s32sdk_s32k1xx_rtm_402/platform/drivers/src/clock/S32K1xx/doxygen/clock_S32K1xx.dox</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

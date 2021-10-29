@@ -292,7 +292,7 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     },
     {
         .base            = PORTC,
-        .pinPortIdx      = 1U,
+        .pinPortIdx      = 12U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
@@ -301,7 +301,7 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
         .intConfig       = PORT_DMA_INT_DISABLED,
         .clearIntFlag    = false,
         .gpioBase        = PTC,
-        .direction       = GPIO_OUTPUT_DIRECTION,
+        .direction       = GPIO_INPUT_DIRECTION,
         .digitalFilter   = false,
         .initValue       = 0U,
     },
