@@ -157,7 +157,7 @@ PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void)
 PIN_VALUE Dio_Read_RearRightWindowClose_Button(void)
 {
 	//PIN_VALUE btn = PINS_DRV_ReadPins(REARRIGHT_CLOSE_BTN_PORT) >> (31 - REARRIGHT_CLOSE_BTN_PIN);
-	PIN_VALUE btn = (PINS_DRV_ReadPins(REARRIGHT_CLOSE_BTN_PORT) & 0x00000040) >> (REARRIGHT_CLOSE_BTN_PIN);
+	PIN_VALUE btn = (PINS_DRV_ReadPins(REARRIGHT_CLOSE_BTN_PORT) & 0x000010000) >> (REARRIGHT_CLOSE_BTN_PIN);
 	return btn;
 	//return DIO_LOW;
 }

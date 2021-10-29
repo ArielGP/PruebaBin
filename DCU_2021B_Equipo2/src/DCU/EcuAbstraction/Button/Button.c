@@ -13,6 +13,7 @@
 #include "Dio.h"
 #include "HwConfig.h"
 #include "Button.h"
+#include <string.h>
 
 #include "InDebounce.h"
 
@@ -49,10 +50,12 @@ BUTTON_STATUS  Button_Get_Door_Lock(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[LOCK_BTN].releasedAt1)
 	{
+		ButtonList[LOCK_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[LOCK_BTN].releasedAt2)
 	{
+		ButtonList[LOCK_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -64,10 +67,12 @@ BUTTON_STATUS  Button_Get_Door_Unlock(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[UNLOCK_BTN].releasedAt1)
 	{
+		ButtonList[UNLOCK_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[UNLOCK_BTN].releasedAt2)
 	{
+		ButtonList[UNLOCK_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -80,12 +85,16 @@ BUTTON_STATUS  Button_Get_Window_Open(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[OPEN_BTN].releasedAt1)
 	{
+		ButtonList[OPEN_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[OPEN_BTN].releasedAt2)
 	{
+		ButtonList[OPEN_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
+
+
 	return btn_value;
 	//return BUTTON_NOT_PRESSED;
 }
@@ -95,10 +104,12 @@ BUTTON_STATUS  Button_Get_Window_Close(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[CLOSE_BTN].releasedAt1)
 	{
+		ButtonList[CLOSE_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[CLOSE_BTN].releasedAt2)
 	{
+		ButtonList[CLOSE_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -112,10 +123,12 @@ BUTTON_STATUS  Button_Get_PassengerWindow_Open(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[PASSENGER_OPEN_BTN].releasedAt1)
 	{
+		ButtonList[PASSENGER_OPEN_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[PASSENGER_OPEN_BTN].releasedAt2)
 	{
+		ButtonList[PASSENGER_OPEN_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -127,10 +140,12 @@ BUTTON_STATUS  Button_Get_PassengerWindow_Close(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[PASSENGER_CLOSE_BTN].releasedAt1)
 	{
+		ButtonList[PASSENGER_CLOSE_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[PASSENGER_CLOSE_BTN].releasedAt2)
 	{
+		ButtonList[PASSENGER_CLOSE_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -143,10 +158,12 @@ BUTTON_STATUS  Button_Get_RearLeftWindow_Open(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[REARLEFT_OPEN_BTN].releasedAt1)
 	{
+		ButtonList[REARLEFT_OPEN_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[REARLEFT_OPEN_BTN].releasedAt2)
 	{
+		ButtonList[REARLEFT_OPEN_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -158,10 +175,12 @@ BUTTON_STATUS  Button_Get_RearLeftWindow_Close(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[REARLEFT_CLOSE_BTN].releasedAt1)
 	{
+		ButtonList[REARLEFT_CLOSE_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[REARLEFT_CLOSE_BTN].releasedAt2)
 	{
+		ButtonList[REARLEFT_CLOSE_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -174,10 +193,12 @@ BUTTON_STATUS  Button_Get_RearRightWindow_Open(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[REARRIGHT_OPEN_BTN].releasedAt1)
 	{
+		ButtonList[REARRIGHT_OPEN_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[REARRIGHT_OPEN_BTN].releasedAt2)
 	{
+		ButtonList[REARRIGHT_OPEN_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -189,10 +210,12 @@ BUTTON_STATUS  Button_Get_RearRightWindow_Close(void)
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[REARRIGHT_CLOSE_BTN].releasedAt1)
 	{
+		ButtonList[REARRIGHT_CLOSE_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[REARRIGHT_CLOSE_BTN].releasedAt2)
 	{
+		ButtonList[REARRIGHT_CLOSE_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;
@@ -207,10 +230,12 @@ BUTTON_STATUS  Button_Get_RearWindow_Lock(void)  //switch
 	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
 	if(ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt1)
 	{
+		ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt1 = 0;
 		btn_value = BUTTON_PRESSED;
 	}
 	else if(ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt2)
 	{
+		ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt2 = 0;
 		btn_value = BUTTON_LONG_PRESSED;
 	}
 	return btn_value;

@@ -75,16 +75,20 @@ extern "C" {
 #define WINDOW_LED10_PIN     16U
 #define ANTIPINCH_SIGNAL_PORT    PTC
 #define ANTIPINCH_SIGNAL_PIN     14U
-#define REARRIGHT_CLOSE_BTN_PORT    PTC
-#define REARRIGHT_CLOSE_BTN_PIN     6U
-#define UNLOCK_BTN_PORT    PTB
-#define UNLOCK_BTN_PIN     17U
+#define CAN_RX_PORT    PTE
+#define CAN_RX_PIN     4U
+#define CAN_TX_PORT    PTE
+#define CAN_TX_PIN     5U
 #define PASSENGER_OPEN_BTN_PORT    PTB
 #define PASSENGER_OPEN_BTN_PIN     14U
+#define UNLOCK_BTN_PORT    PTB
+#define UNLOCK_BTN_PIN     17U
 #define PASSENGER_CLOSE_BTN_PORT    PTB
 #define PASSENGER_CLOSE_BTN_PIN     15U
+#define REARRIGHT_CLOSE_BTN_PORT    PTB
+#define REARRIGHT_CLOSE_BTN_PIN     16U
 /*! @brief User number of configured pins */
-#define NUM_OF_CONFIGURED_PINS0 31
+#define NUM_OF_CONFIGURED_PINS0 34
 /*! @brief User configuration structure */
 extern pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0];
 
