@@ -26,6 +26,7 @@
 #include "Adc.h"
 #include "Dio.h"
 #include "DcuTasks.h"
+#include "HwConfig.h"
 
 
 #include "pins_driver.h"
@@ -196,6 +197,8 @@ void init_hook(void) {
 	Dio_Init();
 
 	Adc_Init();
+
+	HwConfig_Init();
 
 	Tasks_StartOS();
 }

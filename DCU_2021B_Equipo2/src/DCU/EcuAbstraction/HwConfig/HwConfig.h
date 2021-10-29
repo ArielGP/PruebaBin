@@ -16,10 +16,9 @@ typedef uint8  HW_CONFIG;
 #define HWCONFIG_REAR_LEFT  ((HW_CONFIG)0x04)
 #define HWCONFIG_REAR_RIGHT ((HW_CONFIG)0x08)
 
-
+extern void HwConfig_Init(void);
 
 HW_CONFIG HwConfig_Get(void);
-
 
 boolean   HwConfig_IsAny(HW_CONFIG config, HW_CONFIG config_mask);
 
