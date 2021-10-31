@@ -20,6 +20,7 @@ extern void Hw_Config_Init(void);
 
 HW_CONFIG HwConfig_Get(void);
 
+
 boolean   HwConfig_IsAny(HW_CONFIG config, HW_CONFIG config_mask);
 
 

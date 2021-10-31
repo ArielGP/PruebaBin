@@ -23,11 +23,13 @@
 #include "Wdg.h"
 #include "Mcu.h"
 #include "Mpu.h"
+#include "adc.h"
 #include "Adc.h"
 #include "Dio.h"
 #include "DcuTasks.h"
 #include "Signals.h"
 #include "HwConfig.h"
+#include "pins_driver.h"
 
 
 #ifdef TEST
@@ -43,20 +45,6 @@ uint8_t btn_state = 0;
 BUTTON_STATUS openbtn, closebtn;
 #endif
 
-	#ifdef TEST
-	uint8_t btn_state = 0;
-	PIN_VALUE openbtn, closebtn;
-	#endif
-	#ifdef TEST2
-	PIN_VALUES led_data;
-	uint8_t leds_state = 0;
-	#endif
-	#ifdef TEST3
-	uint8_t btn_state = 0;
-	BUTTON_STATUS openbtn, closebtn;
-	#endif
-
-
 /*Local Macros______________________________________________________________*/
 #define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
 #define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY)//4
@@ -65,6 +53,7 @@ BUTTON_STATUS openbtn, closebtn;
 HW_CONFIG hwversion;
 
 
+PIN_VALUE pinlecture;
 
 /* Local Function Prototypes */
 void Tasks_StartOS(void);
@@ -86,8 +75,27 @@ void app_task_100ms( void *pvParameters )
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
 
+
+
+	ADC_VALUE  adc_value;
+
 	for( ;; )
 	{
+
+
+		Adc_Run();
+
+		pinlecture = Dio_Read_DoorUnlock();
+
+		adc_value = Adc_Get_AntiPinch_Value();
+
+		if(adc_value <= 500)
+			Dio_Write_DoorUnlock_Led(DIO_HIGH);  //APAGA EL LED
+		else
+            PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
+
+
+
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
@@ -127,7 +135,6 @@ void app_task_10ms( void *pvParameters )
 		switch(btn_state)
 		{
 			case 0:
-
 			openbtn = Dio_Read_WindowOpen_Button();
 			if(openbtn == DIO_HIGH)
 			{
@@ -142,9 +149,7 @@ void app_task_10ms( void *pvParameters )
 			}
 			break;
 
-
 			case 1:
-
 			closebtn = Dio_Read_WindowClose_Button();
 			if(closebtn == DIO_HIGH)
 			{
@@ -153,7 +158,6 @@ void app_task_10ms( void *pvParameters )
 				btn_state = 0;
 			}
 			break;
-
 
 			default:
 				btn_state = 0;
