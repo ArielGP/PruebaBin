@@ -2,6 +2,7 @@
 # Ignore directories
 #
 Debug_FLASH/
+Debug_RAM/
 
 #
 # Ignore files

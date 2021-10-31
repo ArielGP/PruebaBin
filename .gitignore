@@ -1,5 +1,5 @@
 #
-# Ignore direcories
+# Ignore directories
 #
 RemoteSystemsTempFiles/
 FreeRTOS_TAD_logs/
