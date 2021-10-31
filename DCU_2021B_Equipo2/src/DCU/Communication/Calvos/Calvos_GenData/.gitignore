@@ -1,0 +1,10 @@
+#
+# Ignore directories
+#
+out/
+
+
+#
+# Ignore files
+#
+*.log
