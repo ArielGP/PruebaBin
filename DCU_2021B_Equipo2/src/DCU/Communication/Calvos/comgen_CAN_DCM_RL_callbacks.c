@@ -1,7 +1,7 @@
 /*============================================================================*/
 /*                           calvOS Project                                   */
 /*============================================================================*/
-/** \file		USER_comgen_CAN_DCM_DR_callbacks.c                            */
+/** \file		USER_comgen_CAN_DCM_RL_callbacks.c                            */
 /** \brief     	Source file for CAN user callbacks.
  *  \details   	Definitions fo CAN callbacks to be filled-up with user code as
  *  			required.
@@ -27,10 +27,11 @@
  *  along with calvOS.  If not, see <https://www.gnu.org/licenses/>. */
 /*============================================================================*/
 /*-----------------------------------------------------------------------------
- * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:48:32
+ * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:26:40
  * Generated from following source(s):
  *     Network file: "/home/efren/Documents/2_Courses/2_CUCEI/2_Diplomado_Conti/..
-                      0_Git/Equipo2/DCU_2021B_Equipo2/src/DCU/Communication/..
+                      0_Git/udgDSE_C_NXP/1_DCU_2021B_EDRF/..
+                      _1_freertos_s32k144_DCU_vEDRF/src/DCU/Communication/..
                       Calvos/Calvos_GenData/usr_in/..
                       template - CAN Network Definition.ods"
  *     Network name: "CAN-B"
@@ -39,7 +40,7 @@
  *     Network version: "2"
  -----------------------------------------------------------------------------*/
 #include "calvos.h"
-#include "comgen_CAN_DCM_DR_callbacks.h"
+#include "comgen_CAN_DCM_RL_callbacks.h"
 
 
 /* =============================================================================
@@ -52,60 +53,70 @@
 /* ===========================================================================*/
 /** Callback for BCM_5 reception.
  *
- * Invoked within ISR context whenever BCM_5 is received by node DCM_DR
+ * Invoked within ISR context whenever BCM_5 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_BCM_5_rx_callback(void){
+void can_DCM_RL_BCM_5_rx_callback(void){
 	/* User code goes here... */
 }
 
 /* ===========================================================================*/
 /** Callback for BCM_2 reception.
  *
- * Invoked within ISR context whenever BCM_2 is received by node DCM_DR
+ * Invoked within ISR context whenever BCM_2 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_BCM_2_rx_callback(void){
+void can_DCM_RL_BCM_2_rx_callback(void){
 	/* User code goes here... */
 }
 
 /* ===========================================================================*/
 /** Callback for BRAKE_2 reception.
  *
- * Invoked within ISR context whenever BRAKE_2 is received by node DCM_DR
+ * Invoked within ISR context whenever BRAKE_2 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_BRAKE_2_rx_callback(void){
+void can_DCM_RL_BRAKE_2_rx_callback(void){
 	/* User code goes here... */
 }
 
 /* ===========================================================================*/
 /** Callback for TRANSM_2 reception.
  *
- * Invoked within ISR context whenever TRANSM_2 is received by node DCM_DR
+ * Invoked within ISR context whenever TRANSM_2 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_TRANSM_2_rx_callback(void){
+void can_DCM_RL_TRANSM_2_rx_callback(void){
 	/* User code goes here... */
 }
 
 /* ===========================================================================*/
 /** Callback for TRANSM_4 reception.
  *
- * Invoked within ISR context whenever TRANSM_4 is received by node DCM_DR
+ * Invoked within ISR context whenever TRANSM_4 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_TRANSM_4_rx_callback(void){
+void can_DCM_RL_TRANSM_4_rx_callback(void){
+	/* User code goes here... */
+}
+
+/* ===========================================================================*/
+/** Callback for DCU_1 reception.
+ *
+ * Invoked within ISR context whenever DCU_1 is received by node DCM_RL
+ *  of network B.
+ * ===========================================================================*/
+void can_DCM_RL_DCU_1_rx_callback(void){
 	/* User code goes here... */
 }
 
 /* ===========================================================================*/
 /** Callback for DCU_2 reception.
  *
- * Invoked within ISR context whenever DCU_2 is received by node DCM_DR
+ * Invoked within ISR context whenever DCU_2 is received by node DCM_RL
  *  of network B.
  * ===========================================================================*/
-void can_DCM_DR_DCU_2_rx_callback(void){
+void can_DCM_RL_DCU_2_rx_callback(void){
 	/* User code goes here... */
 }
 
@@ -116,55 +127,64 @@ void can_DCM_DR_DCU_2_rx_callback(void){
 /* ===========================================================================*/
 /** Callback for BCM_5 timeout notification.
  *
- * Invoked when BCM_5 times out as per suscriber node DCM_DR
+ * Invoked when BCM_5 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_BCM_5_timeout_callback(void){
+void can_DCM_RL_BCM_5_timeout_callback(void){
 	/* User code goes here... */
 }
 /* ===========================================================================*/
 /** Callback for BCM_2 timeout notification.
  *
- * Invoked when BCM_2 times out as per suscriber node DCM_DR
+ * Invoked when BCM_2 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_BCM_2_timeout_callback(void){
+void can_DCM_RL_BCM_2_timeout_callback(void){
 	/* User code goes here... */
 }
 /* ===========================================================================*/
 /** Callback for BRAKE_2 timeout notification.
  *
- * Invoked when BRAKE_2 times out as per suscriber node DCM_DR
+ * Invoked when BRAKE_2 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_BRAKE_2_timeout_callback(void){
+void can_DCM_RL_BRAKE_2_timeout_callback(void){
 	/* User code goes here... */
 }
 /* ===========================================================================*/
 /** Callback for TRANSM_2 timeout notification.
  *
- * Invoked when TRANSM_2 times out as per suscriber node DCM_DR
+ * Invoked when TRANSM_2 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_TRANSM_2_timeout_callback(void){
+void can_DCM_RL_TRANSM_2_timeout_callback(void){
 	/* User code goes here... */
 }
 /* ===========================================================================*/
 /** Callback for TRANSM_4 timeout notification.
  *
- * Invoked when TRANSM_4 times out as per suscriber node DCM_DR
+ * Invoked when TRANSM_4 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_TRANSM_4_timeout_callback(void){
+void can_DCM_RL_TRANSM_4_timeout_callback(void){
+	/* User code goes here... */
+}
+/* ===========================================================================*/
+/** Callback for DCU_1 timeout notification.
+ *
+ * Invoked when DCU_1 times out as per suscriber node DCM_RL
+ * of network B.
+ * ===========================================================================*/
+void can_DCM_RL_DCU_1_timeout_callback(void){
 	/* User code goes here... */
 }
 /* ===========================================================================*/
 /** Callback for DCU_2 timeout notification.
  *
- * Invoked when DCU_2 times out as per suscriber node DCM_DR
+ * Invoked when DCU_2 times out as per suscriber node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_DCU_2_timeout_callback(void){
+void can_DCM_RL_DCU_2_timeout_callback(void){
 	/* User code goes here... */
 }
 
@@ -172,11 +192,11 @@ void can_DCM_DR_DCU_2_timeout_callback(void){
 /* Message transmission callbacks */
 /* ------------------------------ */
 /* ===========================================================================*/
-/** Callback for DCU_1 transmission notification.
+/** Callback for DCU_3 transmission notification.
  *
- * Invoked when DCU_1 is transmitted as per publisher node DCM_DR
+ * Invoked when DCU_3 is transmitted as per publisher node DCM_RL
  * of network B.
  * ===========================================================================*/
-void can_DCM_DR_DCU_1_tx_callback(void){
+void can_DCM_RL_DCU_3_tx_callback(void){
 	/* User code goes here... */
 }
