@@ -84,7 +84,8 @@ void Tasks_StartOS(void)
 	vTaskStartScheduler();
 }
 
-void init_hook(void) {
+void init_hook(void) 
+{
 
 	Mcu_Init();
 
