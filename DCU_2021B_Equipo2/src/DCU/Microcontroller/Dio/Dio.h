@@ -9,12 +9,10 @@
 #define MICROCONTROLLER_DIO_H_
 
 
-void Dio_Init(void);
-
-
+/*type def__________________________________________________________________*/
 typedef boolean PIN_VALUE;
 typedef uint32  PIN_VALUES;
-
+/*Global Macros_____________________________________________________________*/
 #define DIO_LOW    ((PIN_VALUE)0)
 #define DIO_HIGH   ((PIN_VALUE)1)
 
@@ -29,40 +27,36 @@ typedef uint32  PIN_VALUES;
 #define DIO_WINDOW_LED9    ((PIN_VALUES)0x00000200)
 #define DIO_WINDOW_LED10   ((PIN_VALUES)0x00000400)
 
-//driver, passenger
-void Dio_Write_DoorUnlock_Led(PIN_VALUE value);
-void Dio_Write_DoorLock_Led(PIN_VALUE value);
-PIN_VALUE Dio_Read_DoorUnlock(void);
-PIN_VALUE Dio_Read_DoorLock(void);
-
-
-void Dio_Write_Window_Leds(PIN_VALUES values);
-
-PIN_VALUE Dio_Read_Window_Open(void);
-PIN_VALUE Dio_Read_Window_Closed(void);
+extern void Dio_Init(void);
 
 //driver, passenger
-PIN_VALUE Dio_Read_DoorLock_Button(void);
-PIN_VALUE Dio_Read_DoorUnlock_Button(void);
+extern void Dio_Write_DoorUnlock_Led(PIN_VALUE value);
+extern void Dio_Write_DoorLock_Led(PIN_VALUE value);
+extern PIN_VALUE Dio_Read_DoorUnlock(void);
+extern PIN_VALUE Dio_Read_DoorLock(void);
 
+extern void Dio_Write_Window_Leds(PIN_VALUES values);
 
-PIN_VALUE Dio_Read_WindowOpen_Button(void);
-PIN_VALUE Dio_Read_WindowClose_Button(void);
+extern PIN_VALUE Dio_Read_Window_Open(void);
+extern PIN_VALUE Dio_Read_Window_Closed(void);
 
+//driver, passenger
+extern PIN_VALUE Dio_Read_DoorLock_Button(void);
+extern PIN_VALUE Dio_Read_DoorUnlock_Button(void);
+
+extern PIN_VALUE Dio_Read_WindowOpen_Button(void);
+extern PIN_VALUE Dio_Read_WindowClose_Button(void);
 
 //driver
-PIN_VALUE Dio_Read_PassengerWindowOpen_Button(void);
-PIN_VALUE Dio_Read_PassengerWindowClose_Button(void);
-PIN_VALUE Dio_Read_RearLeftWindowOpen_Button(void);
-PIN_VALUE Dio_Read_RearLeftWindowClose_Button(void);
-PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void);
-PIN_VALUE Dio_Read_RearRightWindowClose_Button(void);
-PIN_VALUE Dio_Read_RearWindowLock_Button(void);
+extern PIN_VALUE Dio_Read_PassengerWindowOpen_Button(void);
+extern PIN_VALUE Dio_Read_PassengerWindowClose_Button(void);
+extern PIN_VALUE Dio_Read_RearLeftWindowOpen_Button(void);
+extern PIN_VALUE Dio_Read_RearLeftWindowClose_Button(void);
+extern PIN_VALUE Dio_Read_RearRightWindowOpen_Button(void);
+extern PIN_VALUE Dio_Read_RearRightWindowClose_Button(void);
+extern PIN_VALUE Dio_Read_RearWindowLock_Button(void);
 
-
-PIN_VALUE Dio_Read_Jumper0(void);
-PIN_VALUE Dio_Read_Jumper1(void);
-
-
+extern PIN_VALUE Dio_Read_Jumper0(void);
+extern PIN_VALUE Dio_Read_Jumper1(void);
 
 #endif /* MICROCONTROLLER_DIO_H_ */
