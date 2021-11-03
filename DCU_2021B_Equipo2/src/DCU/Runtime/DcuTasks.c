@@ -46,21 +46,20 @@ BUTTON_STATUS openbtn, closebtn;
 #endif
 
 /*Local Macros______________________________________________________________*/
+#define ACT_3_5
 #define ACT_3_7
 
-#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3u )
-#define app_20ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2u )
-#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1u )
+#define app_10ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3u )
+#define app_20ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2u )
+#define app_100ms_TASK_PRIORITY     ( tskIDLE_PRIORITY + 1u )
 
-#define app_10ms_STACK_SIZE        ( configMINIMAL_STACK_SIZE + 10u )
-#define app_20ms_STACK_SIZE        ( configMINIMAL_STACK_SIZE + 10u )
-#define app_100ms_STACK_SIZE       ( configMINIMAL_STACK_SIZE +  0u )
+#define app_10ms_STACK_SIZE         ( configMINIMAL_STACK_SIZE + 10u )
+#define app_20ms_STACK_SIZE         ( configMINIMAL_STACK_SIZE + 10u )
+#define app_100ms_STACK_SIZE        ( configMINIMAL_STACK_SIZE +  0u )
 
-
-HW_CONFIG hwversion;
-
-
-PIN_VALUE pinlecture;
+#ifdef ACT_3_5
+#define ACT_3_5_ANTIPINCH_LIMIT     (500UL)
+#endif
 
 /* Local Function Prototypes */
 static void Tasks_StartOS(void);
@@ -68,9 +67,6 @@ static void Tasks_StartOS(void);
 static void app_task_10ms( void *pvParameters );
 static void app_task_20ms( void *pvParameters );
 static void app_task_100ms( void *pvParameters );
-
-
-
 
 
 void Tasks_StartOS(void)
@@ -270,6 +266,10 @@ void app_task_100ms( void *pvParameters )
 {
 	TickType_t xNextWakeTime;
 
+# ifdef ACT_3_5
+    PIN_VALUE  DoorUnlockPin_value;
+# endif
+
 # ifdef ACT_3_7
 	SIGNAL_ERROR error_code;
 	uint8_t signal_value;
@@ -281,20 +281,25 @@ void app_task_100ms( void *pvParameters )
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
 
-	ADC_VALUE  adc_value;
-
 	for( ;; )
 	{
 		Adc_Run();
 
-		pinlecture = Dio_Read_DoorUnlock();
-
-		adc_value = Adc_Get_AntiPinch_Value();
-
-		if(adc_value <= 500)
-			Dio_Write_DoorUnlock_Led(DIO_HIGH);  //APAGA EL LED
+# ifdef ACT_3_5
+		if (ACT_3_5_ANTIPINCH_LIMIT <= Adc_Get_AntiPinch_Value())
+		{
+			/* Toogle Green LED */
+			DoorUnlockPin_value ^= DIO_HIGH;
+		}
 		else
-            PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
+		{
+			/* Turn off Green LED */
+			DoorUnlockPin_value = DIO_HIGH;			
+		}
+
+		Dio_Write_DoorUnlock_Led(DoorUnlockPin_value);
+# endif
+
 
 # ifdef ACT_3_7
 		error_code = Signals_Get_SysPwrMode(&signal_value);
