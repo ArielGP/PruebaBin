@@ -28,10 +28,11 @@
  *  along with calvOS.  If not, see <https://www.gnu.org/licenses/>. */
 /*============================================================================*/
 /*-----------------------------------------------------------------------------
- * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:48:32
+ * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:26:39
  * Generated from following source(s):
  *     Network file: "/home/efren/Documents/2_Courses/2_CUCEI/2_Diplomado_Conti/..
-                      0_Git/Equipo2/DCU_2021B_Equipo2/src/DCU/Communication/..
+                      0_Git/udgDSE_C_NXP/1_DCU_2021B_EDRF/..
+                      _1_freertos_s32k144_DCU_vEDRF/src/DCU/Communication/..
                       Calvos/Calvos_GenData/usr_in/..
                       template - CAN Network Definition.ods"
  *     Network name: "CAN-B"
@@ -40,9 +41,11 @@
  *     Network version: "2"
  -----------------------------------------------------------------------------*/
 #include "calvos.h"
+#include "CANpal.h"
 #include "comgen_CAN_common.h"
 #include "comgen_CAN_DCM_DR_hal.h"
 #include "comgen_CAN_DCM_DR_core.h"
+#include "sdk_project_config.h"
 
 /* Macro for confirming TX msg ID */
 /* This macro is generated based on parameter "CAN_tx_confirm_msg_id" */
@@ -69,9 +72,16 @@ uint32_t can_DCM_DR_HALgetTxdMsgId(void);
 CalvosError can_DCM_DR_HALtransmitMsg(const CANtxMsgStaticData* msg_info){
 
 	CalvosError return_value = kError;
+	status_t local_status = STATUS_ERROR;
+
 	// Write HAL code to transmit a CAN message. Information about the message
 	// can be extracted from the provided msg_info structure.
-	#warning "User code needed here. Remove this line when done."
+	local_status = CANpal_send_CAN_message(msg_info->id, msg_info->fields.len, msg_info->data);
+
+	if (STATUS_SUCCESS == local_status)
+	{
+		return_value = kNoError;
+	}
 
 	return return_value;
 }
@@ -89,7 +99,7 @@ uint32_t can_DCM_DR_HALgetTxdMsgId(void){
 	uint32_t txd_msg_id;
 	// Write user code to return the ID of the CAN message just transmitted
 	// by the CAN HAL.
-	#warning "User code needed here. Remove this line when done."
+	txd_msg_id = CANpal_get_Txd_Id();
 
 	return txd_msg_id;
 }
@@ -127,7 +137,6 @@ void can_DCM_DR_HALconfirmTxMsg(void){
  * ===========================================================================*/
 void can_DCM_DR_HALreceiveMsg(uint32_t msg_id, uint8_t* data_in, uint8_t data_len){
 
-	#warning "This function shall be called in user's CAN HAL rx ISR. Remove this line when done".
 	// Call RX processor function
 	can_DCM_DR_processRxMessage(msg_id, data_in, data_len);
 }
@@ -141,5 +150,7 @@ void can_DCM_DR_HALreceiveMsg(uint32_t msg_id, uint8_t* data_in, uint8_t data_le
 void can_DCM_DR_HALinit(void){
 
 	// Write user code to initialize CAN HAL in the target MCU.
+#if (0)
 	#warning "User code needed here. Remove this line when done."
+# endif
 }

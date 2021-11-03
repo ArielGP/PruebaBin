@@ -1,14 +1,13 @@
 /*============================================================================*/
 /*                           calvOS Project                                   */
 /*============================================================================*/
-/** \file		general_defs.h                                                */
-/** \brief     	Header file for general types/macros definitions.
- *  \details   	Contains macros to be used across all calvos related source
- *				code and that need some user instrumentation.
+/** \file		USER_comgen_CAN_DCM_RR_hal.h                                  */
+/** \brief     	Header file for CAN Hardware Abstraction Layer functions.
+ *  \details   	Contains delcarations of functions for CAN HAL integration.
  *  \author    	Carlos Calvillo
  *  \version   	1.0
- *  \date      	2021-02-23
- *  \copyright 	2021 Carlos Calvillo.
+ *  \date      	2020-11-15
+ *  \copyright 	2020 Carlos Calvillo.
  */
 /*============================================================================*/
 /*  This file is part of calvOS project <https://github.com/calcore-io/calvos>.
@@ -27,24 +26,29 @@
  *  along with calvOS.  If not, see <https://www.gnu.org/licenses/>. */
 /*============================================================================*/
 /*-----------------------------------------------------------------------------
- * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:48:32
+ * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:26:40
  * Generated from following source(s):
- *     Config file: "File Name"
+ *     Network file: "/home/efren/Documents/2_Courses/2_CUCEI/2_Diplomado_Conti/..
+                      0_Git/udgDSE_C_NXP/1_DCU_2021B_EDRF/..
+                      _1_freertos_s32k144_DCU_vEDRF/src/DCU/Communication/..
+                      Calvos/Calvos_GenData/usr_in/..
+                      template - CAN Network Definition.ods"
+ *     Network name: "CAN-B"
+ *     Network id: "B"
+ *     Network date: "12/Mar/2021"
+ *     Network version: "2"
  -----------------------------------------------------------------------------*/
-#ifndef GENERAL_DEFS_H
-#define GENERAL_DEFS_H
+#ifndef USER_COMGEN_CAN_DCM_RR_HAL_H
+#define USER_COMGEN_CAN_DCM_RR_HAL_H
 
-#include <stdint.h>
-#include <stddef.h>
+#include "calvos.h"
+#include "comgen_CAN_common.h"
+#include "comgen_CAN_network.h"
 
-/* Macros for critical sections */
-#warning "Insert user code to enter and exit critical section. Remove this directive when done."
-/* IMPORTANT: macro CALVOS_CRITICAL_ENTER() shall store the current state of
- * "global" interrupt state and then disable them. CALVOS_CRITICAL_EXIT() shall
- * restore the "global" interrupt state that was stored before entering the
- * critical section. CALVOS_CRITICAL_EXIT() shall NOT always just enable
- * all the "global" interrupts, but rather restore previous state. */
-#define CALVOS_CRITICAL_ENTER()
-#define CALVOS_CRITICAL_EXIT()
+/* CAN HAL functions */
+extern CalvosError can_DCM_RR_HALtransmitMsg(const CANtxMsgStaticData* msg_info);
+extern void can_DCM_RR_HALconfirmTxMsg(void);
+extern void can_DCM_RR_HALreceiveMsg(uint32_t msg_id, uint8_t* data_in, uint8_t data_len);
+extern void can_DCM_RR_HALinit(void);
 
-#endif /* GENERAL_DEFS_H */
+#endif /* USER_COMGEN_CAN_DCM_RR_HAL_H */

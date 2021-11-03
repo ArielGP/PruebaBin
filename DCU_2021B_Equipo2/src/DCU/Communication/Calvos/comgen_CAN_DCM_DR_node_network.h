@@ -28,10 +28,11 @@
  *  along with calvOS.  If not, see <https://www.gnu.org/licenses/>. */
 /*============================================================================*/
 /*-----------------------------------------------------------------------------
- * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:48:32
+ * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:26:39
  * Generated from following source(s):
  *     Network file: "/home/efren/Documents/2_Courses/2_CUCEI/2_Diplomado_Conti/..
-                      0_Git/Equipo2/DCU_2021B_Equipo2/src/DCU/Communication/..
+                      0_Git/udgDSE_C_NXP/1_DCU_2021B_EDRF/..
+                      _1_freertos_s32k144_DCU_vEDRF/src/DCU/Communication/..
                       Calvos/Calvos_GenData/usr_in/..
                       template - CAN Network Definition.ods"
  *     Network name: "CAN-B"

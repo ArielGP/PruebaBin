@@ -1,7 +1,7 @@
 /*============================================================================*/
 /*                           calvOS Project                                   */
 /*============================================================================*/
-/** \file		USER_comgen_CAN_DCM_PS_callbacks.h                            */
+/** \file		USER_comgen_CAN_DCM_RR_callbacks.h                            */
 /** \brief     	Header file for CAN callbacks.
  *  \details   	Contains declarations of CAN callback functions.
  *  \author    	Carlos Calvillo
@@ -26,10 +26,11 @@
  *  along with calvOS.  If not, see <https://www.gnu.org/licenses/>. */
 /*============================================================================*/
 /*-----------------------------------------------------------------------------
- * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:48:32
+ * This file was generated on (yyyy.mm.dd::hh:mm:ss): 2021.10.31::12:26:40
  * Generated from following source(s):
  *     Network file: "/home/efren/Documents/2_Courses/2_CUCEI/2_Diplomado_Conti/..
-                      0_Git/Equipo2/DCU_2021B_Equipo2/src/DCU/Communication/..
+                      0_Git/udgDSE_C_NXP/1_DCU_2021B_EDRF/..
+                      _1_freertos_s32k144_DCU_vEDRF/src/DCU/Communication/..
                       Calvos/Calvos_GenData/usr_in/..
                       template - CAN Network Definition.ods"
  *     Network name: "CAN-B"
@@ -37,38 +38,40 @@
  *     Network date: "12/Mar/2021"
  *     Network version: "2"
  -----------------------------------------------------------------------------*/
-#ifndef USER_COMGEN_CAN_DCM_PS_CALLBACKS_H
-#define USER_COMGEN_CAN_DCM_PS_CALLBACKS_H
+#ifndef USER_COMGEN_CAN_DCM_RR_CALLBACKS_H
+#define USER_COMGEN_CAN_DCM_RR_CALLBACKS_H
 
 #include "calvos.h"
 #include "comgen_CAN_common.h"
-#include "comgen_CAN_DCM_PS_node_network.h"
+#include "comgen_CAN_DCM_RR_node_network.h"
 
 
 /* --------------------------- */
 /* Message reception callbacks */
 /* --------------------------- */
-extern void can_DCM_PS_BCM_5_rx_callback(void);
-extern void can_DCM_PS_BCM_2_rx_callback(void);
-extern void can_DCM_PS_BRAKE_2_rx_callback(void);
-extern void can_DCM_PS_TRANSM_2_rx_callback(void);
-extern void can_DCM_PS_TRANSM_4_rx_callback(void);
-extern void can_DCM_PS_DCU_1_rx_callback(void);
+extern void can_DCM_RR_BCM_5_rx_callback(void);
+extern void can_DCM_RR_BCM_2_rx_callback(void);
+extern void can_DCM_RR_BRAKE_2_rx_callback(void);
+extern void can_DCM_RR_TRANSM_2_rx_callback(void);
+extern void can_DCM_RR_TRANSM_4_rx_callback(void);
+extern void can_DCM_RR_DCU_1_rx_callback(void);
+extern void can_DCM_RR_DCU_2_rx_callback(void);
 
 /* ------------------------- */
 /* Message timeout callbacks */
 /* ------------------------- */
-extern void can_DCM_PS_BCM_5_timeout_callback(void);
-extern void can_DCM_PS_BCM_2_timeout_callback(void);
-extern void can_DCM_PS_BRAKE_2_timeout_callback(void);
-extern void can_DCM_PS_TRANSM_2_timeout_callback(void);
-extern void can_DCM_PS_TRANSM_4_timeout_callback(void);
-extern void can_DCM_PS_DCU_1_timeout_callback(void);
+extern void can_DCM_RR_BCM_5_timeout_callback(void);
+extern void can_DCM_RR_BCM_2_timeout_callback(void);
+extern void can_DCM_RR_BRAKE_2_timeout_callback(void);
+extern void can_DCM_RR_TRANSM_2_timeout_callback(void);
+extern void can_DCM_RR_TRANSM_4_timeout_callback(void);
+extern void can_DCM_RR_DCU_1_timeout_callback(void);
+extern void can_DCM_RR_DCU_2_timeout_callback(void);
 
 /* ------------------------------ */
 /* Message transmission callbacks */
 /* ------------------------------ */
-extern void can_DCM_PS_DCU_2_tx_callback(void);
+extern void can_DCM_RR_DCU_4_tx_callback(void);
 
 
-#endif /* USER_COMGEN_CAN_DCM_PS_CALLBACKS_H */
+#endif /* USER_COMGEN_CAN_DCM_RR_CALLBACKS_H */

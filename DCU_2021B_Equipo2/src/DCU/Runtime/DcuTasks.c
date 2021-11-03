@@ -27,7 +27,7 @@
 #include "Adc.h"
 #include "Dio.h"
 #include "DcuTasks.h"
-#include "Signals.h"
+#include "..\Communication\Signals\Signals.h"
 #include "HwConfig.h"
 #include "pins_driver.h"
 
@@ -46,9 +46,16 @@ BUTTON_STATUS openbtn, closebtn;
 #endif
 
 /*Local Macros______________________________________________________________*/
-#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
-#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY)//4
-#define app_20ms_TASK_PRIORITY        ( tskIDLE_PRIORITY)//5
+#define ACT_3_7
+
+#define app_10ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3u )
+#define app_20ms_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2u )
+#define app_100ms_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1u )
+
+#define app_10ms_STACK_SIZE        ( configMINIMAL_STACK_SIZE + 10u )
+#define app_20ms_STACK_SIZE        ( configMINIMAL_STACK_SIZE + 10u )
+#define app_100ms_STACK_SIZE       ( configMINIMAL_STACK_SIZE +  0u )
+
 
 HW_CONFIG hwversion;
 
@@ -56,54 +63,45 @@ HW_CONFIG hwversion;
 PIN_VALUE pinlecture;
 
 /* Local Function Prototypes */
-void Tasks_StartOS(void);
+static void Tasks_StartOS(void);
+
+static void app_task_10ms( void *pvParameters );
+static void app_task_20ms( void *pvParameters );
+static void app_task_100ms( void *pvParameters );
 
 
-/* ============================================================================
- * Function Name:app_task_100ms
- * Description:It is a periodic task task that runs each 100ms
- * Arguments: void *pvParameters
- * Return:void
- * ========================================================================= */
-void app_task_100ms( void *pvParameters )
+
+
+
+void Tasks_StartOS(void)
 {
-	TickType_t xNextWakeTime;
+	(void) xTaskCreate(app_task_10ms,    "App10ms",    app_10ms_STACK_SIZE,  NULL,  app_10ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(app_task_20ms,    "App20ms",    app_20ms_STACK_SIZE,  NULL,  app_20ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(app_task_100ms,   "App100ms",   app_100ms_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
 
-	/* Casting pvParameters to void because it is unused */
-	(void)pvParameters;
+	Mpu_Init();
 
-	/* Initialize xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+	vTaskStartScheduler();
+}
 
+void init_hook(void) 
+{
 
+	Mcu_Init();
 
-	ADC_VALUE  adc_value;
+	Wdg_Init();
 
-	for( ;; )
-	{
+	Dio_Init();
 
+	Adc_Init();
+	
+	Hw_Config_Init();
 
-		Adc_Run();
+	Button_Init();
 
-		pinlecture = Dio_Read_DoorUnlock();
+	Signals_Init();
 
-		adc_value = Adc_Get_AntiPinch_Value();
-
-		if(adc_value <= 500)
-			Dio_Write_DoorUnlock_Led(DIO_HIGH);  //APAGA EL LED
-		else
-            PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
-
-
-
-
-		/* Place this task in the blocked state until it is time to run again.
-		The block time is specified in ticks, the constant used converts ticks
-		to ms.  While in the Blocked state this task will not consume any CPU
-		time. */
-		vTaskDelayUntil( &xNextWakeTime, 100 );
-
-	}
+	Tasks_StartOS();
 }
 
 /* ============================================================================
@@ -121,8 +119,6 @@ void app_task_10ms( void *pvParameters )
 
 	/* Initialize xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
-
-
 
 	for( ;; )
 	{
@@ -228,13 +224,14 @@ void app_task_10ms( void *pvParameters )
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 10 );
+		vTaskDelayUntil( &xNextWakeTime, pdMS_TO_TICKS( 10u ) );
 
 	}
 }
+
 /* ============================================================================
- * Function Name:app_task_200ms
- * Description:It is a periodic task task that runs each 100ms
+ * Function Name:app_task_20ms
+ * Description:It is a periodic task task that runs each 20ms
  * Arguments: void *pvParameters
  * Return:void
  * ========================================================================= */
@@ -258,42 +255,60 @@ void app_task_20ms( void *pvParameters )
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
 		time. */
-		vTaskDelayUntil( &xNextWakeTime, 20 );
+		vTaskDelayUntil( &xNextWakeTime, pdMS_TO_TICKS( 20u ) );
 
 	}
 }
 
-
-void Tasks_StartOS(void)
+/* ============================================================================
+ * Function Name:app_task_100ms
+ * Description:It is a periodic task task that runs each 100ms
+ * Arguments: void *pvParameters
+ * Return:void
+ * ========================================================================= */
+void app_task_100ms( void *pvParameters )
 {
+	TickType_t xNextWakeTime;
 
-	(void) xTaskCreate(app_task_100ms,  "App100ms",         configMINIMAL_STACK_SIZE , NULL,  app_100ms_TASK_PRIORITY, NULL);
-	(void) xTaskCreate(app_task_10ms,    "App10ms",         configMINIMAL_STACK_SIZE + 10 , NULL,  app_10ms_TASK_PRIORITY,  NULL);
-	(void) xTaskCreate(app_task_20ms,    "App20ms",         configMINIMAL_STACK_SIZE + 10 , NULL,  app_20ms_TASK_PRIORITY,  NULL);
+# ifdef ACT_3_7
+	SIGNAL_ERROR error_code;
+	uint8_t signal_value;
+# endif
 
-	Mpu_Init();
+	/* Casting pvParameters to void because it is unused */
+	(void)pvParameters;
 
-	vTaskStartScheduler();
+	/* Initialize xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
 
+	ADC_VALUE  adc_value;
+
+	for( ;; )
+	{
+		Adc_Run();
+
+		pinlecture = Dio_Read_DoorUnlock();
+
+		adc_value = Adc_Get_AntiPinch_Value();
+
+		if(adc_value <= 500)
+			Dio_Write_DoorUnlock_Led(DIO_HIGH);  //APAGA EL LED
+		else
+            PINS_DRV_TogglePins(DOOR_UNLOCKED_PORT,(1 << DOOR_UNLOCKED_PIN));
+
+# ifdef ACT_3_7
+		error_code = Signals_Get_SysPwrMode(&signal_value);
+
+		if ((SIGNAL_ERROR_NO == error_code) && (SYSPWRMODE_SNA != signal_value))
+		{
+			Signals_Set_WindowOp(&signal_value);
+		}
+# endif
+
+		/* Place this task in the blocked state until it is time to run again.
+		The block time is specified in ticks, the constant used converts ticks
+		to ms.  While in the Blocked state this task will not consume any CPU
+		time. */
+		vTaskDelayUntil( &xNextWakeTime, pdMS_TO_TICKS( 100u ) );
+	}
 }
-
-void init_hook(void) {
-
-	Mcu_Init();
-
-	Wdg_Init();
-
-	Dio_Init();
-
-	Adc_Init();
-
-	Button_Init();
-
-	Signals_Init();
-
-	Hw_Config_Init();
-
-	Tasks_StartOS();
-}
-
-
