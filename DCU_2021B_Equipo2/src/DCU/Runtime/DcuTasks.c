@@ -122,6 +122,9 @@ void app_task_10ms( void *pvParameters )
 		Signals_RunTx();
 
 		Button_Run();
+
+		Window_Run();
+
 		/*
 		#ifdef TEST
 		switch(btn_state)
@@ -284,6 +287,8 @@ void app_task_100ms( void *pvParameters )
 	for( ;; )
 	{
 		Adc_Run();
+		
+		Window_Run_Safety();
 
 # ifdef ACT_3_5
 		if (ACT_3_5_ANTIPINCH_LIMIT <= Adc_Get_AntiPinch_Value())
