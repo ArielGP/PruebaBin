@@ -5,290 +5,324 @@
  *      Author: uid87544
  */
 
+#include <string.h>
 #include "BasicTypes.h"
 #include "Dio.h"
 #include "HwConfig.h"
 #include "Button.h"
-#include <string.h>
-
 #include "InDebounce.h"
 
-Button_t ButtonList[TOTAL_BUTTONS];
+/*Local Macro_______________________________________________________________*/
+#define BUTTON_THRESHOLD1             ((ButtonData_t) 0x05u)
+#define BUTTON_THRESHOLD2             ((ButtonData_t) 0x64u)
 
-PIN_VALUE getDigitalInput(int index);
+/*Local variables___________________________________________________________*/
+static Button_t ButtonList[BUTTON_LIST_LENGTH];
 
+/*Local function def________________________________________________________*/
+static BUTTON_STATUS Button_GetButtonStatus(uint8_t index);
+static PIN_VALUE getDigitalInput(uint8_t index);
+
+/* ============================================================================
+ * Function Name: Button_Init
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 void Button_Init(void)
 {
-	for(int i = 0; i < TOTAL_BUTTONS; i++)
+	uint8_t index = 0x00u;
+
+	(void) memset(ButtonList, 0x00u, sizeof(ButtonList));
+
+	for(index = 0x00u; (BUTTON_LIST_LENGTH > index); index++)
 	{
-		memset(&ButtonList[i], 0, sizeof(ButtonList[i]));
-		ButtonList[i].threshold1 = 5;
-		ButtonList[i].threshold2 = 50;
+		ButtonList[index].threshold1 = BUTTON_THRESHOLD1;
+		ButtonList[index].threshold2 = BUTTON_THRESHOLD2;
 	}
-
-
 }
-
 
 //10 ms
+/* ============================================================================
+ * Function Name: Button_Run
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 void Button_Run(void)
 {
-	PIN_VALUE button_pin_value;
-	for(int i = 0; i < TOTAL_BUTTONS; i++)
+	uint8_t index = 0x00u;
+	PIN_VALUE button_pin_value = DIO_LOW;
+	
+	for (index = 0x00u; (BUTTON_LIST_LENGTH > index); index++)
 	{
-		button_pin_value = getDigitalInput(i);
-		Debounce_Process(&ButtonList[i], button_pin_value);
+		button_pin_value = getDigitalInput(index);
+		(void) Debounce_Process(&ButtonList[index], button_pin_value);
 	}
 }
 
+/* ============================================================================
+ * Function Name: Button_Get_Door_Lock
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_Door_Lock(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[LOCK_BTN].releasedAt1)
-	{
-		ButtonList[LOCK_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[LOCK_BTN].releasedAt2)
-	{
-		ButtonList[LOCK_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-    //return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_LOCK_BTN_IDX);
+
+	return return_status;
 }
 
+/* ============================================================================
+ * Function Name: Button_Get_Door_Unlock
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_Door_Unlock(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[UNLOCK_BTN].releasedAt1)
-	{
-		ButtonList[UNLOCK_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[UNLOCK_BTN].releasedAt2)
-	{
-		ButtonList[UNLOCK_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_UNLOCK_BTN_IDX);
+
+	return return_status;
 }
 
-
+/* ============================================================================
+ * Function Name: Button_Get_Window_Open
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_Window_Open(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[OPEN_BTN].releasedAt1)
-	{
-		ButtonList[OPEN_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[OPEN_BTN].releasedAt2)
-	{
-		ButtonList[OPEN_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
 
+	return_status = Button_GetButtonStatus(BUTTON_OPEN_BTN_IDX);
 
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	return return_status;
 }
 
+/* ============================================================================
+ * Function Name: Button_Get_Window_Close
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_Window_Close(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[CLOSE_BTN].releasedAt1)
-	{
-		ButtonList[CLOSE_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[CLOSE_BTN].releasedAt2)
-	{
-		ButtonList[CLOSE_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_CLOSE_BTN_IDX);
+
+	return return_status;
 }
 
 
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_PassengerWindow_Open
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_PassengerWindow_Open(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[PASSENGER_OPEN_BTN].releasedAt1)
-	{
-		ButtonList[PASSENGER_OPEN_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[PASSENGER_OPEN_BTN].releasedAt2)
-	{
-		ButtonList[PASSENGER_OPEN_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_PASSENGER_OPEN_BTN_IDX);
+
+	return return_status;
 }
+
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_PassengerWindow_Close
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_PassengerWindow_Close(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[PASSENGER_CLOSE_BTN].releasedAt1)
-	{
-		ButtonList[PASSENGER_CLOSE_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[PASSENGER_CLOSE_BTN].releasedAt2)
-	{
-		ButtonList[PASSENGER_CLOSE_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_PASSENGER_CLOSE_BTN_IDX);
+
+	return return_status;
 }
 
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_RearLeftWindow_Open
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_RearLeftWindow_Open(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[REARLEFT_OPEN_BTN].releasedAt1)
-	{
-		ButtonList[REARLEFT_OPEN_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[REARLEFT_OPEN_BTN].releasedAt2)
-	{
-		ButtonList[REARLEFT_OPEN_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_REARLEFT_OPEN_BTN_IDX);
+
+	return return_status;
 }
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_RearLeftWindow_Close
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_RearLeftWindow_Close(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[REARLEFT_CLOSE_BTN].releasedAt1)
-	{
-		ButtonList[REARLEFT_CLOSE_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[REARLEFT_CLOSE_BTN].releasedAt2)
-	{
-		ButtonList[REARLEFT_CLOSE_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_REARLEFT_CLOSE_BTN_IDX);
+
+	return return_status;
 }
 
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_RearRightWindow_Open
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_RearRightWindow_Open(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[REARRIGHT_OPEN_BTN].releasedAt1)
-	{
-		ButtonList[REARRIGHT_OPEN_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[REARRIGHT_OPEN_BTN].releasedAt2)
-	{
-		ButtonList[REARRIGHT_OPEN_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_REARRIGHT_OPEN_BTN_IDX);
+
+	return return_status;
 }
+
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_RearRightWindow_Close
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_RearRightWindow_Close(void)
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[REARRIGHT_CLOSE_BTN].releasedAt1)
-	{
-		ButtonList[REARRIGHT_CLOSE_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[REARRIGHT_CLOSE_BTN].releasedAt2)
-	{
-		ButtonList[REARRIGHT_CLOSE_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_REARRIGHT_CLOSE_BTN_IDX);
+
+	return return_status;
 }
-
-
 
 //driver
+/* ============================================================================
+ * Function Name: Button_Get_RearWindow_Lock
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
 BUTTON_STATUS  Button_Get_RearWindow_Lock(void)  //switch
 {
-	BUTTON_STATUS btn_value = BUTTON_NOT_PRESSED;
-	if(ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt1)
-	{
-		ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt1 = 0;
-		btn_value = BUTTON_PRESSED;
-	}
-	else if(ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt2)
-	{
-		ButtonList[REAR_WINDOW_LOCK_BTN].releasedAt2 = 0;
-		btn_value = BUTTON_LONG_PRESSED;
-	}
-	return btn_value;
-	//return BUTTON_NOT_PRESSED;
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	return_status = Button_GetButtonStatus(BUTTON_REAR_WINDOW_LOCK_BTN_IDX);
+
+	return return_status;
 }
 
-PIN_VALUE getDigitalInput(int index)
+/* ============================================================================
+ * Function Name: Button_GetButtonStatus
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
+static BUTTON_STATUS Button_GetButtonStatus(uint8_t index)
 {
-	PIN_VALUE button_pin_value=FALSE; //pin initialization value
-	switch(index)
+	BUTTON_STATUS return_status = BUTTON_NOT_PRESSED;
+
+	if (kTrue == ButtonList[index].releasedAt1)
 	{
-		case OPEN_BTN:
+		return_status = BUTTON_PRESSED;
+		ButtonList[index].releasedAt1 = kFalse;
+	}
+	else if (kTrue == ButtonList[index].releasedAt2)
+	{
+		return_status = BUTTON_LONG_PRESSED;
+		ButtonList[index].releasedAt2 = kFalse;
+	}
+	else
+	{
+		/*Avoid Misra - No action required */
+	}
+
+	return return_status;
+}
+
+/* ============================================================================
+ * Function Name: getDigitalInput
+ * Description:
+ * Arguments:
+ * Return:
+ * ========================================================================= */
+static PIN_VALUE getDigitalInput(uint8_t index)
+{
+	PIN_VALUE button_pin_value = DIO_LOW; //pin initialization value
+
+	switch (index)
+	{
+		case BUTTON_OPEN_BTN_IDX:
 			button_pin_value = Dio_Read_WindowOpen_Button();
 			break;
 
-		case CLOSE_BTN:
+		case BUTTON_CLOSE_BTN_IDX:
 			button_pin_value = Dio_Read_WindowClose_Button();
 			break;
 
-		case PASSENGER_OPEN_BTN:
+		case BUTTON_PASSENGER_OPEN_BTN_IDX:
 			button_pin_value = Dio_Read_PassengerWindowOpen_Button();
 			break;
 
-		case PASSENGER_CLOSE_BTN:
+		case BUTTON_PASSENGER_CLOSE_BTN_IDX:
 			button_pin_value = Dio_Read_PassengerWindowClose_Button();
 			break;
 
-		case REARLEFT_OPEN_BTN:
+		case BUTTON_REARLEFT_OPEN_BTN_IDX:
 			button_pin_value = Dio_Read_RearLeftWindowOpen_Button();
 			break;
 
-		case REARLEFT_CLOSE_BTN:
+		case BUTTON_REARLEFT_CLOSE_BTN_IDX:
 			button_pin_value =  Dio_Read_RearLeftWindowClose_Button();
 			break;
 
-		case REARRIGHT_OPEN_BTN:
+		case BUTTON_REARRIGHT_OPEN_BTN_IDX:
 			button_pin_value = Dio_Read_RearRightWindowOpen_Button();
 			break;
 
-		case REARRIGHT_CLOSE_BTN:
+		case BUTTON_REARRIGHT_CLOSE_BTN_IDX:
 			button_pin_value = Dio_Read_RearRightWindowClose_Button();
 			break;
 
-		case REAR_WINDOW_LOCK_BTN:
+		case BUTTON_REAR_WINDOW_LOCK_BTN_IDX:
 			button_pin_value = Dio_Read_RearWindowLock_Button();
 			break;
 
-		case LOCK_BTN:
+		case BUTTON_LOCK_BTN_IDX:
 			button_pin_value = Dio_Read_DoorLock_Button();
 			break;
 
-		case UNLOCK_BTN:
+		case BUTTON_UNLOCK_BTN_IDX:
 			button_pin_value = Dio_Read_DoorUnlock_Button();
 			break;
 
+		default:
+			/* Avoid Misra -No action required */
+			break;
 	}
 
 	return button_pin_value;
 }
 
+/*End of file_______________________________________________________________*/

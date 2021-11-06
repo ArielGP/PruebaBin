@@ -8,22 +8,19 @@
 #ifndef ECUABSTRACTION_BUTTONDRIVER_H_
 #define ECUABSTRACTION_BUTTONDRIVER_H_
 
-#define TOTAL_BUTTONS 11
-
-enum
-{
-	OPEN_BTN,
-	CLOSE_BTN,
-	PASSENGER_OPEN_BTN,
-	PASSENGER_CLOSE_BTN,
-	REARLEFT_OPEN_BTN,
-	REARLEFT_CLOSE_BTN,
-	REARRIGHT_OPEN_BTN,
-	REARRIGHT_CLOSE_BTN,
-	REAR_WINDOW_LOCK_BTN,
-	LOCK_BTN,
-	UNLOCK_BTN
-};
+/*Global Macro______________________________________________________________*/
+#define BUTTON_OPEN_BTN_IDX                 (0x00u)
+#define BUTTON_CLOSE_BTN_IDX                (0x01u)
+#define BUTTON_PASSENGER_OPEN_BTN_IDX       (0x02u)
+#define BUTTON_PASSENGER_CLOSE_BTN_IDX      (0x03u)
+#define BUTTON_REARLEFT_OPEN_BTN_IDX        (0x04u)
+#define BUTTON_REARLEFT_CLOSE_BTN_IDX       (0x05u)
+#define BUTTON_REARRIGHT_OPEN_BTN_IDX       (0x06u)
+#define BUTTON_REARRIGHT_CLOSE_BTN_IDX      (0x07u)
+#define BUTTON_REAR_WINDOW_LOCK_BTN_IDX     (0x08u)
+#define BUTTON_LOCK_BTN_IDX                 (0x09u)
+#define BUTTON_UNLOCK_BTN_IDX               (0x0Au)
+#define BUTTON_LIST_LENGTH                  (0x0Bu)
 
 void Button_Init(void);
 
