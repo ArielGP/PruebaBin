@@ -40,12 +40,13 @@ static WINDOW_STATUS    Window_position;
 static WINDOW_OPERATION Window_operation;
 
 static Window_pin_t     Window_pin;
-static Window_Actuation_t Window_actuation_state;
+static Window_Actuation_t Window_actuationState;
 
 PIN_VALUES pins_value = 0x00;
 
 static void Window_Actuation(void);
 static void Window_Status_Process(void);
+
 /* ============================================================================
  * Function Name: Window_Init
  * Description:
@@ -55,7 +56,7 @@ static void Window_Status_Process(void);
 void Window_Init(void)
 {
 
-    Window_actuation_state = eNOT_WINDOW_ACTUATION;
+    Window_actuationState = eNOT_WINDOW_ACTUATION;
 
     Window_request = WINDOW_REQUEST_IDLE;
     
@@ -82,7 +83,7 @@ void Window_Init_Safety(void)
 
 //10 ms
 /* ============================================================================
- * Function Name: Window_Runstatic void Window_Status_Process(void)
+ * Function Name: Window_Run
  * Description:
  * Arguments:
  * Return:
@@ -99,6 +100,9 @@ void Window_Run(void)
     /**/
     Window_Actuation();
 
+
+    Signals_Set_WindowPos();
+
     /* Sets Window Operation */
     Signals_Set_WindowOp(Window_operation);
     
@@ -113,6 +117,11 @@ void Window_Run(void)
  * ========================================================================= */
 void Window_Run_Safety(void)
 {
+
+    if (eCLOSE_WINDOW_ACTUATION == Window_actuationState)
+    {
+        Window_actuationState = eCANCEL_WINDOW_ACTUATION; 
+    }
 
 }
 
@@ -190,16 +199,16 @@ static void Window_Actuation(void)
 
         if ((WINDOW_POSITION_OPEN != Window_status) && (WINDOW_POSITION_ERROR != Window_status))
         {
-            Window_actuation_state = eOPEN_WINDOW_ACTUATION;
+            Window_actuationState = eOPEN_WINDOW_ACTUATION;
         }
         else if ((WINDOW_POSITION_CLOSED != Window_status) && (WINDOW_POSITION_ERROR != Window_status))
         {
-            Window_actuation_state = eCLOSE_WINDOW_ACTUATION;
+            Window_actuationState = eCLOSE_WINDOW_ACTUATION;
         }
-        else if (((WINDOW_POSITION_CLOSED == Window_status) && (eGLOBAL_CLOSE_WINDOW_ACTUATION == Window_actuation_state)) ||
-                ((WINDOW_POSITION_OPEN == Window_status) && (eGLOBAL_OPEN_WINDOW_ACTUATION == Window_actuation_state)))
+        else if (((WINDOW_POSITION_CLOSED == Window_status) && (eGLOBAL_CLOSE_WINDOW_ACTUATION == Window_actuationState)) ||
+                ((WINDOW_POSITION_OPEN == Window_status) && (eGLOBAL_OPEN_WINDOW_ACTUATION == Window_actuationState)))
         {
-            Window_actuation_state = eCANCEL_WINDOW_ACTUATION;
+            Window_actuationState = eCANCEL_WINDOW_ACTUATION;
         }
 
     }
@@ -209,7 +218,7 @@ static void Window_Actuation(void)
     }
 
 
-    switch (Window_actuation_state)
+    switch (Window_actuationState)
     {
         case eNOT_WINDOW_ACTUATION:
         case eCANCEL_WINDOW_ACTUATION:

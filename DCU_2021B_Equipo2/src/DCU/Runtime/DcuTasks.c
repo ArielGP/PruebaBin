@@ -97,6 +97,13 @@ void init_hook(void)
 
 	Signals_Init();
 
+    /* */
+    Door_Init();
+
+    /* */
+    Window_Init();
+    Window_Init_Safety();
+
 	Tasks_StartOS();
 }
 
@@ -123,7 +130,11 @@ void app_task_10ms( void *pvParameters )
 
 		Button_Run();
 
-		Window_Run();
+		/* */
+        Door_Run();
+
+        /* */
+        Window_Run();
 
 		/*
 		#ifdef TEST
@@ -288,7 +299,8 @@ void app_task_100ms( void *pvParameters )
 	{
 		Adc_Run();
 		
-		Window_Run_Safety();
+        /* */
+        Window_Run_Safety();
 
 # ifdef ACT_3_5
 		if (ACT_3_5_ANTIPINCH_LIMIT <= Adc_Get_AntiPinch_Value())
