@@ -9,43 +9,30 @@
 
 #include "BasicTypes.h"
 #include "Dio.h"
-#include "Signals.h"
 #include "Window.h"
 #include "Adc.h"
 
 
-typedef enum
-{
-    eNOT_WINDOW_ACTUATION,
-    eOPEN_WINDOW_ACTUATION,
-    eGLOBAL_OPEN_WINDOW_ACTUATION,
-    eCLOSE_WINDOW_ACTUATION,
-    eGLOBAL_CLOSE_WINDOW_ACTUATION,
-    eCANCEL_WINDOW_ACTUATION
-}Window_Actuation_t;
+/*Local Macro______________________________________________________________*/
+#define WINDOW_ADC_COUNTS_THRESHOLD   ((ADC_VALUE)0x334)
+#define WINDOW_DELAY_500MS            (50u)
+
+#define WINDOW_SW_ACTIVE              DIO_HIGH
+#define WINDOW_SW_INACTIVE            DIO_LOW
+
+#define WINDOW_INIT_LEDS              ((PIN_VALUES)0x00u)
 
 
-#define WINDOW_DELAY_500MS        (50u)
+/*Local variable____________________________________________________________*/
+static WINDOW_STATUS    Window_Status;
+static WINDOW_STATUS    Window_Position;
+static WINDOW_OPERATION Window_Operation;
 
-#define WINDOW_SW_ACTIVE          DIO_HIGH
-#define WINDOW_SW_INACTIVE        DIO_LOW
+static PIN_VALUES pins_Value = 0x00;
 
-#define WINDOW_INIT_LEDS         ((PIN_VALUES)0x00)
-
-
-static uint8_t Window_delay_conter;
-static WINDOW_REQUEST   Window_request;
-static WINDOW_STATUS    Window_status;
-static WINDOW_STATUS    Window_position;
-static WINDOW_OPERATION Window_operation;
-
-static Window_pin_t     Window_pin;
-static Window_Actuation_t Window_actuationState;
-
-PIN_VALUES pins_value = 0x00;
-
-static void Window_Actuation(void);
-static void Window_Status_Process(void);
+/*Local function def________________________________________________________*/
+static void Window_Actuation( void );
+static void Window_StatusDetermination( void );
 
 /* ============================================================================
  * Function Name: Window_Init
@@ -55,19 +42,11 @@ static void Window_Status_Process(void);
  * ========================================================================= */
 void Window_Init(void)
 {
+    Window_Operation = WINDOW_OPERATION_IDLE;
+    Window_Status    = WINDOW_POSITION_OPEN;
+    Window_Position  = WINDOW_POSITION_OPEN;
 
-    Window_actuationState = eNOT_WINDOW_ACTUATION;
-
-    Window_request = WINDOW_REQUEST_IDLE;
-    
-    Window_operation = WINDOW_OPERATION_IDLE;
-
-    Window_delay_conter = 0u;
-
-    Window_status = WINDOW_POSITION_OPEN;
-    Window_position = WINDOW_POSITION_1;
-
-    Dio_Write_Window_Leds(WINDOW_INIT_LEDS);
+    Dio_Write_Window_Leds( WINDOW_INIT_LEDS );
 }
 
 /* ============================================================================
@@ -81,75 +60,80 @@ void Window_Init_Safety(void)
 
 }
 
-//10 ms
 /* ============================================================================
  * Function Name: Window_Run
- * Description:
- * Arguments:
- * Return:
+ * Description:   This runnable is execute every 10ms.
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
 void Window_Run(void)
 {
-# if(0)
-    Signals_Set_WindowPos();
-# endif
-
-    /* */
-    Window_Status_Process();
-    
     /**/
     Window_Actuation();
 
-
-    Signals_Set_WindowPos();
-
-    /* Sets Window Operation */
-    Signals_Set_WindowOp(Window_operation);
-    
+    /* */
+    Window_StatusDetermination();
 }
 
-//100 ms
 /* ============================================================================
  * Function Name: Window_Run_Safety
- * Description:
- * Arguments:
- * Return:
+ * Description:   This runnable is execute every 100ms.
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
 void Window_Run_Safety(void)
 {
+# if (0)
+    static ADC_VALUE Previous_AntiPinch_Val = 0x00u;
+    ADC_VALUE AntiPinch_Val = 0x00u;
 
-    if (eCLOSE_WINDOW_ACTUATION == Window_actuationState)
+    AntiPinch_Val = Adc_Get_AntiPinch_Value();
+    
+    if ((WINDOW_ADC_COUNTS_THRESHOLD < AntiPinch_Val) &&
+        (WINDOW_ADC_COUNTS_THRESHOLD > Previous_AntiPinch_Val))
     {
-        Window_actuationState = eCANCEL_WINDOW_ACTUATION; 
+            
     }
-
+    Previous_AntiPinch_Val = AntiPinch_Val;
+# endif   
 }
 
 /* ============================================================================
  * Function Name: Window_Set_Request
  * Description:
  * Arguments:
- * Return:
+ * Return:        None
  * ========================================================================= */
 void Window_Set_Request(WINDOW_REQUEST request)
 {
     if ((WINDOW_REQUEST_IDLE == request) || 
-        (WINDOW_REQUEST_UP == request) ||
+        (WINDOW_REQUEST_UP   == request) ||
         (WINDOW_REQUEST_DOWN == request))
     {
-        Window_request = request;
+        if (WINDOW_REQUEST_UP == request)
+        {
+            Window_Operation = WINDOW_OPERATION_UP;
+        }
+        else if (WINDOW_REQUEST_DOWN == request)
+        {
+            Window_Operation = WINDOW_OPERATION_DOWN;
+        }
+        else
+        {
+            Window_Operation = WINDOW_OPERATION_IDLE;
+        }
     }
 }
 
 /* ============================================================================
  * Function Name: Window_Get_Status
- * Description:
- * Arguments:
- * Return:
+ * Description:   
+ * Arguments:     None
+ * Return:        
  * ========================================================================= */
 WINDOW_STATUS Window_Get_Status(void)
 {
-    return Window_status;
+    return Window_Status;
 }
 
 /* ============================================================================
@@ -160,127 +144,105 @@ WINDOW_STATUS Window_Get_Status(void)
  * ========================================================================= */
 WINDOW_OPERATION Window_Get_Operation(void)
 {    
-    return Window_operation;
+    return Window_Operation;
 }
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: Window_StatusDetermination
  * Description:
- * Arguments:
- * Return:
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
-static void Window_Status_Process(void)
+static void Window_StatusDetermination(void)
 {
-    PIN_VALUE Window_pinOpen  = Dio_Read_Window_Open();
-    PIN_VALUE Window_pinClose = Dio_Read_Window_Closed();
+    PIN_VALUE Open_PinVal  = Dio_Read_Window_Open();
+    PIN_VALUE Close_PinVal = Dio_Read_Window_Closed();
 
-    if (WINDOW_SW_INACTIVE == Window_pinOpen)
+    if (WINDOW_SW_INACTIVE == Open_PinVal)
     {
-        Window_status = (WINDOW_SW_INACTIVE == Window_pinOpen)? WINDOW_POSITION_OPEN : WINDOW_POSITION_ERROR;
+        Window_Status = (WINDOW_SW_INACTIVE == Close_PinVal)? WINDOW_POSITION_OPEN : WINDOW_POSITION_ERROR;
     }
     else
-    /* WINDOW_SW_ACTIVE == Window_pinOpen */
+    /* WINDOW_SW_ACTIVE == Open_PinVal */
     {
-        Window_status = (WINDOW_SW_ACTIVE == Window_pinClose)? WINDOW_POSITION_CLOSED : Window_position;
+        Window_Status = (WINDOW_SW_ACTIVE == Close_PinVal)? WINDOW_POSITION_CLOSED : Window_Position;
     }
 }
 
 /* ============================================================================
- * Function Name: 
- * Description:
- * Arguments:
- * Return:
+ * Function Name: Window_Actuation
+ * Description:   
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
 static void Window_Actuation(void)
 {
-    if (WINDOW_DELAY_500MS > Window_delay_conter)
+    static uint8 Delay_Counter = 0x00u;
+
+    if (WINDOW_DELAY_500MS < Delay_Counter)
     {
-        Window_delay_conter = 0x00u;
+        Delay_Counter = 0x00u;
 
-        if ((WINDOW_POSITION_OPEN != Window_status) && (WINDOW_POSITION_ERROR != Window_status))
+        if (WINDOW_REQUEST_DOWN == Window_Operation)
         {
-            Window_actuationState = eOPEN_WINDOW_ACTUATION;
+            Window_Actuation_Open();
         }
-        else if ((WINDOW_POSITION_CLOSED != Window_status) && (WINDOW_POSITION_ERROR != Window_status))
+        else if (WINDOW_REQUEST_UP == Window_Operation)
         {
-            Window_actuationState = eCLOSE_WINDOW_ACTUATION;
+            Window_Actuation_Close();
         }
-        else if (((WINDOW_POSITION_CLOSED == Window_status) && (eGLOBAL_CLOSE_WINDOW_ACTUATION == Window_actuationState)) ||
-                ((WINDOW_POSITION_OPEN == Window_status) && (eGLOBAL_OPEN_WINDOW_ACTUATION == Window_actuationState)))
+        else
+        /* WINDOW_REQUEST_IDLE == Window_Operation */
         {
-            Window_actuationState = eCANCEL_WINDOW_ACTUATION;
+            Window_Operation = WINDOW_OPERATION_IDLE;
         }
-
     }
     else
     {
-        Window_delay_conter++;
-    }
-
-
-    switch (Window_actuationState)
-    {
-        case eNOT_WINDOW_ACTUATION:
-        case eCANCEL_WINDOW_ACTUATION:
-        {
-            Window_operation = WINDOW_OPERATION_IDLE;
-        } break;
-
-        case eOPEN_WINDOW_ACTUATION:
-        case eGLOBAL_OPEN_WINDOW_ACTUATION:
-        {
-            Window_operation = WINDOW_OPERATION_DOWN;
-        } break;
-
-        case eCLOSE_WINDOW_ACTUATION:
-        case eGLOBAL_CLOSE_WINDOW_ACTUATION:
-        {
-            Window_operation = WINDOW_OPERATION_UP;
-        }
-        default:
-        {
-            /* Avoid Misra - No action required */
-        } break;
+        Delay_Counter++;
     }
 }
 
 /* ============================================================================
- * Function Name: 
- * Description:
- * Arguments:
- * Return:
+ * Function Name: Window_Actuation_Open
+ * Description:   
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
 static void Window_Actuation_Open(void)
 {
-    Window_position = (WINDOW_POSITION_OPEN == Window_position)? WINDOW_POSITION_1 : Window_position;
+    if ((WINDOW_POSITION_OPEN <= Window_Position) && (WINDOW_POSITION_10 > Window_Position))
+    {
+        Window_Position++;
 
-    pins_value |= (0x01u << Window_position);
-    
-    Dio_Write_Window_Leds(pins_value);
-
-    Window_position++;
-
-    Window_position = (WINDOW_POSITION_10 <= Window_position)? WINDOW_POSITION_10 : Window_position;
+        pins_Value |= (0x01u << Window_Position);
+        Dio_Write_Window_Leds( pins_Value );
+    }
+    else
+    {
+        Window_Operation = WINDOW_OPERATION_IDLE;
     }
 }
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: Window_Actuation_Close
  * Description:
- * Arguments:
- * Return:
+ * Arguments:     None
+ * Return:        None
  * ========================================================================= */
 static void Window_Actuation_Close(void)
 {
-    Window_position = (WINDOW_POSITION_10 <= Window_position)? WINDOW_POSITION_10 : Window_position;
+    if ((WINDOW_POSITION_OPEN < Window_Position) && (WINDOW_POSITION_10 >= Window_Position))
+    {
+        pins_Value &= ~(0x01u << Window_Position);
+        Dio_Write_Window_Leds( pins_Value );
 
-    pins_value &= ~(0x01u << Window_position);
-    
-    Dio_Write_Window_Leds(pins_value);
-
-    Window_position--;
-
-    Window_position = (WINDOW_POSITION_OPEN <= Window_position)? WINDOW_POSITION_OPEN : Window_position;
+        Window_Position--;
+    }
+    else
+    {
+        Window_Operation = WINDOW_OPERATION_IDLE;
     }
 }
+
 /*End of file_______________________________________________________________*/

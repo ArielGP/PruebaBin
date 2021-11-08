@@ -10,7 +10,7 @@
 #include "HwConfig.h"
 #include "Door.h"
 
-/*Global type def___________________________________________________________*/
+/*Local type def___________________________________________________________*/
 typedef uint8 Door_hold_t;
 
 typedef enum
@@ -20,7 +20,7 @@ typedef enum
     eDOOR_ACTION_COMPLETED 
 }Door_actionState_t;
 
-/*Global Macro______________________________________________________________*/
+/*Local Macro______________________________________________________________*/
 #define DOOR_HOLD_THRESHOLD_STATE         ((Door_hold_t) 0x0Au)
 #define DOOR_TURN_ON_STATE                 DIO_LOW
 #define DOOR_TURN_OFF_STATE                DIO_HIGH
@@ -28,15 +28,15 @@ typedef enum
 #define DOOR_SW_ACTIVE                     DIO_HIGH
 #define DOOR_SW_INACTIVE                   DIO_LOW
 
-/*Local function def________________________________________________________*/
-static void Door_StatusDetermination( void );
-static Door_actionState_t Door_LockDoorActuation( void );
-static Door_actionState_t Door_UnLockDoorActuation( void );
-
 /*Local variable____________________________________________________________*/
 static DOOR_REQUEST Door_Request;
 static DOOR_STATUS  Door_Status;
 static Door_actionState_t actionState;
+
+/*Local function def________________________________________________________*/
+static void Door_StatusDetermination( void );
+static Door_actionState_t Door_LockDoorActuation( void );
+static Door_actionState_t Door_UnLockDoorActuation( void );
 
 /* ============================================================================
  * Function Name: Door_Init
