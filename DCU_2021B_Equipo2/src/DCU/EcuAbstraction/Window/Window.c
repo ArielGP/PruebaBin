@@ -31,8 +31,10 @@ static WINDOW_OPERATION Window_Operation;
 static PIN_VALUES pins_Value = 0x00;
 
 /*Local function def________________________________________________________*/
-static void Window_Actuation( void );
-static void Window_StatusDetermination( void );
+static void Window_Actuation(void);
+static void Window_StatusDetermination(void);
+static void Window_Actuation_Open(void);
+static void Window_Actuation_Close(void);
 
 /* ============================================================================
  * Function Name: Window_Init
