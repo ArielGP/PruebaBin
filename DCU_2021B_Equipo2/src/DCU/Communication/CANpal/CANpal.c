@@ -25,6 +25,7 @@
 /* Need to include flexcan_hw_access.h for symbols CAN_ID_STD_MASK and CAN_ID_STD_SHIFT */
 #include "flexcan_hw_access.h"
 
+#include "comgen_CAN_includes.h"
 
 #define CAN_PAL_RX_BUFFER	0
 #define CAN_PAL_TX_BUFFER	1
