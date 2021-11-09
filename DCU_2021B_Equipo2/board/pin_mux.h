@@ -42,11 +42,11 @@ extern "C" {
 #define SW_WINDOW_CLOSE_PORT    PTD
 #define SW_WINDOW_CLOSE_PIN     7U
 #define LOCK_BTN_PORT    PTA
-#define LOCK_BTN_PIN     10U
+#define LOCK_BTN_PIN     14U
 #define SW_DOOR_LOCKED_PORT    PTD
 #define SW_DOOR_LOCKED_PIN     2U
 #define SW_DOOR_UNLOCKED_PORT    PTD
-#define SW_DOOR_UNLOCKED_PIN     0U
+#define SW_DOOR_UNLOCKED_PIN     5U
 #define REAR_WINDOW_LOCK_BTN_PORT    PTC
 #define REAR_WINDOW_LOCK_BTN_PIN     17U
 #define SW_VARIANT_1_PORT    PTD
@@ -81,14 +81,14 @@ extern "C" {
 #define CAN_TX_PIN     5U
 #define PASSENGER_OPEN_BTN_PORT    PTB
 #define PASSENGER_OPEN_BTN_PIN     14U
-#define UNLOCK_BTN_PORT    PTB
-#define UNLOCK_BTN_PIN     17U
+#define UNLOCK_BTN_PORT    PTA
+#define UNLOCK_BTN_PIN     13U
 #define PASSENGER_CLOSE_BTN_PORT    PTB
 #define PASSENGER_CLOSE_BTN_PIN     15U
 #define REARRIGHT_CLOSE_BTN_PORT    PTB
 #define REARRIGHT_CLOSE_BTN_PIN     16U
 /*! @brief User number of configured pins */
-#define NUM_OF_CONFIGURED_PINS0 34
+#define NUM_OF_CONFIGURED_PINS0 32
 /*! @brief User configuration structure */
 extern pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0];
 
