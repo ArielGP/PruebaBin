@@ -8,3 +8,4 @@ Debug_RAM/
 # Ignore files
 #
 .settings/language.settings.xml
+.project
