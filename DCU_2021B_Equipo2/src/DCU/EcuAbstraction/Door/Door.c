@@ -38,7 +38,7 @@ static Door_hold_t  doorCounter;
 /*Local function def________________________________________________________*/
 static void Door_StatusDetermination( void );
 static void Door_LockDoorActuation  (Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr);
-static void Door_UnLockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
+static void Door_UnLockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr);
 
 /* ============================================================================
  * Function Name: Door_Init
@@ -178,7 +178,7 @@ static void Door_LockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST 
  * Arguments:     
  * Return:        None 
  * ========================================================================= */
-static void Door_LockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
+static void Door_UnLockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
 {
     if (0x00u == counterPtr[0u])
     {
