@@ -31,12 +31,14 @@ typedef enum
 /*Local variable____________________________________________________________*/
 static DOOR_REQUEST Door_Request;
 static DOOR_STATUS  Door_Status;
-static Door_actionState_t actionState;
+
+static DOOR_REQUEST previousDoor_Request;
+static Door_hold_t  doorCounter;
 
 /*Local function def________________________________________________________*/
 static void Door_StatusDetermination( void );
-static Door_actionState_t Door_LockDoorActuation( void );
-static Door_actionState_t Door_UnLockDoorActuation( void );
+static void Door_LockDoorActuation  (Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr);
+static void Door_UnLockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
 
 /* ============================================================================
  * Function Name: Door_Init
@@ -48,7 +50,9 @@ void Door_Init(void)
 {
     Door_Request = DOOR_REQUEST_NONE;
     Door_Status  = DOOR_STATUS_UNKNOWN;
-    actionState  = eDOOR_ACTION_UNKNOWN;
+
+    previousDoor_Request = DOOR_REQUEST_NONE;
+    doorCounter = 0x00u;
 }
 
 /* ============================================================================
@@ -59,30 +63,32 @@ void Door_Init(void)
  * ========================================================================= */
 void Door_Run(void)
 {
+
     /* DOOR Actuation */
+    if (Door_Request != previousDoor_Request)
+    {
+        doorCounter = 0x00u;
+    }
+    
     if (DOOR_REQUEST_LOCK == Door_Request)
     {
-        actionState = Door_LockDoorActuation();
+        Door_LockDoorActuation(&doorCounter, &Door_Request);
     }
     else if (DOOR_REQUEST_UNLOCK == Door_Request)
     {
-        actionState = Door_UnLockDoorActuation();
+        Door_UnLockDoorActuation(&doorCounter, &Door_Request);
     }
     else
     {
-        /* Avoid Misra - No action required */ 
+        /* Avoid Misra - No action required */
     }
 
-    if (eDOOR_ACTION_COMPLETED == actionState)
-    {
-        /* Ready to receive new actuation request */
-        Door_Request = DOOR_REQUEST_NONE;
-        actionState = eDOOR_ACTION_UNKNOWN;
-    }
-
+    previousDoor_Request = Door_Request;
 
     /* DOOR status*/
     Door_StatusDetermination();
+
+    
 }
 
 //driver, passenger
@@ -94,15 +100,11 @@ void Door_Run(void)
  * ========================================================================= */
 void Door_Set_Request(DOOR_REQUEST request)
 {
-    if ((DOOR_REQUEST_NONE == request) ||
-        (DOOR_REQUEST_LOCK == request) ||
+    if ((DOOR_REQUEST_NONE   == request) ||
+        (DOOR_REQUEST_LOCK   == request) ||
         (DOOR_REQUEST_UNLOCK == request))
     {
-        /* Request new Door Actuation until finish the current one */
-        if (DOOR_REQUEST_NONE == Door_Request)
-        {
-            Door_Request = request;
-        }
+        Door_Request = request;
     }
 }
 
@@ -126,7 +128,7 @@ DOOR_STATUS Door_Get_Status(void)
 static void Door_StatusDetermination(void)
 {
     PIN_VALUE  UnLock_status = Dio_Read_DoorUnlock();
-    PIN_VALUE  Lock_status = Dio_Read_DoorLock();
+    PIN_VALUE  Lock_status   = Dio_Read_DoorLock();
 
     if ((DOOR_SW_ACTIVE == UnLock_status) && (DOOR_SW_INACTIVE == Lock_status))
     {
@@ -145,65 +147,58 @@ static void Door_StatusDetermination(void)
 /* ============================================================================
  * Function Name: Door_LockDoorActuation
  * Description:   
- * Arguments:     None
- * Return:        Enum door action state.
+ * Arguments:     
+ * Return:        None
  * ========================================================================= */
-static Door_actionState_t Door_LockDoorActuation( void )
+static void Door_LockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
 {
-    static Door_hold_t counter = 0x00u;
-    Door_actionState_t ret_value = eDOOR_ACTION_IN_PROGRESS;
-
-    if (0x00u == counter)
+    if (0x00u == counterPtr[0u])
     {
         Dio_Write_DoorUnlock_Led( DOOR_TURN_OFF_STATE );
     }
     
     /* Wait 100ms */
-    if (DOOR_HOLD_THRESHOLD_STATE < counter)
+    if (DOOR_HOLD_THRESHOLD_STATE < counterPtr[0u])
     {
+        /* DOOR_ACTION_COMPLETED */
+        doorRequestPtr[0u] = DOOR_REQUEST_NONE;
+        counterPtr[0u]     = 0x00u;
         Dio_Write_DoorLock_Led( DOOR_TURN_ON_STATE );
-
-        counter = 0x00u;
-        ret_value = eDOOR_ACTION_COMPLETED;
     }
     else
     {
-        counter++;
+        /* DOOR_ACTION_IN_PROGRESS */
+        counterPtr[0u]++;
     }
-
-    return ret_value;
 }
 
 /* ============================================================================
  * Function Name: Door_UnLockDoorActuation
  * Description:
  * Arguments:     
- * Return:        Enum door action state.
+ * Return:        None 
  * ========================================================================= */
-static Door_actionState_t Door_UnLockDoorActuation( void )
+static void Door_LockDoorActuation(Door_hold_t * const counterPtr, DOOR_REQUEST * const doorRequestPtr)
 {
-    static Door_hold_t counter = 0x00u;
-    Door_actionState_t ret_value = eDOOR_ACTION_IN_PROGRESS;
-
-    if (0x00u == counter)
+    if (0x00u == counterPtr[0u])
     {
         Dio_Write_DoorLock_Led( DOOR_TURN_OFF_STATE );
     }
     
     /* Wait 100ms */
-    if (DOOR_HOLD_THRESHOLD_STATE < counter)
+    if (DOOR_HOLD_THRESHOLD_STATE < counterPtr[0u])
     {
+        /* DOOR_ACTION_COMPLETED */
+        
+        doorRequestPtr[0u] = DOOR_REQUEST_NONE;
+        counterPtr[0u]     = 0x00u;
         Dio_Write_DoorUnlock_Led( DOOR_TURN_ON_STATE );
-
-        counter = 0x00u;
-        ret_value = eDOOR_ACTION_COMPLETED;
     }
     else
     {
-        counter++;
+        /* DOOR_ACTION_IN_PROGRESS */
+        counterPtr[0u]++;
     }
-
-    return ret_value;
 }
 
 /*End of file_______________________________________________________________*/
