@@ -110,6 +110,9 @@ void init_hook(void)
     Window_Init();
     Window_Init_Safety();
 
+	/* */
+	WindowApp_Init();
+
 	Tasks_StartOS();
 }
 
@@ -307,6 +310,9 @@ void app_task_100ms( void *pvParameters )
 		
         /* */
         Window_Run_Safety();
+
+		/* */
+		WindowApp_Run();
 
 # ifdef ECU_DOOR_WINDOW_TEST
 
