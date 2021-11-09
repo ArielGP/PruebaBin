@@ -309,23 +309,11 @@ void app_task_100ms( void *pvParameters )
         Window_Run_Safety();
 
 # ifdef ECU_DOOR_WINDOW_TEST
-		if (BUTTON_PRESSED == Button_Get_Door_Lock())
-		{
-			if (DOOR_STATUS_LOCKED != Door_Get_Status())
-			{
-				Door_Set_Request(DOOR_REQUEST_LOCK);
-			}
-		}
-		else if (BUTTON_PRESSED == Button_Get_Door_Unlock())
-		{
-			if (DOOR_STATUS_UNLOCKED != Door_Get_Status())
-			{
-				Door_Set_Request(DOOR_REQUEST_UNLOCK);
-			}
-		}
 
+	/* NOTE: below code is just fort test */
 		if (BUTTON_PRESSED == Button_Get_Window_Open())
 		{
+			/*test window*/
 			if (WINDOW_OPERATION_DOWN != Window_Get_Operation())
 			{
 				Window_Set_Request(WINDOW_REQUEST_DOWN);
@@ -334,9 +322,16 @@ void app_task_100ms( void *pvParameters )
 			{
 				Window_Set_Request(WINDOW_REQUEST_IDLE);
 			}
+
+			/*test Door*/
+			if (DOOR_STA/*test Door*/TUS_LOCKED != Door_Get_Status())
+			{
+				Door_Set_Request(DOOR_REQUEST_LOCK);
+			}
 		}
 		else if (BUTTON_PRESSED == Button_Get_Window_Close())
 		{
+			/*test window*/
 			if (WINDOW_OPERATION_UP != Window_Get_Operation())
 			{
 				Window_Set_Request(WINDOW_REQUEST_UP);
@@ -345,7 +340,12 @@ void app_task_100ms( void *pvParameters )
 			{
 				Window_Set_Request(WINDOW_REQUEST_IDLE);
 			}
-		}
+
+			/*test Door*/
+			if (DOOR_STATUS_UNLOCKED != Door_Get_Status())
+			{
+				Door_Set_Request(DOOR_REQUEST_UNLOCK);
+			}
 		}
 # endif		
 
