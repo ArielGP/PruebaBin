@@ -10,7 +10,9 @@
 
 //#define TEST
 //#define TEST2
-#define TEST3
+# if(0)
+#    define TEST3
+# endif
 extern void init_hook(void);
 
 #endif /* OS_TASKS_TASKS_H_ */
