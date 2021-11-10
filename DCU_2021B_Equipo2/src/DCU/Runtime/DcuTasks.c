@@ -52,8 +52,9 @@ BUTTON_STATUS openbtn, closebtn;
 #    define ACT_3_7
 # endif
 
-#define ECU_DOOR_WINDOW_TEST
-
+# if (0)
+#    define ECU_DOOR_WINDOW_TEST
+# endif
 
 #define app_10ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3u )
 #define app_20ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2u )
@@ -109,6 +110,9 @@ void init_hook(void)
     /* */
     Window_Init();
     Window_Init_Safety();
+
+	/* */
+	WindowApp_Init();
 
 	Tasks_StartOS();
 }
@@ -307,6 +311,9 @@ void app_task_100ms( void *pvParameters )
 		
         /* */
         Window_Run_Safety();
+
+		/* */
+		WindowApp_Run();
 
 # ifdef ECU_DOOR_WINDOW_TEST
 
