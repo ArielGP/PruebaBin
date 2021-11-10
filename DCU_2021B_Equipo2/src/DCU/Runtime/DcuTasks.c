@@ -46,8 +46,14 @@ BUTTON_STATUS openbtn, closebtn;
 #endif
 
 /*Local Macros______________________________________________________________*/
-#define ACT_3_5
-#define ACT_3_7
+
+# if (0)
+#    define ACT_3_5
+#    define ACT_3_7
+# endif
+
+#define ECU_DOOR_WINDOW_TEST
+
 
 #define app_10ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3u )
 #define app_20ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2u )
@@ -97,6 +103,13 @@ void init_hook(void)
 
 	Signals_Init();
 
+    /* */
+    Door_Init();
+
+    /* */
+    Window_Init();
+    Window_Init_Safety();
+
 	Tasks_StartOS();
 }
 
@@ -122,6 +135,13 @@ void app_task_10ms( void *pvParameters )
 		Signals_RunTx();
 
 		Button_Run();
+
+		/* */
+        Door_Run();
+
+        /* */
+        Window_Run();
+
 		/*
 		#ifdef TEST
 		switch(btn_state)
@@ -292,6 +312,52 @@ void app_task_100ms( void *pvParameters )
 	for( ;; )
 	{
 		Adc_Run();
+		
+        /* */
+        Window_Run_Safety();
+
+# ifdef ECU_DOOR_WINDOW_TEST
+
+	/* NOTE: below code is just fort test */
+		if (BUTTON_PRESSED == Button_Get_Window_Open())
+		{
+			/* test window */
+			if (WINDOW_OPERATION_DOWN != Window_Get_Operation())
+			{
+				Window_Set_Request(WINDOW_REQUEST_DOWN);
+			}
+			else
+			{
+				Window_Set_Request(WINDOW_REQUEST_IDLE);
+			}
+
+			/* test Door */
+			if (DOOR_STATUS_LOCKED != Door_Get_Status())
+			{
+				Door_Set_Request(DOOR_REQUEST_LOCK);
+			}
+		}
+		else if (BUTTON_PRESSED == Button_Get_Window_Close())
+		{
+			/* test window */
+			if (WINDOW_OPERATION_UP != Window_Get_Operation())
+			{
+				Window_Set_Request(WINDOW_REQUEST_UP);
+			}
+			else
+			{
+				Window_Set_Request(WINDOW_REQUEST_IDLE);
+			}
+
+			/* test Door */
+			if (DOOR_STATUS_UNLOCKED != Door_Get_Status())
+			{
+				Door_Set_Request(DOOR_REQUEST_UNLOCK);
+			}
+		}
+# endif		
+
+		
 
 # ifdef ACT_3_5
 		if (ACT_3_5_ANTIPINCH_LIMIT <= Adc_Get_AntiPinch_Value())
