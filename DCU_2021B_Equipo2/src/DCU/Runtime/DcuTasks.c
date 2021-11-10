@@ -113,6 +113,8 @@ void init_hook(void)
 
 	/* */
 	WindowApp_Init();
+	/* */
+	DoorApp_Init();
 
 	Tasks_StartOS();
 }
@@ -322,6 +324,10 @@ void app_task_100ms( void *pvParameters )
 
 		/* */
 		WindowApp_Run();
+
+
+		DoorApp_Run();
+
 
 # ifdef ECU_DOOR_WINDOW_TEST
 

@@ -69,6 +69,8 @@ static boolean RearLeftRightOnly;
 static uint8 WinOp_SigVal;
 static uint8 BCM_2_Counter;
 
+static uint8_t counter=0;
+
 /*Local function def________________________________________________________*/
 static WinApp_Actuation_t WindowApp_ManualMode (void);
 static WinApp_Actuation_t WindowApp_RemoteOperation (void);
@@ -115,7 +117,7 @@ void WindowApp_Run(void)
         winActuation = WindowApp_RemoteOperation();
     }
 
-    if ((eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation))
+    if ((eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_OPEN_WINDOW_ACTUATION == prevWinActuation))
     {
         /* 
          *Global actuation will stop whether window is considered either COMPLETY_OPEN or COMPLETY_CLOSE 
@@ -154,8 +156,23 @@ void WindowApp_Run(void)
 
     prevWinActuation = winActuation;
 
-    Window_Set_Request(Window_ReqOperation);
-    Signals_Set_WindowOp(&WinOp_SigVal);
+
+    if((counter == 0) && (winActuation != eNOT_WINDOW_ACTUATION))
+    {
+    	   counter++;
+
+      Window_Set_Request(Window_ReqOperation);
+      Signals_Set_WindowOp(&WinOp_SigVal);
+
+    }
+    else{
+
+
+    	if(counter < 5 && counter > 0)
+    		counter++;
+    	else
+    		counter=0;
+    }
 }
 
 /* ============================================================================
