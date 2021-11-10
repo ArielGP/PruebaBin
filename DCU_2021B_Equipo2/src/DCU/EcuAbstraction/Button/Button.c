@@ -330,4 +330,15 @@ static PIN_VALUE getDigitalInput(uint8_t index)
 	return button_pin_value;
 }
 
+/* ============================================================================
+ * Function Name: Button_Consume_Stuck
+ * Description:
+ * Arguments: index
+ * Return:
+ * ========================================================================= */
+void Button_Consume_Stuck(uint8 index)
+{
+	ButtonList[index].reached3 = kFalse;
+}
+
 /*End of file_______________________________________________________________*/
