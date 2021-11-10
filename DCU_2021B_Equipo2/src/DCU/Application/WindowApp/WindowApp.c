@@ -251,7 +251,7 @@ static WinApp_Actuation_t WindowApp_RemoteOperation(void)
             }
             else
             {
-                BCM_2_Counter++
+                BCM_2_Counter++;
             }
 
             prevConfortCmd_SigVal = confortCmd_SigVal;
@@ -290,15 +290,15 @@ static WinApp_Actuation_t WindowApp_RemoteOperation(void)
 
         switch (winCtrl_SigVal)
         {
-            case:WINDOWCONTROL_NO_REQ:
+            case WINDOWCONTROL_NO_REQ:
             {
                 retValue = eCANCEL_WINDOW_ACTUATION;
-            } break
+            } break;
 
-            case:WINDOWCONTROL_UP_REQ:
+            case WINDOWCONTROL_UP_REQ:
             {
                 retValue = eCLOSE_WINDOW_ACTUATION;
-            } break
+            } break;
 
             case WINDOWCONTROL_DOWN_REQ:
             {
@@ -393,8 +393,8 @@ static void WindowApp_ReportWindowControlSignals(void)
     
     for(index =0x00u; (WINDOW_CTRL_DOOR_LEN > index); index++)
     {
-        openButtonSts  = WinCtrlDoor_table[index]->GetButton_WindowOpen();
-        closeButtonSts = WinCtrlDoor_table[index]->GetButton_WindowClose();
+        openButtonSts  = WinCtrlDoor_table[index].GetButton_WindowOpen();
+        closeButtonSts = WinCtrlDoor_table[index].GetButton_WindowClose();
 
         if ((BUTTON_PRESSED == openButtonSts) || (BUTTON_LONG_PRESSED == openButtonSts))
         {
@@ -409,7 +409,7 @@ static void WindowApp_ReportWindowControlSignals(void)
             signalVal = WINDOWCONTROL_NO_REQ;
         }
 
-        WinCtrlDoor_table[index]->SetSignal_WindowControl(&signalVal);
+        WinCtrlDoor_table[index].SetSignal_WindowControl(&signalVal);
     }
 }
 
