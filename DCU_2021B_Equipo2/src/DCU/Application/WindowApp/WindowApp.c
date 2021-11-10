@@ -3,6 +3,12 @@
  *
  *  Created on: 2 ago. 2021
  *      Author: uid87544
+ *
+ *      History
+ *      Date        Version     Author               Comment
+ *      (YYMMDD)    vX.X.X
+ *
+ *      211109      v1.0.0      Efren Del Real       WindowApp SWC implemented
  */
 #include "BasicTypes.h"
 #include "WindowApp.h"

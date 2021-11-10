@@ -52,8 +52,9 @@ BUTTON_STATUS openbtn, closebtn;
 #    define ACT_3_7
 # endif
 
-#define ECU_DOOR_WINDOW_TEST
-
+# if (0)
+#    define ECU_DOOR_WINDOW_TEST
+# endif
 
 #define app_10ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3u )
 #define app_20ms_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2u )
