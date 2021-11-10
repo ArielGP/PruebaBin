@@ -20,7 +20,7 @@ typedef struct
     Signal_set_t SetSignal_WindowControl;
     Button_Get_t GetButton_WindowOpen;
     Button_Get_t GetButton_WindowClose;
-}WindowApp_t;
+}WinApp_WinCtrlDoor_t;
 
 typedef enum
 {
@@ -30,46 +30,47 @@ typedef enum
     eCLOSE_WINDOW_ACTUATION,
     eGLOBAL_CLOSE_WINDOW_ACTUATION,
     eCANCEL_WINDOW_ACTUATION
-}WindowApp_Actuation_t;
+}WinApp_Actuation_t;
 
 /*Local Macro______________________________________________________________*/
-#define WINDOW_CTRL_SIGNAL_LEN           (0x03u)
+#define BCM_2_CONFORCMD_TIME_REACH       (0x05u)
+#define WINDOW_CTRL_DOOR_LEN             (0x03u)
 
 /*Local const_______________________________________________________________*/
-const WindowApp_t * const WinCtrlSignal_table [WINDOW_CTRL_SIGNAL_LEN] =
+const WinApp_WinCtrlDoor_t WinCtrlDoor_table [WINDOW_CTRL_DOOR_LEN] =
 {
-    {.SetSignal_WindowControl = Signals_Set_WindowControl_Passenger, 
-     .GetButton_WindowOpen    = Button_Get_PassengerWindow_Open,
-     .GetButton_WindowClose   = Button_Get_PassengerWindow_Close
+    {
+        .SetSignal_WindowControl = Signals_Set_WindowControl_Passenger,
+        .GetButton_WindowOpen    = Button_Get_PassengerWindow_Open,
+        .GetButton_WindowClose   = Button_Get_PassengerWindow_Close
     },
-    {.SetSignal_WindowControl = Signals_Set_WindowControl_RearLeft, 
-     .GetButton_WindowOpen    = Button_Get_RearLeftWindow_Open,
-     .GetButton_WindowClose   = Button_Get_RearLeftWindow_Close
+    {
+        .SetSignal_WindowControl = Signals_Set_WindowControl_RearLeft,
+        .GetButton_WindowOpen    = Button_Get_RearLeftWindow_Open,
+        .GetButton_WindowClose   = Button_Get_RearLeftWindow_Close
     },
-    {.SetSignal_WindowControl = Signals_Set_WindowControl_RearRight, 
-     .GetButton_WindowOpen    = Button_Get_RearRightWindow_Open,
-     .GetButton_WindowClose   = Button_Get_RearRightWindow_Close
+    {
+        .SetSignal_WindowControl = Signals_Set_WindowControl_RearRight,
+        .GetButton_WindowOpen    = Button_Get_RearRightWindow_Open,
+        .GetButton_WindowClose   = Button_Get_RearRightWindow_Close
     }
 };
 
 /*Local variable____________________________________________________________*/
-static WINDOW_STATUS    Window_Position;
-static WINDOW_OPERATION Window_Operation;
 static WINDOW_REQUEST   Window_ReqOperation;
 
-
 static boolean RearLeftRightOnly;
-static WindowApp_Actuation_t Window_Actuation;
 static uint8 WinOp_SigVal;
-
+static uint8 BCM_2_Counter;
 
 /*Local function def________________________________________________________*/
-static WindowApp_Actuation_t WindowApp_ManualMode (void);
-static WindowApp_Actuation_t WindowApp_RemoteMode (void);
-static WindowApp_Actuation_t WindowApp_GetOpenActuation (BUTTON_STATUS buttonSts);
-static WindowApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts);
+static WinApp_Actuation_t WindowApp_ManualMode (void);
+static WinApp_Actuation_t WindowApp_RemoteOperation (void);
+static WinApp_Actuation_t WindowApp_GetOpenActuation (BUTTON_STATUS buttonSts);
+static WinApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts);
 static void WindowApp_ReportWindowControlSignals(void);
 static void WindowApp_ReportRearWindowLockSignal(void);
+static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr);
 
 
 
@@ -81,6 +82,10 @@ static void WindowApp_ReportRearWindowLockSignal(void);
  * ========================================================================= */
 void WindowApp_Init(void)
 {
+    WinOp_SigVal        = WINDOWOP_IDLE;
+    Window_ReqOperation = WINDOW_REQUEST_IDLE;
+    BCM_2_Counter = 0x00u;
+
     RearLeftRightOnly = ((HWCONFIG_REAR_LEFT == HwConfig_Get()) || (HWCONFIG_REAR_RIGHT == HwConfig_Get()))? TRUE : FALSE;
 }
 
@@ -92,62 +97,29 @@ void WindowApp_Init(void)
  * ========================================================================= */
 void WindowApp_Run(void)
 {
-    uint8 rearWinLock_SigVal;
-
-    Window_Position  = Window_Get_Status();
-    Window_Operation = Window_Get_Operation();
+    static WinApp_Actuation_t prevWinActuation = eNOT_WINDOW_ACTUATION;
+    WinApp_Actuation_t winActuation = eNOT_WINDOW_ACTUATION;
+    
+    /* */
+     winActuation = WindowApp_ManualMode();
 
     /* */
-    if ((eGLOBAL_CLOSE_WINDOW_ACTUATION != Window_Actuation) && (eGLOBAL_CLOSE_WINDOW_ACTUATION != Window_Actuation))
+     if (eNOT_WINDOW_ACTUATION == winActuation)
     {
-
-        Window_Actuation = WindowApp_ManualMode();
-
-        if (eNOT_WINDOW_ACTUATION == Window_Actuation)
-        {
-            Window_Actuation = WindowApp_RemoteMode();
-        }
-
-        if (HWCONFIG_DRIVER == HwConfig_Get())
-        {
-            WindowApp_ReportWindowControlSignals();
-            WindowApp_ReportRearWindowLockSignal();
-        }
+        winActuation = WindowApp_RemoteOperation();
     }
 
-
-    /**/
-    if ( WINDOW_POSITION_ERROR != Window_Position)
+    if ((eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation))
     {
-        if (WINDOW_POSITION_OPEN == Window_Position)
-        {
-            if ((eOPEN_WINDOW_ACTUATION == Window_Actuation) || (eGLOBAL_OPEN_WINDOW_ACTUATION == Window_Actuation))
-            {
-                Window_Actuation = eCANCEL_WINDOW_ACTUATION;
-            }
-        }
-        else if (WINDOW_POSITION_CLOSED == Window_Position)
-        {
-            if ((eCLOSE_WINDOW_ACTUATION == Window_Actuation) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == Window_Actuation))
-            {
-                Window_Actuation = eCANCEL_WINDOW_ACTUATION;
-            }
-        }
-        else
-        {
-            /* Avoid Misra - No action required */
-        }
-    }
-    else
-    {
-        Window_Actuation = eCANCEL_WINDOW_ACTUATION;
+        /* 
+         *Global actuation will stop whether window is considered either COMPLETY_OPEN or COMPLETY_CLOSE 
+        */
+        winActuation = prevWinActuation;
     }
 
+    WindowApp_ValidateWindowActuation(&winActuation);
 
-
-
-
-    switch (Window_Actuation)
+    switch (winActuation)
     {
         case eOPEN_WINDOW_ACTUATION:
         case eGLOBAL_OPEN_WINDOW_ACTUATION:
@@ -165,6 +137,7 @@ void WindowApp_Run(void)
         } break;
 
         case eCANCEL_WINDOW_ACTUATION:
+        case eNOT_WINDOW_ACTUATION:
         {
             WinOp_SigVal        = WINDOWOP_IDLE;
             Window_ReqOperation = WINDOW_REQUEST_IDLE;
@@ -173,22 +146,26 @@ void WindowApp_Run(void)
             break;
     }
 
+    prevWinActuation = winActuation;
+
     Window_Set_Request(Window_ReqOperation);
     Signals_Set_WindowOp(&WinOp_SigVal);
 }
 
 /* ============================================================================
  * Function Name: WindowApp_ManualMode
- * Description:   
+ * Description:   All Doors are allowed to execute manual Window Control from 
+ *                its corresponding OPEN_BTN and CLOSE_BTN states.
+ * 
  * Arguments:     None
  * Return:        
  * ========================================================================= */
-static WindowApp_Actuation_t WindowApp_ManualMode(void)
+static WinApp_Actuation_t WindowApp_ManualMode(void)
 {
     BUTTON_STATUS openButtonSts    = Button_Get_Window_Open();
     BUTTON_STATUS closeButtonSts   = Button_Get_Window_Close();
     uint8 rearWinLock_SigVal       = REARWINDOWLOCK_BLOCK;
-    WindowApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
+    WinApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
     
     if (TRUE == RearLeftRightOnly)
     {
@@ -228,60 +205,125 @@ static WindowApp_Actuation_t WindowApp_ManualMode(void)
         /* Avoid Misra - No action required */
     }
 
-    return retValue;
-}
 
-/* ============================================================================
- * Function Name: WindowApp_RemoteMode
- * Description:   
- * Arguments:     None
- * Return:        
- * ========================================================================= */
-static WindowApp_Actuation_t WindowApp_RemoteMode(void)
-{
-    uint8 confortCmd_SigVal;
-    WindowApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
-
-    (void)Signals_Get_ConfortCmd(&confortCmd_SigVal);
-    (void)Signals_Get_WindowControl_Passenger(&confortCmd_SigVal);
-    (void)Signals_Get_WindowControl_RearLeft(&confortCmd_SigVal);
-    (void)Signals_Get_WindowControl_RearRight(&confortCmd_SigVal);
-
-    switch (confortCmd_SigVal)
+    if (HWCONFIG_DRIVER == HwConfig_Get())
     {
-        case CONFORTCMD_NO:
-        {
-            retValue = eCANCEL_WINDOW_ACTUATION;
-        } break;
-
-        case CONFORTCMD_LOCK:
-        {
-            retValue = eCLOSE_WINDOW_ACTUATION;
-
-        } break;
-    
-        case CONFORTCMD_UNLOCK_ALL:
-        {
-            retValue = eOPEN_WINDOW_ACTUATION;
-        } break;
-
-        default:
-        {
-        } break;
+        WindowApp_ReportWindowControlSignals();
+        WindowApp_ReportRearWindowLockSignal();
     }
 
     return retValue;
 }
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: WindowApp_RemoteOperation
+ * Description:    
+ * Arguments:     None
+ * Return:        
+ * ========================================================================= */
+static WinApp_Actuation_t WindowApp_RemoteOperation(void)
+{
+    static uint8 prevConfortCmd_SigVal = CONFORTCMD_NO;
+    uint8 confortCmd_SigVal;
+    uint8 winCtrl_SigVal = WINDOWCONTROL_NO_REQ;
+    WinApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
+
+    (void)Signals_Get_ConfortCmd(&confortCmd_SigVal);
+
+    if (CONFORTCMD_NO == confortCmd_SigVal)
+    {
+        retValue = eCANCEL_WINDOW_ACTUATION;
+        BCM_2_Counter = 0x00u;
+    }
+    else
+    {
+        if ((CONFORTCMD_LOCK == confortCmd_SigVal) || (CONFORTCMD_UNLOCK_ALL == confortCmd_SigVal))
+        {
+            if (prevConfortCmd_SigVal != confortCmd_SigVal)
+            {
+                BCM_2_Counter = 0x00u;
+            }
+
+            if (BCM_2_CONFORCMD_TIME_REACH < BCM_2_Counter)
+            {
+                retValue = (CONFORTCMD_UNLOCK_ALL == confortCmd_SigVal)? eOPEN_WINDOW_ACTUATION : eCLOSE_WINDOW_ACTUATION;
+                BCM_2_Counter = 0x00u;
+            }
+            else
+            {
+                BCM_2_Counter++
+            }
+
+            prevConfortCmd_SigVal = confortCmd_SigVal;
+        }
+        else /* CONFORTCMD_UNLOCK_DRIVER == confortCmd_SigVal*/
+        {
+            BCM_2_Counter = 0x00u;
+        }
+    }
+
+    
+    if (eNOT_WINDOW_ACTUATION == retValue)
+    {
+        switch (HwConfig_Get())
+        {
+            case HWCONFIG_PASSENGER:
+            {
+                (void)Signals_Get_WindowControl_Passenger(&winCtrl_SigVal);
+            } break;
+
+            case HWCONFIG_REAR_LEFT:
+            {
+                (void)Signals_Get_WindowControl_RearLeft(&winCtrl_SigVal);
+            } break;
+
+            case HWCONFIG_REAR_RIGHT:
+            {
+                (void)Signals_Get_WindowControl_RearRight(&winCtrl_SigVal);
+            } break;
+
+            default:
+            {
+                /* Avoid Misra - No action required */
+            } break;
+        }
+
+        switch (winCtrl_SigVal)
+        {
+            case:WINDOWCONTROL_NO_REQ:
+            {
+                retValue = eCANCEL_WINDOW_ACTUATION;
+            } break
+
+            case:WINDOWCONTROL_UP_REQ:
+            {
+                retValue = eCLOSE_WINDOW_ACTUATION;
+            } break
+
+            case WINDOWCONTROL_DOWN_REQ:
+            {
+                retValue = eOPEN_WINDOW_ACTUATION;
+            } break;
+        
+            default:
+            {
+                /* Avoid Misra - No action required */
+            } break;
+        }
+    }
+
+    return retValue;
+}
+
+/* ============================================================================
+ * Function Name: WindowApp_GetOpenActuation
  * Description:   
  * Arguments:     None
  * Return:        
  * ========================================================================= */
-static WindowApp_Actuation_t WindowApp_GetOpenActuation(BUTTON_STATUS buttonSts)
+static WinApp_Actuation_t WindowApp_GetOpenActuation(BUTTON_STATUS buttonSts)
 {
-    WindowApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
+    WinApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
 
     switch (buttonSts)
     {
@@ -306,14 +348,14 @@ static WindowApp_Actuation_t WindowApp_GetOpenActuation(BUTTON_STATUS buttonSts)
 
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: WindowApp_GetCloseActuation
  * Description:   
- * Arguments:     None
+ * Arguments:     
  * Return:        None
  * ========================================================================= */
-static WindowApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts)
+static WinApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts)
 {
-    WindowApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
+    WinApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
 
     switch (buttonSts)
     {
@@ -337,7 +379,7 @@ static WindowApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts
 }
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: WindowApp_ReportWindowControlSignals
  * Description:   
  * Arguments:     None
  * Return:        None
@@ -349,10 +391,10 @@ static void WindowApp_ReportWindowControlSignals(void)
     uint8 signalVal;
     uint8 index;
     
-    for(index =0x00u; (WINDOW_CTRL_SIGNAL_LEN > index); index++)
+    for(index =0x00u; (WINDOW_CTRL_DOOR_LEN > index); index++)
     {
-        openButtonSts  = WinCtrlSignal_table[index]->GetButton_WindowOpen();
-        closeButtonSts = WinCtrlSignal_table[index]->GetButton_WindowClose();
+        openButtonSts  = WinCtrlDoor_table[index]->GetButton_WindowOpen();
+        closeButtonSts = WinCtrlDoor_table[index]->GetButton_WindowClose();
 
         if ((BUTTON_PRESSED == openButtonSts) || (BUTTON_LONG_PRESSED == openButtonSts))
         {
@@ -367,12 +409,12 @@ static void WindowApp_ReportWindowControlSignals(void)
             signalVal = WINDOWCONTROL_NO_REQ;
         }
 
-        WinCtrlSignal_table[index]->SetSignal_WindowControl(&signalVal);
+        WinCtrlDoor_table[index]->SetSignal_WindowControl(&signalVal);
     }
 }
 
 /* ============================================================================
- * Function Name: 
+ * Function Name: WindowApp_ReportRearWindowLockSignal
  * Description:   
  * Arguments:     None
  * Return:        None
@@ -389,3 +431,42 @@ static void WindowApp_ReportRearWindowLockSignal(void)
 
     Signals_Set_RearWindowLock(&signalVal);
 }
+
+/* ============================================================================
+ * Function Name: WindowApp_ValidateWindowActuation
+ * Description:   
+ * Arguments:     
+ * Return:        None
+ * ========================================================================= */
+static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr)
+{
+    WINDOW_STATUS winPosition = Window_Get_Status();
+
+    if ( WINDOW_POSITION_ERROR != winPosition)
+    {
+        if (WINDOW_POSITION_OPEN == winPosition)
+        {
+            if ((eOPEN_WINDOW_ACTUATION == winActuationPtr[0]) || (eGLOBAL_OPEN_WINDOW_ACTUATION == winActuationPtr[0]))
+            {
+                winActuationPtr[0] = eCANCEL_WINDOW_ACTUATION;
+            }
+        }
+        else if (WINDOW_POSITION_CLOSED == winPosition)
+        {
+            if ((eCLOSE_WINDOW_ACTUATION == winActuationPtr[0]) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == winActuationPtr[0]))
+            {
+                winActuationPtr[0] = eCANCEL_WINDOW_ACTUATION;
+            }
+        }
+        else
+        {
+            /* Avoid Misra - No action required */
+        }
+    }
+    else
+    {
+        winActuationPtr[0] = eCANCEL_WINDOW_ACTUATION;
+    }
+}
+
+/*End of file_______________________________________________________________*/
