@@ -25,6 +25,8 @@ static uint8_t loq_request;
 
 static uint8_t CAN_status_report;
 
+static uint8_t confort_cmd;
+
 
 static void Remote_Operation(void)
 {
@@ -77,19 +79,13 @@ static void Autolock_driving(void)
 
 
 	uint8_t PS_door_lockstatus;
-	uint8_t RL_door_lockstatus;
-	uint8_t RR_door_lockstatus;
 	uint8_t System_PwrMode;
 	uint8_t vehicle_speed;
 
-
-
-
-
 	/*reads doorlockstatus by CAN*/
 	Signals_Get_Passenger_DoorLockSts(&PS_door_lockstatus);
-	Signals_Get_RearLeft_DoorLockSts(&RL_door_lockstatus);
-	Signals_Get_RearRight_DoorLockSts(&RR_door_lockstatus);
+	//Signals_Get_RearLeft_DoorLockSts(&RL_door_lockstatus);
+	//Signals_Get_RearRight_DoorLockSts(&RR_door_lockstatus);
 
 	Signals_Get_SysPwrMode(&System_PwrMode);
 
@@ -100,7 +96,7 @@ static void Autolock_driving(void)
 			((System_PwrMode == SYSPWRMODE_RUN) && (vehicle_speed >=autolock_speed_threshold)))
 
 	 */
-	if(PS_door_lockstatus || RL_door_lockstatus || RR_door_lockstatus == LOCKINGREQ_UNLOCK)
+	if(PS_door_lockstatus == LOCKINGREQ_UNLOCK)
 	{
 		/*check byte 2 del bcm for confort comd value*/
 
@@ -161,6 +157,15 @@ static void Manual_Mode(void)
 			Signals_Set_DoorLockSts(&CAN_status_report);
 		}
 	}
+
+	else if ((BUTTON_PRESSED == Button_Get_Door_Unlock()) && (BUTTON_PRESSED == Button_Get_Door_Lock()))
+	{
+		Door_Set_Request(DOOR_REQUEST_NONE);
+		loq_request = LOCKINGREQ_NO;
+		Signals_Set_LockingReq(&loq_request);
+
+	}
+
 	else{
 		loq_request =LOCKINGREQ_NO;
 		Signals_Set_LockingReq(&loq_request);
@@ -179,9 +184,9 @@ void DoorApp_Init(void)
 
 	door_request = DOOR_REQUEST_NONE;
 
-
-
 	loq_request = LOCKINGREQ_NO;
+
+	confort_cmd = CONFORTCMD_NO;
 
 }
 
@@ -192,9 +197,44 @@ void DoorApp_Run(void)
 	{
 	case HWCONFIG_DRIVER:
 	{
-		Autolock_driving();
+		Signals_Get_ConfortCmd(&confort_cmd);
 
-		Manual_Mode();
+
+			if(confort_cmd == CONFORTCMD_LOCK)
+			{
+				Door_Set_Request(DOOR_REQUEST_LOCK);
+
+			    CAN_status_report = DOORLOCKSTS_LOCK;
+				Signals_Set_DoorLockSts(&CAN_status_report);
+
+				confort_cmd = CONFORTCMD_NO;
+
+			}
+			else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
+
+				confort_cmd = CONFORTCMD_NO;
+
+
+
+
+		  else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
+		  {
+				Door_Set_Request(DOOR_REQUEST_UNLOCK);
+
+			    CAN_status_report = DOORLOCKSTS_UNLOCK;
+				Signals_Set_DoorLockSts(&CAN_status_report);
+				confort_cmd = CONFORTCMD_NO;
+
+	       }
+
+
+			else if(confort_cmd == CONFORTCMD_NO)
+			{
+		        Autolock_driving();
+
+		          Manual_Mode();
+		  }
+
 
 
 
