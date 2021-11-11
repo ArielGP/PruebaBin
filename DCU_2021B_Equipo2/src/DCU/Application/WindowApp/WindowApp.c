@@ -18,7 +18,7 @@
 #include "Window.h"
 
 /*Local type def___________________________________________________________*/
-typedef void (*Signal_set_t)(const uint8 *value);
+typedef void (*Signal_set_t) (const uint8 * value);
 typedef BUTTON_STATUS (*Button_Get_t) (void);
 
 typedef struct 
@@ -63,13 +63,9 @@ const WinApp_WinCtrlDoor_t WinCtrlDoor_table [WINDOW_CTRL_DOOR_LEN] =
 };
 
 /*Local variable____________________________________________________________*/
-static WINDOW_REQUEST   Window_ReqOperation;
-
+static WinApp_Actuation_t WinApp_Actuation;
 static boolean RearLeftRightOnly;
-static uint8 WinOp_SigVal;
 static uint8 BCM_2_Counter;
-
-static uint8_t counter=0;
 
 /*Local function def________________________________________________________*/
 static WinApp_Actuation_t WindowApp_ManualMode (void);
@@ -78,8 +74,8 @@ static WinApp_Actuation_t WindowApp_GetOpenActuation (BUTTON_STATUS buttonSts);
 static WinApp_Actuation_t WindowApp_GetCloseActuation(BUTTON_STATUS buttonSts);
 static void WindowApp_ReportWindowControlSignals(void);
 static void WindowApp_ReportRearWindowLockSignal(void);
-static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr);
-
+static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr, WINDOW_STATUS winPosition);
+static void WindowApp_PositionReport(WINDOW_STATUS winPosition);
 
 
 /* ============================================================================
@@ -90,9 +86,8 @@ static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActu
  * ========================================================================= */
 void WindowApp_Init(void)
 {
-    WinOp_SigVal        = WINDOWOP_IDLE;
-    Window_ReqOperation = WINDOW_REQUEST_IDLE;
-    BCM_2_Counter = 0x00u;
+    BCM_2_Counter       = 0x00u;
+    WinApp_Actuation    = eNOT_WINDOW_ACTUATION;
 
     RearLeftRightOnly = ((HWCONFIG_REAR_LEFT == HwConfig_Get()) || (HWCONFIG_REAR_RIGHT == HwConfig_Get()))? TRUE : FALSE;
 }
@@ -106,73 +101,69 @@ void WindowApp_Init(void)
 void WindowApp_Run(void)
 {
     static WinApp_Actuation_t prevWinActuation = eNOT_WINDOW_ACTUATION;
-    WinApp_Actuation_t winActuation = eNOT_WINDOW_ACTUATION;
-    
-    /* */
-     winActuation = WindowApp_ManualMode();
+    uint8            Sig_WinOpVal     = WINDOWOP_IDLE;
+    WINDOW_REQUEST   Win_ReqOperation = WINDOW_REQUEST_IDLE;
+    WINDOW_STATUS    Win_Status       = Window_Get_Status();
+    WINDOW_OPERATION Win_Operation    = Window_Get_Operation();
 
     /* */
-     if (eNOT_WINDOW_ACTUATION == winActuation)
+     WinApp_Actuation = WindowApp_ManualMode();
+
+    /* */
+     if (eNOT_WINDOW_ACTUATION == WinApp_Actuation)
     {
-        winActuation = WindowApp_RemoteOperation();
+        WinApp_Actuation = WindowApp_RemoteOperation();
     }
 
-    if ((eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_OPEN_WINDOW_ACTUATION == prevWinActuation))
+    if ((eGLOBAL_OPEN_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation))
     {
         /* 
          *Global actuation will stop whether window is considered either COMPLETY_OPEN or COMPLETY_CLOSE 
         */
-        winActuation = prevWinActuation;
+        WinApp_Actuation = prevWinActuation;
     }
 
-    WindowApp_ValidateWindowActuation(&winActuation);
+    WindowApp_ValidateWindowActuation(&WinApp_Actuation, Win_Status);
 
-    switch (winActuation)
+    switch (WinApp_Actuation)
     {
         case eOPEN_WINDOW_ACTUATION:
         case eGLOBAL_OPEN_WINDOW_ACTUATION:
         {
-            WinOp_SigVal        = WINDOWOP_DOWN;
-            Window_ReqOperation = WINDOW_REQUEST_DOWN;
+            Sig_WinOpVal     = WINDOWOP_DOWN;
+            Win_ReqOperation = WINDOW_REQUEST_DOWN;
         } break;
         
         case eCLOSE_WINDOW_ACTUATION:
         case eGLOBAL_CLOSE_WINDOW_ACTUATION:
         {
-            WinOp_SigVal        = WINDOWOP_UP;
-            Window_ReqOperation = WINDOW_REQUEST_UP;
+            Sig_WinOpVal     = WINDOWOP_UP;
+            Win_ReqOperation = WINDOW_REQUEST_UP;
 
         } break;
 
         case eCANCEL_WINDOW_ACTUATION:
         case eNOT_WINDOW_ACTUATION:
         {
-            WinOp_SigVal        = WINDOWOP_IDLE;
-            Window_ReqOperation = WINDOW_REQUEST_IDLE;
+            Sig_WinOpVal     = WINDOWOP_IDLE;
+            Win_ReqOperation = WINDOW_REQUEST_IDLE;
         } break;
         default:
             break;
     }
 
-    prevWinActuation = winActuation;
+    /* Keeps current actuation in order to perform Global Close/Open actuation */
+    prevWinActuation = WinApp_Actuation;
 
-
-    if((counter == 0) && (winActuation != eNOT_WINDOW_ACTUATION))
+    /* Request until window is ready to perform new operation (After 500ms) */
+    if ((WINDOW_REQUEST_IDLE == Win_Operation) || (eCANCEL_WINDOW_ACTUATION == WinApp_Actuation))
     {
-    	   counter++;
-
-      Window_Set_Request(Window_ReqOperation);
-      Signals_Set_WindowOp(&WinOp_SigVal);
-
+        Window_Set_Request(Win_ReqOperation);
     }
-    else{
 
-
-    	if(counter < 5 && counter > 0)
-    		counter++;
-    	else
-    		counter=0;
-    }
+    /* Transmit the curent window position to CAN network */
+    Signals_Set_WindowOp(&Sig_WinOpVal);
+    WindowApp_PositionReport(Win_Status);
 }
 
 /* ============================================================================
@@ -461,10 +452,8 @@ static void WindowApp_ReportRearWindowLockSignal(void)
  * Arguments:     
  * Return:        None
  * ========================================================================= */
-static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr)
+static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActuationPtr, WINDOW_STATUS winPosition)
 {
-    WINDOW_STATUS winPosition = Window_Get_Status();
-
     if ( WINDOW_POSITION_ERROR != winPosition)
     {
         if (WINDOW_POSITION_OPEN == winPosition)
@@ -490,6 +479,38 @@ static void WindowApp_ValidateWindowActuation(WinApp_Actuation_t * const winActu
     {
         winActuationPtr[0] = eCANCEL_WINDOW_ACTUATION;
     }
+}
+
+/* ============================================================================
+ * Function Name: WindowApp_PositionReport
+ * Description:   
+ * Arguments:     
+ * Return:        None
+ * ========================================================================= */
+static void WindowApp_PositionReport(WINDOW_STATUS winPosition)
+{
+    uint8 signalVal = WINDOWPOS_ERROR;
+
+
+    if ((WINDOW_POSITION_1 >= winPosition) && (WINDOW_POSITION_10 <= winPosition))
+    {
+        signalVal = WINDOWPOS_IN_BETWEEN;
+    }
+    else if (WINDOW_POSITION_OPEN == winPosition)
+    {
+        signalVal = WINDOWPOS_COMPLETELY_OPEN;
+    }
+    else if (WINDOW_POSITION_CLOSED == winPosition)
+    {
+        signalVal = WINDOWPOS_COMPLETELY_CLOSE;
+    }
+    else
+    {
+        signalVal = WINDOWPOS_ERROR;
+    }
+
+
+    Signals_Set_WindowPos(&signalVal);
 }
 
 /*End of file_______________________________________________________________*/

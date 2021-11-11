@@ -112,18 +112,7 @@ void Window_Set_Request(WINDOW_REQUEST request)
         (WINDOW_REQUEST_UP   == request) ||
         (WINDOW_REQUEST_DOWN == request))
     {
-        if (WINDOW_REQUEST_UP == request)
-        {
-            Window_Operation = WINDOW_OPERATION_UP;
-        }
-        else if (WINDOW_REQUEST_DOWN == request)
-        {
-            Window_Operation = WINDOW_OPERATION_DOWN;
-        }
-        else
-        {
-            Window_Operation = WINDOW_OPERATION_IDLE;
-        }
+        Window_Operation = (WINDOW_OPERATION) request;
     }
 }
 
@@ -164,8 +153,7 @@ static void Window_StatusDetermination(void)
     {
         Window_Status = (WINDOW_SW_INACTIVE == Close_PinVal)? WINDOW_POSITION_OPEN : WINDOW_POSITION_ERROR;
     }
-    else
-    /* WINDOW_SW_ACTIVE == Open_PinVal */
+    else /* WINDOW_SW_ACTIVE == Open_PinVal */
     {
         Window_Status = (WINDOW_SW_ACTIVE == Close_PinVal)? WINDOW_POSITION_CLOSED : Window_Position;
     }
@@ -181,27 +169,34 @@ static void Window_Actuation(void)
 {
     static uint8 Delay_Counter = 0x00u;
 
-    if (WINDOW_DELAY_500MS < Delay_Counter)
+    if (WINDOW_REQUEST_IDLE != Window_Operation)
     {
-        Delay_Counter = 0x00u;
+        if (WINDOW_DELAY_500MS < Delay_Counter)
+        {
+            if (WINDOW_REQUEST_DOWN == Window_Operation)
+            {
+                Window_Actuation_Open();
+            }
+            else /* WINDOW_REQUEST_UP == Window_Operation */
+            {
+                Window_Actuation_Close();
+            }
 
-        if (WINDOW_REQUEST_DOWN == Window_Operation)
-        {
-            Window_Actuation_Close();
-        }
-        else if (WINDOW_REQUEST_UP == Window_Operation)
-        {
-            Window_Actuation_Open();
+            /* 
+             * Window operation is complete. 
+             * Reset the conditions to the next request.
+             * */
+            Window_Operation = WINDOW_OPERATION_IDLE;
+            Delay_Counter = 0x00u;
         }
         else
-        /* WINDOW_REQUEST_IDLE == Window_Operation */
         {
-            Window_Operation = WINDOW_OPERATION_IDLE;
+            Delay_Counter++;
         }
     }
     else
     {
-        Delay_Counter++;
+        Delay_Counter = 0x00u;
     }
 }
 
@@ -213,16 +208,12 @@ static void Window_Actuation(void)
  * ========================================================================= */
 static void Window_Actuation_Open(void)
 {
-    if ((WINDOW_POSITION_OPEN <= Window_Position) && (WINDOW_POSITION_10 > Window_Position))
+    if ((WINDOW_POSITION_OPEN < Window_Position) && (WINDOW_POSITION_10 >= Window_Position))
     {
-        Window_Position++;
-
-        pins_Value |= (0x01u << Window_Position);
+        pins_Value &= ~(0x01u << Window_Position);
         Dio_Write_Window_Leds( pins_Value );
-    }
-    else
-    {
-        Window_Operation = WINDOW_OPERATION_IDLE;
+
+        Window_Position--;
     }
 }
 
@@ -234,16 +225,12 @@ static void Window_Actuation_Open(void)
  * ========================================================================= */
 static void Window_Actuation_Close(void)
 {
-    if ((WINDOW_POSITION_OPEN < Window_Position) && (WINDOW_POSITION_10 >= Window_Position))
+    if ((WINDOW_POSITION_OPEN <= Window_Position) && (WINDOW_POSITION_10 > Window_Position))
     {
-        pins_Value &= ~(0x01u << Window_Position);
-        Dio_Write_Window_Leds( pins_Value );
+        Window_Position++;
 
-        Window_Position--;
-    }
-    else
-    {
-        Window_Operation = WINDOW_OPERATION_IDLE;
+        pins_Value |= (0x01u << Window_Position);
+        Dio_Write_Window_Leds( pins_Value );
     }
 }
 
