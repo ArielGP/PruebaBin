@@ -2,7 +2,7 @@
  * DoorHandler.c
  *
  *  Created on: 2 ago. 2021
- *      Author: uid87544
+ *      Author: jose garibay
  */
 #include "BasicTypes.h"
 #include "DoorApp.h"
@@ -76,45 +76,27 @@ static void Remote_Operation(void)
 
 static void Autolock_driving(void)
 {
-
-
 	uint8_t PS_door_lockstatus;
 	uint8_t System_PwrMode;
 	uint8_t vehicle_speed;
 
 	/*reads doorlockstatus by CAN*/
 	Signals_Get_Passenger_DoorLockSts(&PS_door_lockstatus);
-	//Signals_Get_RearLeft_DoorLockSts(&RL_door_lockstatus);
-	//Signals_Get_RearRight_DoorLockSts(&RR_door_lockstatus);
+
 
 	Signals_Get_SysPwrMode(&System_PwrMode);
 
 	Signals_Get_VehSpeed(&vehicle_speed);
 
-	/*
-	if((( door_status || PS_door_lockstatus || RL_door_lockstatus || RR_door_lockstatus) == DOOR_STATUS_UNLOCKED) &&
-			((System_PwrMode == SYSPWRMODE_RUN) && (vehicle_speed >=autolock_speed_threshold)))
 
-	 */
-	if(PS_door_lockstatus == LOCKINGREQ_UNLOCK)
+	if((PS_door_lockstatus == LOCKINGREQ_UNLOCK) && (vehicle_speed> autolock_speed_threshold) && (System_PwrMode == SYSPWRMODE_RUN))
 	{
 		/*check byte 2 del bcm for confort comd value*/
 
 		Door_Set_Request(DOOR_REQUEST_LOCK);
 
-		loq_request = LOCKINGREQ_LOCK;
-		Signals_Set_LockingReq(&loq_request);
-		/*
-		if((Signals_Get_ConfortCmd(&confort_cmd))==(CONFORTCMD_UNLOCK_DRIVER || CONFORTCMD_UNLOCK_ALL))
-		{
-			Door_Set_Request(DOOR_REQUEST_UNLOCK);
-			door_status = CAN_status_report = DOORLOCKSTS_UNLOCK;
-			Signals_Set_DoorLockSts(&CAN_status_report);
-
-		}
-
-		*/
-
+		CAN_status_report = DOORLOCKSTS_LOCK;
+		Signals_Set_DoorLockSts(&CAN_status_report);
 	}
 
 }
@@ -200,60 +182,172 @@ void DoorApp_Run(void)
 		Signals_Get_ConfortCmd(&confort_cmd);
 
 
-			if(confort_cmd == CONFORTCMD_LOCK)
-			{
-				Door_Set_Request(DOOR_REQUEST_LOCK);
+		if(confort_cmd == CONFORTCMD_LOCK)
+		{
+			Door_Set_Request(DOOR_REQUEST_LOCK);
 
-			    CAN_status_report = DOORLOCKSTS_LOCK;
-				Signals_Set_DoorLockSts(&CAN_status_report);
+			CAN_status_report = DOORLOCKSTS_LOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
 
-				confort_cmd = CONFORTCMD_NO;
+			confort_cmd = CONFORTCMD_NO;
 
-			}
-			else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
+		}
+		else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
 
-				confort_cmd = CONFORTCMD_NO;
+		{	Door_Set_Request(DOOR_REQUEST_UNLOCK);
 
+			CAN_status_report = DOORLOCKSTS_UNLOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+			confort_cmd = CONFORTCMD_NO;
+		}
 
+		else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
+		{
+			Door_Set_Request(DOOR_REQUEST_UNLOCK);
 
+			CAN_status_report = DOORLOCKSTS_UNLOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+			confort_cmd = CONFORTCMD_NO;
 
-		  else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
-		  {
-				Door_Set_Request(DOOR_REQUEST_UNLOCK);
-
-			    CAN_status_report = DOORLOCKSTS_UNLOCK;
-				Signals_Set_DoorLockSts(&CAN_status_report);
-				confort_cmd = CONFORTCMD_NO;
-
-	       }
-
-
-			else if(confort_cmd == CONFORTCMD_NO)
-			{
-		        Autolock_driving();
-
-		          Manual_Mode();
-		  }
+		}
 
 
+		else if(confort_cmd == CONFORTCMD_NO)
+		{
+			Autolock_driving();
+
+			Manual_Mode();
+		}
 
 
 	}break;
 	case HWCONFIG_PASSENGER:
 	{
-		Manual_Mode();
+		Signals_Get_ConfortCmd(&confort_cmd);
+
+
+		if(confort_cmd == CONFORTCMD_LOCK)
+		{
+			Door_Set_Request(DOOR_REQUEST_LOCK);
+
+			CAN_status_report = DOORLOCKSTS_LOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+		else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
+
+			confort_cmd = CONFORTCMD_NO;
+
+
+
+
+		else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
+		{
+			Door_Set_Request(DOOR_REQUEST_UNLOCK);
+
+			CAN_status_report = DOORLOCKSTS_UNLOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+
+
+		else if(confort_cmd == CONFORTCMD_NO)
+		{
+
+
+			Manual_Mode();
+		}
+
 
 
 	}break;
 	case HWCONFIG_REAR_LEFT:
 	{
-		Remote_Operation();
+		Signals_Get_ConfortCmd(&confort_cmd);
+
+
+		if(confort_cmd == CONFORTCMD_LOCK)
+		{
+			Door_Set_Request(DOOR_REQUEST_LOCK);
+
+			CAN_status_report = DOORLOCKSTS_LOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+		else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
+
+			confort_cmd = CONFORTCMD_NO;
+
+
+
+
+		else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
+		{
+			Door_Set_Request(DOOR_REQUEST_UNLOCK);
+
+			CAN_status_report = DOORLOCKSTS_UNLOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+
+
+		else if(confort_cmd == CONFORTCMD_NO)
+		{
+
+
+			Remote_Operation();
+		}
+
+
 
 	}break;
 	case HWCONFIG_REAR_RIGHT:
 	{
+		Signals_Get_ConfortCmd(&confort_cmd);
 
-		Remote_Operation();
+
+		if(confort_cmd == CONFORTCMD_LOCK)
+		{
+			Door_Set_Request(DOOR_REQUEST_LOCK);
+
+			CAN_status_report = DOORLOCKSTS_LOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+		else if(confort_cmd == CONFORTCMD_UNLOCK_ALL)
+
+			confort_cmd = CONFORTCMD_NO;
+
+
+
+
+		else if(confort_cmd == CONFORTCMD_UNLOCK_DRIVER)
+		{
+			Door_Set_Request(DOOR_REQUEST_UNLOCK);
+
+			CAN_status_report = DOORLOCKSTS_UNLOCK;
+			Signals_Set_DoorLockSts(&CAN_status_report);
+			confort_cmd = CONFORTCMD_NO;
+
+		}
+
+
+		else if(confort_cmd == CONFORTCMD_NO)
+		{
+
+
+			Remote_Operation();
+		}
+
+
 
 	}break;
 	default:
