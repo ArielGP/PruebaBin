@@ -67,4 +67,6 @@ BUTTON_STATUS  Button_Get_RearWindow_Lock(void);
 
 
 
+void Button_Consume_Stuck(uint8 index);
+
 #endif /* ECUABSTRACTION_BUTTONDRIVER_H_ */

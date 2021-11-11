@@ -81,6 +81,18 @@ ButtonRetStat_t Debounce_Process(Button_t * button, uint8_t inputState){
 				}
 #endif
 			}
+			else
+			{
+				button->debounceCounter++;
+				if(button->debounceCounter > button->threshold3)
+				{
+					button->reached3 = kTrue;
+					button->state = kButtonDebouncedAt3;
+				}
+			}
+		break;
+		case kButtonDebouncedAt3:
+
 		break;
 		default:
 			retVal = kStatNotOk;

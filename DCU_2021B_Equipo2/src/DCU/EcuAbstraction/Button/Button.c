@@ -14,8 +14,8 @@
 
 /*Local Macro_______________________________________________________________*/
 #define BUTTON_THRESHOLD1             ((ButtonData_t) 0x05u)
-#define BUTTON_THRESHOLD2             ((ButtonData_t) 0x64u)
-
+#define BUTTON_THRESHOLD2             ((ButtonData_t) 0x32u)
+#define BUTTON_THRESHOLD3             ((ButtonData_t) 0x3E8u)
 /*Local variables___________________________________________________________*/
 static Button_t ButtonList[BUTTON_LIST_LENGTH];
 
@@ -39,6 +39,7 @@ void Button_Init(void)
 	{
 		ButtonList[index].threshold1 = BUTTON_THRESHOLD1;
 		ButtonList[index].threshold2 = BUTTON_THRESHOLD2;
+		ButtonList[index].threshold3 = BUTTON_THRESHOLD3;
 	}
 }
 
@@ -253,6 +254,10 @@ static BUTTON_STATUS Button_GetButtonStatus(uint8_t index)
 		return_status = BUTTON_LONG_PRESSED;
 		ButtonList[index].releasedAt2 = kFalse;
 	}
+	else if (kTrue == ButtonList[index].reached3)
+	{
+		return_status = BUTTON_STUCK;
+	}
 	else
 	{
 		/*Avoid Misra - No action required */
@@ -323,6 +328,17 @@ static PIN_VALUE getDigitalInput(uint8_t index)
 	}
 
 	return button_pin_value;
+}
+
+/* ============================================================================
+ * Function Name: Button_Consume_Stuck
+ * Description:
+ * Arguments: index
+ * Return:
+ * ========================================================================= */
+void Button_Consume_Stuck(uint8 index)
+{
+	ButtonList[index].reached3 = kFalse;
 }
 
 /*End of file_______________________________________________________________*/

@@ -187,11 +187,11 @@ static void Window_Actuation(void)
 
         if (WINDOW_REQUEST_DOWN == Window_Operation)
         {
-            Window_Actuation_Open();
+            Window_Actuation_Close();
         }
         else if (WINDOW_REQUEST_UP == Window_Operation)
         {
-            Window_Actuation_Close();
+            Window_Actuation_Open();
         }
         else
         /* WINDOW_REQUEST_IDLE == Window_Operation */

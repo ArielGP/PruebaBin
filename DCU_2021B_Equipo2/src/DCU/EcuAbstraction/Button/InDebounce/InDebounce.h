@@ -33,12 +33,14 @@ typedef uint32_t ButtonData_t;
 typedef enum{
 	kButtonNotDebounced,
 	kButtonDebouncedAt1,
-	kButtonDebouncedAt2
+	kButtonDebouncedAt2,
+	kButtonDebouncedAt3,
 }ButtonState_t;
 
 typedef struct{
 	ButtonData_t threshold1;
 	ButtonData_t threshold2;
+	ButtonData_t threshold3;
 	ButtonData_t debounceCounter;	
 #if BTTN_CFG_REACH_CALLBACKS
 	ButtonCallback_t reached1Callback;
@@ -47,6 +49,7 @@ typedef struct{
 #if BTTN_CFG_REACH_FLAGS
 	uint8_t reached1;
 	uint8_t reached2;
+	uint8_t reached3;
 #endif
 #if BTTN_CFG_RELEASE_CALLBACKS
 	ButtonCallback_t released1Callback;

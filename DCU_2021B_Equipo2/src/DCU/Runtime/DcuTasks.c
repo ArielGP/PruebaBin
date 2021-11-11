@@ -113,6 +113,8 @@ void init_hook(void)
 
 	/* */
 	WindowApp_Init();
+	/* */
+	DoorApp_Init();
 
 	Tasks_StartOS();
 }
@@ -216,6 +218,10 @@ void app_task_10ms( void *pvParameters )
 				Dio_Write_DoorUnlock_Led(DIO_HIGH);
 				btn_state = 1;
 			}
+			else if(openbtn == BUTTON_STUCK)
+			{
+				Dio_Write_Window_Leds((PIN_VALUES) 0x3FF);
+			}
 			break;
 
 		case 1:
@@ -225,10 +231,14 @@ void app_task_10ms( void *pvParameters )
 				Dio_Write_DoorLock_Led(DIO_LOW);
 				btn_state = 0;
 			}
-			if(closebtn == BUTTON_LONG_PRESSED)
+			else if(closebtn == BUTTON_LONG_PRESSED)
 			{
 				Dio_Write_DoorUnlock_Led(DIO_LOW);
 				btn_state = 0;
+			}
+			else if(closebtn == BUTTON_STUCK)
+			{
+				Dio_Write_Window_Leds((PIN_VALUES) 0x3FF);
 			}
 			break;
 
@@ -314,6 +324,10 @@ void app_task_100ms( void *pvParameters )
 
 		/* */
 		WindowApp_Run();
+
+
+		DoorApp_Run();
+
 
 # ifdef ECU_DOOR_WINDOW_TEST
 
