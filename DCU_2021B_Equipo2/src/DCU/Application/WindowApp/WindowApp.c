@@ -114,6 +114,10 @@ void WindowApp_Run(void)
     {
         WinApp_Actuation = WindowApp_RemoteOperation();
     }
+    else
+    {
+        BCM_2_Counter = 0x00u;
+    }
 
     if ((eGLOBAL_OPEN_WINDOW_ACTUATION == prevWinActuation) || (eGLOBAL_CLOSE_WINDOW_ACTUATION == prevWinActuation))
     {
@@ -244,8 +248,12 @@ static WinApp_Actuation_t WindowApp_RemoteOperation(void)
 
     (void)Signals_Get_ConfortCmd(&confortCmd_SigVal);
 
-    if (CONFORTCMD_NO == confortCmd_SigVal)
+    if ((CONFORTCMD_NO == confortCmd_SigVal) && 
+        ((CONFORTCMD_LOCK == prevConfortCmd_SigVal) || (CONFORTCMD_UNLOCK_ALL == prevConfortCmd_SigVal)))
     {
+        /*
+         * CANCEL_WINDOW_ACTUATUON will be execute when BCM.ConfortCmd transition to NoCmd.
+         */
         retValue = eCANCEL_WINDOW_ACTUATION;
         BCM_2_Counter = 0x00u;
     }
@@ -253,12 +261,17 @@ static WinApp_Actuation_t WindowApp_RemoteOperation(void)
     {
         if ((CONFORTCMD_LOCK == confortCmd_SigVal) || (CONFORTCMD_UNLOCK_ALL == confortCmd_SigVal))
         {
+            /*
+             * CLOSE_WINDOW_ACTUATION and OPEN_WINDOW_ACTUATION will be executed when signal 
+             * BCM.ConfortCmd is received onsecutively at least during 500ms LockCmd and UnklockAllCmd
+             * respectively.
+             */
             if (prevConfortCmd_SigVal != confortCmd_SigVal)
             {
                 BCM_2_Counter = 0x00u;
             }
 
-            if (BCM_2_CONFORCMD_TIME_REACH < BCM_2_Counter)
+            if (BCM_2_CONFORCMD_TIME_REACH <= BCM_2_Counter)
             {
                 retValue = (CONFORTCMD_UNLOCK_ALL == confortCmd_SigVal)? eOPEN_WINDOW_ACTUATION : eCLOSE_WINDOW_ACTUATION;
                 BCM_2_Counter = 0x00u;
