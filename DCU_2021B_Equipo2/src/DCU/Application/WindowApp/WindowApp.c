@@ -63,6 +63,7 @@ const WinApp_WinCtrlDoor_t WinCtrlDoor_table [WINDOW_CTRL_DOOR_LEN] =
 };
 
 /*Local variable____________________________________________________________*/
+static WINDOW_OPERATION   Win_Operation;
 static WinApp_Actuation_t WinApp_Actuation;
 static boolean RearLeftRightOnly;
 static uint8 BCM_2_Counter;
@@ -88,6 +89,7 @@ void WindowApp_Init(void)
 {
     BCM_2_Counter       = 0x00u;
     WinApp_Actuation    = eNOT_WINDOW_ACTUATION;
+    Win_Operation       = WINDOW_OPERATION_IDLE;
 
     RearLeftRightOnly = ((HWCONFIG_REAR_LEFT == HwConfig_Get()) || (HWCONFIG_REAR_RIGHT == HwConfig_Get()))? TRUE : FALSE;
 }
@@ -104,7 +106,9 @@ void WindowApp_Run(void)
     uint8            Sig_WinOpVal     = WINDOWOP_IDLE;
     WINDOW_REQUEST   Win_ReqOperation = WINDOW_REQUEST_IDLE;
     WINDOW_STATUS    Win_Status       = Window_Get_Status();
-    WINDOW_OPERATION Win_Operation    = Window_Get_Operation();
+   
+   
+   Win_Operation    = Window_Get_Operation();
 
     /* */
      WinApp_Actuation = WindowApp_ManualMode();
@@ -242,6 +246,7 @@ static WinApp_Actuation_t WindowApp_ManualMode(void)
 static WinApp_Actuation_t WindowApp_RemoteOperation(void)
 {
     static uint8 prevConfortCmd_SigVal = CONFORTCMD_NO;
+    static uint8 prevWinCtrl_SigVal    = WINDOWCONTROL_NO_REQ;
     uint8 confortCmd_SigVal;
     uint8 winCtrl_SigVal = WINDOWCONTROL_NO_REQ;
     WinApp_Actuation_t retValue = eNOT_WINDOW_ACTUATION;
@@ -319,24 +324,30 @@ static WinApp_Actuation_t WindowApp_RemoteOperation(void)
         {
             case WINDOWCONTROL_NO_REQ:
             {
-                retValue = eCANCEL_WINDOW_ACTUATION;
+                if ((WINDOWCONTROL_NO_REQ != prevWinCtrl_SigVal) && (WINDOW_REQUEST_IDLE == Win_Operation))
+                {
+                    retValue = eCANCEL_WINDOW_ACTUATION;
+                    prevWinCtrl_SigVal = winCtrl_SigVal;
+                }
             } break;
 
             case WINDOWCONTROL_UP_REQ:
             {
                 retValue = eCLOSE_WINDOW_ACTUATION;
+                prevWinCtrl_SigVal = winCtrl_SigVal;
             } break;
 
             case WINDOWCONTROL_DOWN_REQ:
             {
                 retValue = eOPEN_WINDOW_ACTUATION;
+                prevWinCtrl_SigVal = winCtrl_SigVal;
             } break;
         
             default:
             {
                 /* Avoid Misra - No action required */
             } break;
-        }
+        }        
     }
 
     return retValue;
