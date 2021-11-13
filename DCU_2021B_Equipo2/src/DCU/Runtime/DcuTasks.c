@@ -78,7 +78,7 @@ static void app_task_100ms( void *pvParameters );
 
 void Tasks_StartOS(void)
 {
-	(void) xTaskCreate(app_task_10ms,    "App10ms",    app_10ms_STACK_SIZE,  NULL,  app_10ms_TASK_PRIORITY,  NULL);
+	(void) xTaskCreate(app_task_10ms,    "App10ms",    app_10ms_STACK_SIZE +100,  NULL,  app_10ms_TASK_PRIORITY,  NULL);
 	(void) xTaskCreate(app_task_20ms,    "App20ms",    app_20ms_STACK_SIZE,  NULL,  app_20ms_TASK_PRIORITY,  NULL);
 	(void) xTaskCreate(app_task_100ms,   "App100ms",   app_100ms_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
 

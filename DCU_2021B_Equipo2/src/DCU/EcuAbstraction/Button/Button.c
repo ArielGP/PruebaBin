@@ -339,6 +339,11 @@ static PIN_VALUE getDigitalInput(uint8_t index)
 void Button_Consume_Stuck(uint8 index)
 {
 	ButtonList[index].reached3 = kFalse;
+	ButtonList[index].reached1 = kFalse;
+	ButtonList[index].reached2 = kFalse;
+	ButtonList[index].debounceCounter = 0;
+	ButtonList[index].state =kButtonNotDebounced;
+
 }
 
 /*End of file_______________________________________________________________*/
