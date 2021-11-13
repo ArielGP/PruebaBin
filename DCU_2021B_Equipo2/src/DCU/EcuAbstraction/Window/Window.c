@@ -171,7 +171,7 @@ static void Window_Actuation(void)
 
     if (WINDOW_REQUEST_IDLE != Window_Operation)
     {
-        if (WINDOW_DELAY_500MS < Delay_Counter)
+        if (WINDOW_DELAY_500MS <= Delay_Counter)
         {
             if (WINDOW_REQUEST_DOWN == Window_Operation)
             {
