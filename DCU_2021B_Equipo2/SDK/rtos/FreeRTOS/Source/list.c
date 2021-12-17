@@ -112,7 +112,6 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 	listTEST_LIST_ITEM_INTEGRITY( pxNewListItem );
 
 	/* Insert the new list item into the list, sorted in xItemValue order.
-
 	If the list already contains a list item with the same item value then the
 	new list item should be placed after it.  This ensures that TCBs which are
 	stored in ready lists (all of which have the same xItemValue value) get a
@@ -130,7 +129,6 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 		listed below.  In addition see https://www.freertos.org/FAQHelp.html for
 		more tips, and ensure configASSERT() is defined!
 		https://www.freertos.org/a00110.html#configASSERT
-
 			1) Stack overflow -
 			   see https://www.freertos.org/Stacks-and-stack-overflow-checking.html
 			2) Incorrect interrupt priority assignment, especially on Cortex-M
@@ -195,4 +193,3 @@ List_t * const pxList = pxItemToRemove->pxContainer;
 	return pxList->uxNumberOfItems;
 }
 /*-----------------------------------------------------------*/
-
