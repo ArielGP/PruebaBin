@@ -22,6 +22,7 @@
 #include "peripherals_can_pal_1.h"
 #include "peripherals_osif_1.h"
 #include "peripherals_adc_pal_1.h"
+#include "peripherals_mpu_pal_config_1.h"
 
 
 #endif /* SDK_PROJECT_CONFIG_H_ */
