@@ -24,11 +24,11 @@
 
 
 /*Local variable____________________________________________________________*/
-static WINDOW_STATUS    Window_Status;
-static WINDOW_STATUS    Window_Position;
-static WINDOW_OPERATION Window_Operation;
+ASIL_A_VAR_NOINIT static WINDOW_STATUS    Window_Status;
+ASIL_A_VAR_NOINIT static WINDOW_STATUS    Window_Position;
+ASIL_A_VAR_NOINIT static WINDOW_OPERATION Window_Operation;
 
-static PIN_VALUES pins_Value = 0x00;
+ASIL_A_VAR_NOINIT static PIN_VALUES pins_Value = 0x00;
 
 /*Local function def________________________________________________________*/
 static void Window_Actuation(void);
