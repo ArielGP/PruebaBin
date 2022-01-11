@@ -40,8 +40,8 @@ all the API functions to use the MPU wrappers.  That should only be done when
 task.h is included from an application file. */
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-#include "FreeRTOS.h"
-#include "task.h"
+#include <FreeRTOS.h>
+#include <task.h>
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -59,18 +59,19 @@ task.h is included from an application file. */
 	heap - probably so it can be placed in a special segment or address. */
 	extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
-	static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+	PRIVILEGED_DATA static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
 /* Index into the ucHeap array. */
-static size_t xNextFreeByte = ( size_t ) 0;
+PRIVILEGED_DATA static size_t xNextFreeByte = ( size_t ) 0;
+
 
 /*-----------------------------------------------------------*/
 
 void *pvPortMalloc( size_t xWantedSize )
 {
-void *pvReturn = NULL;
-static uint8_t *pucAlignedHeap = NULL;
+    void *pvReturn = NULL;
+    PRIVILEGED_DATA static uint8_t *pucAlignedHeap = NULL;
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if( portBYTE_ALIGNMENT != 1 )
@@ -142,5 +143,6 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+
 
 

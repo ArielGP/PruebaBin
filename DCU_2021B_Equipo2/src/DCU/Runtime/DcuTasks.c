@@ -45,6 +45,8 @@ uint8_t btn_state = 0;
 BUTTON_STATUS openbtn, closebtn;
 #endif
 
+int g_counter=0;
+int g_counter2=0;
 /*Local Macros______________________________________________________________*/
 
 # if (0)
@@ -74,6 +76,7 @@ static void Tasks_StartOS(void);
 static void app_task_10ms( void *pvParameters );
 static void app_task_20ms( void *pvParameters );
 static void app_task_100ms( void *pvParameters );
+static void app_task_100ms_Safety( void *pvParameters );
 
 
 void Tasks_StartOS(void)
@@ -81,6 +84,7 @@ void Tasks_StartOS(void)
 	(void) xTaskCreate(app_task_10ms,    "App10ms",    app_10ms_STACK_SIZE +100,  NULL,  app_10ms_TASK_PRIORITY,  NULL);
 	(void) xTaskCreate(app_task_20ms,    "App20ms",    app_20ms_STACK_SIZE,  NULL,  app_20ms_TASK_PRIORITY,  NULL);
 	(void) xTaskCreate(app_task_100ms,   "App100ms",   app_100ms_STACK_SIZE, NULL,  app_100ms_TASK_PRIORITY, NULL);
+	(void) xTaskCreate(app_task_100ms_Safety,   "App100ms_Safety",   app_100ms_STACK_SIZE, NULL,  3 | portPRIVILEGE_BIT, NULL);
 
 	Mpu_Init();
 
@@ -290,8 +294,10 @@ void app_task_20ms( void *pvParameters )
 	}
 }
 
+
+
 /* ============================================================================
- * Function Name:app_task_100ms
+ * Function Name:app_task_100ms_Safety
  * Description:It is a periodic task task that runs each 100ms
  * Arguments: void *pvParameters
  * Return:void
@@ -318,7 +324,7 @@ void app_task_100ms( void *pvParameters )
 	for( ;; )
 	{
 		Adc_Run();
-		
+
         /* */
         Window_Run_Safety();
 
@@ -368,9 +374,9 @@ void app_task_100ms( void *pvParameters )
 				Door_Set_Request(DOOR_REQUEST_UNLOCK);
 			}
 		}
-# endif		
+# endif
 
-		
+
 
 # ifdef ACT_3_5
 		if (ACT_3_5_ANTIPINCH_LIMIT <= Adc_Get_AntiPinch_Value())
@@ -381,7 +387,7 @@ void app_task_100ms( void *pvParameters )
 		else
 		{
 			/* Turn off Green LED */
-			DoorUnlockPin_value = DIO_HIGH;			
+			DoorUnlockPin_value = DIO_HIGH;
 		}
 
 		Dio_Write_DoorUnlock_Led(DoorUnlockPin_value);
@@ -396,6 +402,40 @@ void app_task_100ms( void *pvParameters )
 			Signals_Set_WindowOp(&signal_value);
 		}
 # endif
+
+		/* Place this task in the blocked state until it is time to run again.
+		The block time is specified in ticks, the constant used converts ticks
+		to ms.  While in the Blocked state this task will not consume any CPU
+		time. */
+		vTaskDelayUntil( &xNextWakeTime, pdMS_TO_TICKS( 100u ) );
+	}
+}
+
+
+
+/* ============================================================================
+ * Function Name:app_task_100ms_Safety
+ * Description:It is a periodic task task that runs each 100ms
+ * Arguments: void *pvParameters
+ * Return:void
+ * ========================================================================= */
+void app_task_100ms_Safety( void *pvParameters )
+{
+	TickType_t xNextWakeTime;
+
+
+	/* Casting pvParameters to void because it is unused */
+	(void)pvParameters;
+
+	/* Initialize xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+
+		g_counter++;
+		g_counter2++;
+
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
