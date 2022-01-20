@@ -37,7 +37,7 @@
 extern "C" {
 #endif
 
-#include "task.h"
+#include <task.h>
 
 /**
  * Type by which queues are referenced.  For example, a call to xQueueCreate()
@@ -1652,3 +1652,4 @@ uint8_t ucQueueGetQueueType( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
 #endif
 
 #endif /* QUEUE_H */
+

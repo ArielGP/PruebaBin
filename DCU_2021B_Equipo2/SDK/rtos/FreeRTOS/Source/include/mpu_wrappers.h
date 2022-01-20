@@ -175,7 +175,7 @@ only for ports that are using the MPU. */
 #else /* portUSING_MPU_WRAPPERS */
 
 	#define PRIVILEGED_FUNCTION
-	#define PRIVILEGED_DATA
+	#define PRIVILEGED_DATA           __attribute__((section(".privileged_data")))
 	#define FREERTOS_SYSTEM_CALL
 	#define portUSING_MPU_WRAPPERS 0
 
@@ -183,3 +183,4 @@ only for ports that are using the MPU. */
 
 
 #endif /* MPU_WRAPPERS_H */
+

@@ -42,14 +42,14 @@ Purely for reasons of backward compatibility the old method is still valid, but
 to make it clear that new projects should not use it, support for the port
 specific constants has been moved into the deprecated_definitions.h header
 file. */
-#include "deprecated_definitions.h"
+#include <deprecated_definitions.h>
 
 /* If portENTER_CRITICAL is not defined then including deprecated_definitions.h
 did not result in a portmacro.h header file being included - and it should be
 included here.  In this case the path to the correct portmacro.h header file
 must be set in the compiler's include path. */
 #ifndef portENTER_CRITICAL
-	#include "portmacro.h"
+	#include <portmacro.h>
 #endif
 
 #if portBYTE_ALIGNMENT == 32
@@ -96,7 +96,7 @@ must be set in the compiler's include path. */
 extern "C" {
 #endif
 
-#include "mpu_wrappers.h"
+#include <mpu_wrappers.h>
 
 /*
  * Setup the stack of a new task so it is ready to be placed under the
@@ -104,19 +104,13 @@ extern "C" {
  * the order that the port expects to find them.
  *
  */
-#if( portUSING_MPU_WRAPPERS == 1 )
-	#if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
-		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) PRIVILEGED_FUNCTION;
-	#else
-		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) PRIVILEGED_FUNCTION;
-	#endif
+
+#if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+	StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) PRIVILEGED_FUNCTION;
 #else
-	#if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
-		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
-	#else
-		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
-	#endif
+	StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) PRIVILEGED_FUNCTION;
 #endif
+
 
 /* Used by heap_5.c. */
 typedef struct HeapRegion
@@ -178,3 +172,4 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
 #endif
 
 #endif /* PORTABLE_H */
+
