@@ -234,4 +234,16 @@ static void Window_Actuation_Close(void)
     }
 }
 
+#ifdef MPU_TEST
+/* ============================================================================
+ * Function Name: Window_Actuation_Close
+ * Description:
+ * Arguments:     None
+ * Return:        None
+ * ========================================================================= */
+void Window_MPU_Test(void)
+{
+	Window_Status = 0;
+}
+#endif
 /*End of file_______________________________________________________________*/
