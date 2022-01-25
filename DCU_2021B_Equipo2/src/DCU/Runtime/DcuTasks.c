@@ -284,6 +284,9 @@ void app_task_20ms( void *pvParameters )
 		/*CAN running*/
 		Signals_RunRx();
 
+#ifdef MPU_TEST
+		Window_MPU_Test();
+#endif
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
