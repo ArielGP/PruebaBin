@@ -69,23 +69,26 @@ typedef unsigned long UBaseType_t;
 #endif
 /*-----------------------------------------------------------*/
 
+#define portPRIVILEGE_BIT                                        ( 0x80000000UL )
+#define portSWITCH_TO_USER_MODE()    __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0 " ::: "r0", "memory" )
+
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			8
+    #define portDONT_DISCARD      __attribute__( ( used ) )
 /*-----------------------------------------------------------*/
 
+/* SVC numbers for various services. */
+#define portSVC_START_SCHEDULER    0
+#define portSVC_YIELD              1
+#define portSVC_RAISE_PRIVILEGE    2
+
 /* Scheduler utilities. */
-#define portYIELD() 															\
-{																				\
-	/* Set a PendSV to request a context switch. */								\
-	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;								\
-																				\
-	/* Barriers are normally not required but do ensure the code is completely	\
-	within the specified behaviour for the architecture. */						\
-	__asm volatile( "dsb" ::: "memory" );										\
-	__asm volatile( "isb" );													\
-}
+
+#define portYIELD()    __asm volatile ( "	SVC	%0	\n"::"i" ( portSVC_YIELD ) : "memory" )
+#define portYIELD_WITHIN_API()    portYIELD()
+
 
 #define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
@@ -165,6 +168,28 @@ not necessary for to use this port.  They are defined so the common demo files
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
+
+extern BaseType_t xIsPrivileged( void );
+extern void vResetPrivilege( void );
+
+/**
+ * @brief Checks whether or not the processor is privileged.
+ *
+ * @return 1 if the processor is already privileged, 0 otherwise.
+ */
+#define portIS_PRIVILEGED()      xIsPrivileged()
+
+/**
+ * @brief Raise an SVC request to raise privilege.
+ */
+#define portRAISE_PRIVILEGE()    __asm volatile ( "svc %0 \n" ::"i" ( portSVC_RAISE_PRIVILEGE ) : "memory" );
+
+/**
+ * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+ * register.
+ */
+#define portRESET_PRIVILEGE()    vResetPrivilege()
+/*-----------------------------------------------------------*/
 
 portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
 {

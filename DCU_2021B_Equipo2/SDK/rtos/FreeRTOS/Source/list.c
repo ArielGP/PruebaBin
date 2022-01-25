@@ -26,9 +26,9 @@
  */
 
 
+#include <FreeRTOS.h>
+#include <list.h>
 #include <stdlib.h>
-#include "FreeRTOS.h"
-#include "list.h"
 
 /*-----------------------------------------------------------
  * PUBLIC LIST API documented in list.h
@@ -169,9 +169,9 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 
 UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
 {
-/* The list item knows which list it is in.  Obtain the list from the list
-item. */
-List_t * const pxList = pxItemToRemove->pxContainer;
+     /* The list item knows which list it is in.  Obtain the list from the list
+         item. */
+    List_t * const pxList = pxItemToRemove->pxContainer;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
@@ -190,7 +190,7 @@ List_t * const pxList = pxItemToRemove->pxContainer;
 	}
 
 	pxItemToRemove->pxContainer = NULL;
-	( pxList->uxNumberOfItems )--;
+	pxList->uxNumberOfItems--;
 
 	return pxList->uxNumberOfItems;
 }

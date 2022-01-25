@@ -284,22 +284,22 @@ static void prvSetupHardware( void )
     boardSetup();
 
 	/* Change LED1, LED2 to outputs. */
-	PINS_DRV_SetPinsDirection(LED_GPIO,  (1 << LED1) | (1 << LED2));
+//	PINS_DRV_SetPinsDirection(LED_GPIO,  (1 << LED1) | (1 << LED2));
 
 	/* Change BTN1 to input */
-	PINS_DRV_SetPinsDirection(BTN_GPIO, ~(1 << BTN_PIN));
+//	PINS_DRV_SetPinsDirection(BTN_GPIO, ~(1 << BTN_PIN));
 
 	/* Start with LEDs off. */
-	PINS_DRV_SetPins(LED_GPIO, (1 << LED1) | (1 << LED2));
+//	PINS_DRV_SetPins(LED_GPIO, (1 << LED1) | (1 << LED2));
 
 	/* Install Button interrupt handler */
-    INT_SYS_InstallHandler(BTN_PORT_IRQn, vPort_C_ISRHandler, (isr_t *)NULL);
+   // INT_SYS_InstallHandler(BTN_PORT_IRQn, vPort_C_ISRHandler, (isr_t *)NULL);
     /* Enable Button interrupt handler */
-    INT_SYS_EnableIRQ(BTN_PORT_IRQn);
+   // INT_SYS_EnableIRQ(BTN_PORT_IRQn);
 
     /* The interrupt calls an interrupt safe API function - so its priority must
     be equal to or lower than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
-    INT_SYS_SetPriority( BTN_PORT_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+   // INT_SYS_SetPriority( BTN_PORT_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
 
 }
 /*-----------------------------------------------------------*/
