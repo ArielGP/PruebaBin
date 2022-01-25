@@ -48,6 +48,10 @@ BUTTON_STATUS openbtn, closebtn;
 int g_counter=0;
 int g_counter2=0;
 /*Local Macros______________________________________________________________*/
+//Valores y pruebas para el watchdog
+uint8 WDG_CHECKPOINT_100ms;
+#define WdgTest1
+#define WdgTest2
 
 # if (0)
 #    define ACT_3_5
@@ -406,6 +410,10 @@ void app_task_100ms( void *pvParameters )
 		}
 # endif
 
+		#ifdef WdgTest1
+			while(1){}
+		#endif
+
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks
 		to ms.  While in the Blocked state this task will not consume any CPU
@@ -439,6 +447,11 @@ void app_task_100ms_Safety( void *pvParameters )
 		g_counter++;
 		g_counter2++;
 
+		#ifdef WdgTest2
+			//Wdg_Feed(WDG_CHECKPOINT_100ms);
+		#else
+			Wdg_Feed(WDG_CHECKPOINT_100ms);
+		#endif
 
 		/* Place this task in the blocked state until it is time to run again.
 		The block time is specified in ticks, the constant used converts ticks

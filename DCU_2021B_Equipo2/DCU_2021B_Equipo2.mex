@@ -450,6 +450,16 @@
                   <data type="Version">1.0.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.driver.wdog" description="WDOG Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.driver.wdog" description="Unsupported version of the WDOG Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">1.0.0</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
             <file path="board/FreeRTOSConfig.h" update_enabled="true"/>
@@ -466,6 +476,8 @@
             <file path="board/peripherals_mpu_pal_config_1.h" update_enabled="true"/>
             <file path="board/peripherals_osif_1.c" update_enabled="true"/>
             <file path="board/peripherals_osif_1.h" update_enabled="true"/>
+            <file path="board/peripherals_wdog_config_1.c" update_enabled="true"/>
+            <file path="board/peripherals_wdog_config_1.h" update_enabled="true"/>
             <file path="board/sdk_project_config.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
@@ -804,6 +816,26 @@
                               </struct>
                            </array>
                         </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="wdog_config_1" uuid="96f2e31f-74d4-480d-9d75-9229fedf1195" type="wdog" type_id="wdog" mode="general" peripheral="WDOG" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="wdog">
+                        <array name="WDOGConfig">
+                           <struct name="0">
+                              <setting name="name" value="WDOG_Cfg0"/>
+                              <setting name="readonly" value="true"/>
+                              <setting name="clkSource" value="WDOG_BUS_CLOCK"/>
+                              <setting name="wait" value="false"/>
+                              <setting name="stop" value="false"/>
+                              <setting name="debug" value="false"/>
+                              <setting name="prescalerEnable" value="true"/>
+                              <setting name="updateEnable" value="false"/>
+                              <setting name="intEnable" value="false"/>
+                              <setting name="winEnable" value="false"/>
+                              <setting name="windowValue" value="0"/>
+                              <setting name="timeoutValue" value="6250"/>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                </instances>

@@ -59,7 +59,6 @@ void Mpu_Init(void)
 
 	MPU_DRV_Init(0, MPU_PAL_CONFIG_1_REGION_CFG_CNT0, MPU_Cfg0);
 
-
 	AIPS->PACRB    |= (AIPS_PACRB_SP5_MASK | AIPS_PACRB_WP5_MASK); // MPU only accessed in supervisor mode
 	AIPS->OPACR[3] |= (AIPS_OPACR_SP3_MASK);                       // ADC0 only accessed in supervisor mode
 	AIPS->OPACR[5] |= (AIPS_OPACR_SP5_MASK);                       // PORTE only accessed in supervisor mode
