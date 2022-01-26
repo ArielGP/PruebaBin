@@ -146,7 +146,7 @@ void app_task_10ms( void *pvParameters )
 	for( ;; )
 	{
 
-		Signals_RunTx();
+		//Signals_RunTx();
 
 		Button_Run();
 

@@ -35,7 +35,7 @@ typedef uint8 WINDOW_OPERATION;
 #define WINDOW_OPERATION_IDLE        ((WINDOW_OPERATION)0)
 #define WINDOW_OPERATION_UP          ((WINDOW_OPERATION)1)
 #define WINDOW_OPERATION_DOWN        ((WINDOW_OPERATION)2)
-#define MPU_TEST
+
 
 /*Global function def_______________________________________________________*/
 extern void Window_Init(void);
@@ -54,7 +54,5 @@ extern WINDOW_STATUS Window_Get_Status(void);
 
 extern WINDOW_OPERATION Window_Get_Operation(void);
 
-#ifdef MPU_TEST
-extern void Window_MPU_Test(void);
-#endif
+
 #endif /* ECUABSTRACTION_WINDOWDRIVER_H_ */

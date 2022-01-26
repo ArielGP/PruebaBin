@@ -28,15 +28,6 @@ typedef enum
 #define DOOR_SW_ACTIVE                     DIO_HIGH
 #define DOOR_SW_INACTIVE                   DIO_LOW
 
-/*Test Macro______________________________________________________________*/
-#define Button_Active                      DIO_HIGH
-#define Button_Inactive                    DIO_LOW
-
-#define TEST1                      		   1
-//#define TEST2                  		     1
-//#define TEST3                    		     1
-
-
 /*Local variable____________________________________________________________*/
 static DOOR_REQUEST Door_Request;
 static DOOR_STATUS  Door_Status;
@@ -136,23 +127,8 @@ DOOR_STATUS Door_Get_Status(void)
  * ========================================================================= */
 static void Door_StatusDetermination(void)
 {
-    //PIN_VALUE  UnLock_status = Dio_Read_DoorUnlock();
-    //PIN_VALUE  Lock_status   = Dio_Read_DoorLock();
-
-#ifdef TEST1
-	PIN_VALUE UnLock_status = Button_Active;
-	PIN_VALUE Lock_status   = Button_Active;
-#endif
-
-#ifdef TEST2
-	PIN_VALUE UnLock_status = Button_Inactive;
-	PIN_VALUE Lock_status   = Button_Active;
-#endif
-
-#ifdef TEST3
-	PIN_VALUE UnLock_status = Button_Active;
-	PIN_VALUE Lock_status   = Button_Inactive;
-#endif
+    PIN_VALUE  UnLock_status = Dio_Read_DoorUnlock();
+    PIN_VALUE  Lock_status   = Dio_Read_DoorLock();
 
     if ((DOOR_SW_ACTIVE == UnLock_status) && (DOOR_SW_INACTIVE == Lock_status))
     {
