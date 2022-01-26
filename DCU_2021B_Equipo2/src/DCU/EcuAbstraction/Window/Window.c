@@ -25,11 +25,11 @@
 
 
 /*Local variable____________________________________________________________*/
-ASIL_A_VAR_NOINIT static WINDOW_STATUS    Window_Status;
-ASIL_A_VAR_NOINIT static WINDOW_STATUS    Window_Position;
-ASIL_A_VAR_NOINIT static WINDOW_OPERATION Window_Operation;
+static WINDOW_STATUS    Window_Status;
+static WINDOW_STATUS    Window_Position;
+static WINDOW_OPERATION Window_Operation;
 
-ASIL_A_VAR_NOINIT static PIN_VALUES pins_Value = 0x00;
+static PIN_VALUES pins_Value = 0x00;
 
 // Variables extras solo para antipinch
 ASIL_A_VAR_NOINIT static uint8		Window_AntiPinch_Delay_Counter;
@@ -258,16 +258,4 @@ static void Window_Actuation_Close(void)
     }
 }
 
-#ifdef MPU_TEST
-/* ============================================================================
- * Function Name: Window_Actuation_Close
- * Description:
- * Arguments:     None
- * Return:        None
- * ========================================================================= */
-void Window_MPU_Test(void)
-{
-	Window_Status = 0;
-}
-#endif
 /*End of file_______________________________________________________________*/

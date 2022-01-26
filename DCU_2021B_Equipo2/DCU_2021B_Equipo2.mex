@@ -440,16 +440,6 @@
                   <data type="Version">1.0.0</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.pal.mpu_pal" description="MPU_PAL driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data type="Boolean">true</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.pal.mpu_pal" description="Unsupported version of the MPU_PAL driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="equivalent">
-                  <data type="Version">1.0.0</data>
-               </feature>
-            </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.driver.wdog" description="WDOG Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data type="Boolean">true</data>
@@ -465,15 +455,12 @@
             <file path="board/FreeRTOSConfig.h" update_enabled="true"/>
             <file path="board/adc_pal_cfg.h" update_enabled="true"/>
             <file path="board/can_pal_cfg.h" update_enabled="true"/>
-            <file path="board/mpu_pal_cfg.h" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.c" update_enabled="true"/>
             <file path="board/peripherals_FreeRTOS.h" update_enabled="true"/>
             <file path="board/peripherals_adc_pal_1.c" update_enabled="true"/>
             <file path="board/peripherals_adc_pal_1.h" update_enabled="true"/>
             <file path="board/peripherals_can_pal_1.c" update_enabled="true"/>
             <file path="board/peripherals_can_pal_1.h" update_enabled="true"/>
-            <file path="board/peripherals_mpu_pal_config_1.c" update_enabled="true"/>
-            <file path="board/peripherals_mpu_pal_config_1.h" update_enabled="true"/>
             <file path="board/peripherals_osif_1.c" update_enabled="true"/>
             <file path="board/peripherals_osif_1.h" update_enabled="true"/>
             <file path="board/peripherals_wdog_config_1.c" update_enabled="true"/>
@@ -664,167 +651,13 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="mpu_pal_config_1" uuid="71fa61d5-6fe6-49ac-8e60-50009dbedbe6" type="mpu_pal_config" type_id="mpu_pal" mode="mpu_pal_basic_s32k" peripheral="MPU" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="mpu_pal_s32k">
-                        <struct name="mpu_pal_Configuration">
-                           <array name="mpu_pal_UserConfig">
-                              <struct name="0">
-                                 <setting name="name" value="MPU_Cfg0"/>
-                                 <setting name="readOnly" value="true"/>
-                                 <array name="mpu_pal_RegionConfig">
-                                    <struct name="0">
-                                       <setting name="startAddr" value="0x0"/>
-                                       <setting name="endAddr" value="0xFFFFFFFF"/>
-                                       <setting name="masterAccRight" value="mpu_pal_config_1_AccessRightConfig0"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                    <struct name="1">
-                                       <setting name="startAddr" value="0x0"/>
-                                       <setting name="endAddr" value="0x7FFFF"/>
-                                       <setting name="masterAccRight" value="FullAccessConfig"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                    <struct name="2">
-                                       <setting name="startAddr" value="0x1FFF8000"/>
-                                       <setting name="endAddr" value="0x1FFFFFFF"/>
-                                       <setting name="masterAccRight" value="SupervisorReadAccess"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                    <struct name="3">
-                                       <setting name="startAddr" value="0x20000000"/>
-                                       <setting name="endAddr" value="0x2000001F"/>
-                                       <setting name="masterAccRight" value="UserJustRead"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                    <struct name="4">
-                                       <setting name="startAddr" value="0x20000020"/>
-                                       <setting name="endAddr" value="0x20003FFF"/>
-                                       <setting name="masterAccRight" value="SupervisorReadAccess"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                    <struct name="5">
-                                       <setting name="startAddr" value="0x20004000"/>
-                                       <setting name="endAddr" value="0x20006FFF"/>
-                                       <setting name="masterAccRight" value="FullAccessConfig"/>
-                                       <setting name="processIdentifier" value="0x0"/>
-                                       <setting name="processIdMask" value="0x0"/>
-                                    </struct>
-                                 </array>
-                              </struct>
-                           </array>
-                           <array name="mpu_pal_MasterConfig">
-                              <struct name="0">
-                                 <setting name="name" value="mpu_pal_config_1_AccessRightConfig0"/>
-                                 <setting name="readOnly" value="true"/>
-                                 <array name="mpu_pal_Master">
-                                    <struct name="0">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_CORE"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_RWX"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="1">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DEBUGGER"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_RWX"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="2">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DMA"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                 </array>
-                              </struct>
-                              <struct name="1">
-                                 <setting name="name" value="FullAccessConfig"/>
-                                 <setting name="readOnly" value="true"/>
-                                 <array name="mpu_pal_Master">
-                                    <struct name="0">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_CORE"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_RWX"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="1">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DEBUGGER"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="2">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DMA"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                 </array>
-                              </struct>
-                              <struct name="2">
-                                 <setting name="name" value="UserJustRead"/>
-                                 <setting name="readOnly" value="true"/>
-                                 <array name="mpu_pal_Master">
-                                    <struct name="0">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_CORE"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR_RWX"/>
-                                       <setting name="userAccessRight" value="USER_R"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="1">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DEBUGGER"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="2">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DMA"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                 </array>
-                              </struct>
-                              <struct name="3">
-                                 <setting name="name" value="SupervisorReadAccess"/>
-                                 <setting name="readOnly" value="true"/>
-                                 <array name="mpu_pal_Master">
-                                    <struct name="0">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_CORE"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR_RX"/>
-                                       <setting name="userAccessRight" value="USER_RWX"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="1">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DEBUGGER"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                    <struct name="2">
-                                       <setting name="masterNum" value="FEATURE_MPU_MASTER_DMA"/>
-                                       <setting name="supervisorAccessRight" value="MPU_SUPERVISOR"/>
-                                       <setting name="userAccessRight" value="USER_NONE"/>
-                                       <setting name="pidEnable" value="false"/>
-                                    </struct>
-                                 </array>
-                              </struct>
-                           </array>
-                        </struct>
-                     </config_set>
-                  </instance>
-                  <instance name="wdog_config_1" uuid="96f2e31f-74d4-480d-9d75-9229fedf1195" type="wdog" type_id="wdog" mode="general" peripheral="WDOG" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="wdog_config_1" uuid="44941353-0e68-4b77-9f2f-5de9e2d5177e" type="wdog" type_id="wdog" mode="general" peripheral="WDOG" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="wdog">
                         <array name="WDOGConfig">
                            <struct name="0">
                               <setting name="name" value="WDOG_Cfg0"/>
                               <setting name="readonly" value="true"/>
-                              <setting name="clkSource" value="WDOG_BUS_CLOCK"/>
+                              <setting name="clkSource" value="WDOG_SOSC_CLOCK"/>
                               <setting name="wait" value="false"/>
                               <setting name="stop" value="false"/>
                               <setting name="debug" value="false"/>
