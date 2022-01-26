@@ -22,8 +22,8 @@ typedef signed long  sint32;
 #define TRUE  ((boolean)1)
 #define FALSE ((boolean)0)
 
-#define ASIL_A_VAR_NOINIT     //__attribute__ ((section (".asila_var_noinit")))
+#define ASIL_A_VAR_NOINIT     __attribute__ ((section (".asila_var_noinit")))
 
-#define MPU_ERROR_VAR_NOINIT  //__attribute__ ((section (".mpu_error_info")))
+#define MPU_ERROR_VAR_NOINIT  __attribute__ ((section (".mpu_error_info")))
 
 #endif /* BASICTYPES_H_ */

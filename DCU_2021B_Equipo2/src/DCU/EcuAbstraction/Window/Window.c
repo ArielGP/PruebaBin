@@ -16,6 +16,7 @@
 /*Local Macro______________________________________________________________*/
 #define WINDOW_ADC_COUNTS_THRESHOLD   ((ADC_VALUE)0x334)
 #define WINDOW_DELAY_500MS            (50u)
+#define WINDOW_ANTIPINCH_MAX_DELAY_COUNTER		((uint8)30)
 
 #define WINDOW_SW_ACTIVE              DIO_HIGH
 #define WINDOW_SW_INACTIVE            DIO_LOW
@@ -30,6 +31,8 @@ ASIL_A_VAR_NOINIT static WINDOW_OPERATION Window_Operation;
 
 ASIL_A_VAR_NOINIT static PIN_VALUES pins_Value = 0x00;
 
+// Variables extras solo para antipinch
+ASIL_A_VAR_NOINIT static uint8		Window_AntiPinch_Delay_Counter;
 /*Local function def________________________________________________________*/
 static void Window_Actuation(void);
 static void Window_StatusDetermination(void);
@@ -59,7 +62,7 @@ void Window_Init(void)
  * ========================================================================= */
 void Window_Init_Safety(void)
 {
-
+	Window_AntiPinch_Delay_Counter = 0;
 }
 
 /* ============================================================================
@@ -94,7 +97,28 @@ void Window_Run_Safety(void)
     if ((WINDOW_ADC_COUNTS_THRESHOLD < AntiPinch_Val) &&
         (WINDOW_ADC_COUNTS_THRESHOLD > Previous_AntiPinch_Val))
     {
-            
+    	if(Window_Position > WINDOW_POSITION_OPEN)
+    	{
+    		Window_Operation = WINDOW_OPERATION_DOWN;
+    		Window_Position--;
+    		pins_Value &= ~(0x01u << Window_Position);
+
+    	}
+    	else
+    	{
+    		Window_Operation = WINDOW_OPERATION_DOWN;
+
+    		if(Window_AntiPinch_Delay_Counter < WINDOW_ANTIPINCH_MAX_DELAY_COUNTER)
+    		{
+    			Window_AntiPinch_Delay_Counter++;
+
+    			if(Window_AntiPinch_Delay_Counter >= WINDOW_ANTIPINCH_MAX_DELAY_COUNTER)
+    			{
+    				Previous_AntiPinch_Val = 0x00u;
+    				Window_AntiPinch_Delay_Counter=0;
+    			}
+    		}
+    	}
     }
     Previous_AntiPinch_Val = AntiPinch_Val;
 # endif   
