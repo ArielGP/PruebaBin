@@ -1,0 +1,53 @@
+-std=c99
+-DCPU_S32K144HFT0VLLT
+-DDEV_ERROR_DETECT
+-DUSING_OS_FREERTOS
+-I../SDK/rtos/FreeRTOS/Source/include
+-I../SDK/platform/pal/inc
+-I../SDK/platform/drivers/inc
+-I../SDK/rtos/osif
+-I../SDK/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/SDK/platform/drivers/src/flexcan"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Communication/Calvos"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Communication/CANpal"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Communication/Signals"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/EcuAbstraction/Button/InDebounce"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Application/DoorApp"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Application/WindowApp"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/EcuAbstraction/Button"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/EcuAbstraction/Door"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/EcuAbstraction/HwConfig"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/EcuAbstraction/Window"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Global"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Microcontroller/Adc"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Microcontroller/Dio"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Microcontroller/Mcu"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Microcontroller/Mpu"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Microcontroller/Wdg"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/OS/Tasks"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/src/DCU/Runtime"
+-I"C:/Users/ariel/Documents/Equipo2-Act2.4Equipo/DCU_2021B_Equipo2/board"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/rtos/FreeRTOS_S32K/Source/include"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/rtos/FreeRTOS_S32K/Source/portable/GCC/ARM_CM4F"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144/include"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144/startup"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/S32K144"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices/common"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/devices"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/drivers/inc"
+-I"D:/S32 IDE/S32DS/software/S32SDK_S32K1XX_RTM_4.0.2/platform/drivers/src/clock/S32K1xx"
+-I../SDK/platform/drivers/src/adc
+-O0
+-g3
+-Wall
+-c
+-fmessage-length=0
+-ffunction-sections
+-fdata-sections
+-mcpu=cortex-m4
+-mfloat-abi=hard
+-mfpu=fpv4-sp-d16
+-specs=nano.specs
+-specs=nosys.specs
+--sysroot="D:/S32 IDE/S32DS/build_tools/gcc_b1620/gcc-6.3-arm32-eabi/arm-none-eabi/newlib"
